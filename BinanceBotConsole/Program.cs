@@ -32,6 +32,8 @@ namespace BinanceBotConsole
 
                 Console.Write("Enter Binance Secret Key: ");
                 Bot.Settings.SecretKey = Console.ReadLine();
+
+                Bot.SaveSettings(); // Save API Key and Secret Key
             }
 
             if (Bot.Settings.DailyProfitTarget <= 0)
@@ -62,32 +64,60 @@ namespace BinanceBotConsole
         {
             using (var client = new BinanceClient())
             {
-                var queryOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastOrderID);
+                var queryBuyOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastBuyOrderID);
+                var querySellOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastSellOrderID);
 
-                if (queryOrder.Data != null)
+                if (queryBuyOrder.Data != null)
                 {
-                    switch (queryOrder.Data.Status)
+                    switch (queryBuyOrder.Data.Status)
                     {
                         case OrderStatus.Filled:
                             SellOrder();
                             break;
                         case OrderStatus.Canceled:
-                            Bot.WriteLine($"Order {Bot.Settings.LastOrderID} has been cancelled by the user.");
+                            Bot.WriteLog($"Buy order {Bot.Settings.LastBuyOrderID} has been cancelled by the user.");
                             BuyOrder();
                             break;
                         case OrderStatus.New:
-                            Console.WriteLine($"Waiting for the order {Bot.Settings.LastOrderID} to fill...");
+                            Console.WriteLine($"Waiting for the buy order {Bot.Settings.LastBuyOrderID} to fill...");
                             break;
                         default:
-                            Console.WriteLine("Unhandled outcome. Reload application...");
+                            Console.WriteLine("Unhandled buy order outcome. Reload application...");
                             break;
                     }
                 }
-                else if (queryOrder.Data == null)
+                else if (querySellOrder.Data != null)
                 {
+                    switch (querySellOrder.Data.Status)
+                    {
+                        case OrderStatus.Filled:
+                            BuyOrder();
+                            break;
+                        case OrderStatus.Canceled:
+                            Bot.WriteLog($"Sell order {Bot.Settings.LastSellOrderID} has been cancelled by the user.");
+                            SellOrder();
+                            break;
+                        case OrderStatus.New:
+                            Console.WriteLine($"Waiting for the sell order {Bot.Settings.LastSellOrderID} to fill...");
+                            break;
+                        default:
+                            Console.WriteLine("Unhandled sell order outcome. Reload application...");
+                            break;
+                    }
+                }
+                else if (queryBuyOrder.Data == null)
+                {
+                    Console.WriteLine("Could not find any previous buy orders.");
                     BuyOrder();
                 }
+                else if (querySellOrder.Data == null)
+                {
+                    Console.WriteLine("Could not find any previous buy orders.");
+                    SellOrder();
+                }
             }
+
+            Bot.LoadSettings(); // Re-read settings
         }
 
         private static void BuyOrder()
@@ -103,37 +133,37 @@ namespace BinanceBotConsole
 
                 decimal entryPrice = Math.Min(Bot.Settings.InvestmentMax, coinUSDT.Free);
                 decimal myInvestment = entryPrice / (1 + fees.MakerFee);
-                Bot.WriteLine("USDT balance to trade = " + entryPrice.ToString());
+                Bot.WriteLog("USDT balance to trade = " + entryPrice.ToString());
 
                 decimal marketPrice = Math.Min(price.Data.Price, prices24h.Data.BidPrice);
                 decimal myBuyPrice = marketPrice;
-                Bot.WriteLine("Market price = $" + marketPrice);
+                Bot.WriteLog("Market price = $" + marketPrice);
 
                 Bot.Settings.CoinQuantity = Math.Round(myInvestment / myBuyPrice, 6);
                 decimal receiveTarget = entryPrice + Bot.Settings.DailyProfitTarget;
-                Bot.WriteLine($"Receive target = ${receiveTarget}");
+                Bot.WriteLog($"Receive target = ${receiveTarget}");
 
                 if (prices24h.Data.BidPrice > prices24h.Data.OpenPrice)
                 {
                     myInvestment = (entryPrice - Bot.Settings.DailyProfitTarget / 2) / (1 + fees.MakerFee);
                     myBuyPrice = Math.Round(myInvestment / Bot.Settings.CoinQuantity, 2);
                     receiveTarget = entryPrice + Bot.Settings.DailyProfitTarget / 2;
-                    Bot.WriteLine($"Adjusted receive target = ${receiveTarget}");
+                    Bot.WriteLog($"Adjusted receive target = ${receiveTarget}");
                 }
 
-                Bot.WriteLine($"Buying {Bot.Settings.CoinQuantity} BTC for ${myBuyPrice}");
+                Bot.WriteLog($"Buying {Bot.Settings.CoinQuantity} BTC for ${myBuyPrice}");
                 var buyOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Buy, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: myBuyPrice, timeInForce: TimeInForce.GoodTillCancel);
 
                 if (buyOrder.Success)
                 {
                     // Save Sell Price
-                    Bot.Settings.SellPrice = Math.Round(receiveTarget * (1 + fees.MakerFee) / Bot.Settings.CoinQuantity, 6);
-                    Bot.WriteLine("Target sell price = $" + Bot.Settings.SellPrice);
+                    Bot.Settings.SellPrice = Math.Round(receiveTarget * (1 + fees.MakerFee) / Bot.Settings.CoinQuantity, 2);
+                    Bot.WriteLog("Target sell price = $" + Bot.Settings.SellPrice);
 
                     decimal priceDiff = Bot.Settings.SellPrice - myBuyPrice;
                     decimal priceChange = Math.Round(priceDiff / myBuyPrice * 100, 2);
                     Console.WriteLine($"Price change = {priceChange}%");
-                    Bot.Settings.LastOrderID = buyOrder.Data.OrderId;
+                    Bot.Settings.LastBuyOrderID = buyOrder.Data.OrderId;
                     Console.WriteLine();
                 }
             }
@@ -148,12 +178,19 @@ namespace BinanceBotConsole
                     var accountInfo = client.GetAccountInfo();
 
                     var coinBTC = accountInfo.Data.Balances.Single(s => s.Asset == "BTC");
-                    Bot.WriteLine("BTC balance to trade = " + coinBTC.Free.ToString());
+                    Bot.WriteLog("BTC balance to trade = " + Bot.Settings.CoinQuantity.ToString());
 
                     if (coinBTC.Free > Bot.Settings.CoinQuantity)
                     {
-                        Bot.WriteLine($"Selling {Bot.Settings.CoinQuantity} BTC for ${Bot.Settings.SellPrice}");
-                        var sellOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Sell, OrderType.Limit, Bot.Settings.CoinQuantity, Bot.Settings.SellPrice, timeInForce: TimeInForce.GoodTillCancel);
+                        Bot.WriteLog($"Selling {Bot.Settings.CoinQuantity} BTC for ${Bot.Settings.SellPrice}");
+                        var sellOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Sell, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: Bot.Settings.SellPrice, timeInForce: TimeInForce.GoodTillCancel);
+
+                        if (sellOrder.Success)
+                        {
+                            Bot.Settings.LastSellOrderID = sellOrder.Data.OrderId;
+                            Bot.SaveSettings();
+                            Console.WriteLine();
+                        }
                     }
                 }
             }

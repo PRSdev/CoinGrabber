@@ -31,7 +31,7 @@ namespace BinanceBotLib
 
         private static Logger logger = new Logger(Bot.LogFilePath);
 
-        public static void WriteLine(string message)
+        public static void WriteLog(string message)
         {
             Console.WriteLine(message);
             logger.WriteLine(message);

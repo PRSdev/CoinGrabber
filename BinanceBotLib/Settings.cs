@@ -10,7 +10,8 @@ namespace BinanceBotLib
         public decimal InvestmentMax { get; set; } = 500;
         public decimal DailyProfitTarget { get; set; } = 10;
 
-        public long LastOrderID { get; set; }
+        public long LastBuyOrderID { get; set; }
+        public long LastSellOrderID { get; set; }
         public decimal SellPrice { get; set; }
         public decimal CoinQuantity { get; set; }
     }
