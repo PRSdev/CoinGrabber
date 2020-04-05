@@ -105,15 +105,15 @@ namespace BinanceBotConsole
                             break;
                     }
                 }
-                else if (queryBuyOrder.Data == null)
-                {
-                    Console.WriteLine("Could not find any previous buy orders.");
-                    BuyOrder();
-                }
                 else if (querySellOrder.Data == null)
                 {
                     Console.WriteLine("Could not find any previous buy orders.");
                     SellOrder();
+                }
+                else if (queryBuyOrder.Data == null)
+                {
+                    Console.WriteLine("Could not find any previous buy orders.");
+                    BuyOrder();
                 }
             }
 
