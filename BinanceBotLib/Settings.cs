@@ -12,6 +12,7 @@ namespace BinanceBotLib
 
         public long LastBuyOrderID { get; set; }
         public long LastSellOrderID { get; set; }
+        public decimal BuyPrice { get; set; }
         public decimal SellPrice { get; set; }
         public decimal CoinQuantity { get; set; }
     }
