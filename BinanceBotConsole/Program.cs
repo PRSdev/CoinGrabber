@@ -107,7 +107,7 @@ namespace BinanceBotConsole
                 }
                 else if (querySellOrder.Data == null)
                 {
-                    Console.WriteLine("Could not find any previous buy orders.");
+                    Console.WriteLine("Could not find any previous sell orders.");
                     SellOrder();
                 }
                 else if (queryBuyOrder.Data == null)
@@ -131,7 +131,7 @@ namespace BinanceBotConsole
                 var prices24h = client.Get24HPrice(CoinPairs.BTCUSDT);
                 var fees = client.GetTradeFee().Data.Single(s => s.Symbol == CoinPairs.BTCUSDT);
 
-                decimal entryPrice = Math.Min(Bot.Settings.InvestmentMax, coinUSDT.Free);
+                decimal entryPrice = Bot.Settings.InvestmentMax == 0 ? coinUSDT.Free : Math.Min(Bot.Settings.InvestmentMax, coinUSDT.Free);
                 decimal myInvestment = entryPrice / (1 + fees.MakerFee);
                 Bot.WriteLog("USDT balance to trade = " + entryPrice.ToString());
 
@@ -176,7 +176,6 @@ namespace BinanceBotConsole
                 using (var client = new BinanceClient())
                 {
                     var accountInfo = client.GetAccountInfo();
-
                     var coinBTC = accountInfo.Data.Balances.Single(s => s.Asset == "BTC");
                     Bot.WriteLog("BTC balance to trade = " + Bot.Settings.CoinQuantity.ToString());
 
