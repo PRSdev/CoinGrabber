@@ -5,9 +5,8 @@ namespace BinanceBotLib
 {
     public class Settings : SettingsBase<Settings>
     {
-        public string APIKey { get; set; } = "XXX";
-        public string SecretKey { get; set; } = "XXX";
-
+        public string APIKey { get; set; }
+        public string SecretKey { get; set; }
         public decimal InvestmentMax { get; set; } = 500;
         public decimal DailyProfitTarget { get; set; } = 10;
 
