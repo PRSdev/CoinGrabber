@@ -127,29 +127,25 @@ namespace BinanceBotConsole
                 var accountInfo = client.GetAccountInfo();
                 var coinUSDT = accountInfo.Data.Balances.Single(s => s.Asset == "USDT");
 
-                var price = client.GetPrice(CoinPairs.BTCUSDT);
-                var prices24h = client.Get24HPrice(CoinPairs.BTCUSDT);
-                var fees = client.GetTradeFee().Data.Single(s => s.Symbol == CoinPairs.BTCUSDT);
+                decimal myCapitalCost = Bot.Settings.InvestmentMax == 0 ? coinUSDT.Free : Math.Min(Bot.Settings.InvestmentMax, coinUSDT.Free);
+                Bot.WriteLog("USDT balance to trade = " + myCapitalCost.ToString());
 
-                decimal entryPrice = Bot.Settings.InvestmentMax == 0 ? coinUSDT.Free : Math.Min(Bot.Settings.InvestmentMax, coinUSDT.Free);
-                decimal myInvestment = entryPrice / (1 + fees.MakerFee);
-                Bot.WriteLog("USDT balance to trade = " + entryPrice.ToString());
+                decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == CoinPairs.BTCUSDT).MakerFee;
+                decimal myInvestment = myCapitalCost / (1 + fees);
 
-                decimal marketPrice = Math.Min(price.Data.Price, prices24h.Data.BidPrice);
-                decimal myBuyPrice = marketPrice;
-                Bot.WriteLog("Market price = $" + marketPrice);
+                decimal myRevenue = myCapitalCost + Bot.Settings.DailyProfitTarget;
+                Bot.WriteLog($"Receive target = ${myRevenue}");
+
+                // New method from: https://docs.google.com/spreadsheets/d/1be6zYuzKyJMZ4Yn_pUmIt-YRTON3YJKbq_lenL2Kldc/edit?usp=sharing
+                decimal marketBuyPrice = client.GetPrice(CoinPairs.BTCUSDT).Data.Price;
+                Bot.WriteLog("Market price = $" + marketBuyPrice);
+
+                decimal marketSellPrice = myRevenue * (1 + fees) / (myInvestment / marketBuyPrice);
+                decimal priceDiff = marketSellPrice - marketBuyPrice;
+
+                decimal myBuyPrice = Math.Round(marketBuyPrice - priceDiff / 2, 2);
 
                 Bot.Settings.CoinQuantity = Math.Round(myInvestment / myBuyPrice, 6);
-                decimal receiveTarget = entryPrice + Bot.Settings.DailyProfitTarget;
-                Bot.WriteLog($"Receive target = ${receiveTarget}");
-
-                if (prices24h.Data.BidPrice > prices24h.Data.OpenPrice)
-                {
-                    myInvestment = (entryPrice - Bot.Settings.DailyProfitTarget / 2) / (1 + fees.MakerFee);
-                    myBuyPrice = Math.Round(myInvestment / Bot.Settings.CoinQuantity, 2);
-                    receiveTarget = entryPrice + Bot.Settings.DailyProfitTarget / 2;
-                    Bot.WriteLog($"Adjusted receive target = ${receiveTarget}");
-                }
 
                 Bot.WriteLog($"Buying {Bot.Settings.CoinQuantity} BTC for ${myBuyPrice}");
                 var buyOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Buy, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: myBuyPrice, timeInForce: TimeInForce.GoodTillCancel);
@@ -157,13 +153,13 @@ namespace BinanceBotConsole
                 if (buyOrder.Success)
                 {
                     // Save Sell Price
-                    Bot.Settings.SellPrice = Math.Round(receiveTarget * (1 + fees.MakerFee) / Bot.Settings.CoinQuantity, 2);
+                    Bot.Settings.SellPrice = Math.Round(myRevenue * (1 + fees) / Bot.Settings.CoinQuantity, 2);
                     Bot.WriteLog("Target sell price = $" + Bot.Settings.SellPrice);
 
-                    decimal priceDiff = Bot.Settings.SellPrice - myBuyPrice;
                     decimal priceChange = Math.Round(priceDiff / myBuyPrice * 100, 2);
                     Console.WriteLine($"Price change = {priceChange}%");
                     Bot.Settings.LastBuyOrderID = buyOrder.Data.OrderId;
+                    Bot.SaveSettings();
                     Console.WriteLine();
                 }
             }
