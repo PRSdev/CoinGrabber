@@ -4,9 +4,14 @@ using System.Text;
 
 namespace BinanceBotLib
 {
-    public class ApplicationConstants
+    public class CoinPairs
     {
-        public static string API_KEY { get; set; }
-        public static string PRIVATE_KEY { get; set; }
+        public const string BTCUSDT = "BTCUSDT";
+    }
+
+    public class Coins
+    {
+        public const string USDT = "USDT";
+        public const string BTC = "BTC";
     }
 }

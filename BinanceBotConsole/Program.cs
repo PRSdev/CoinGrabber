@@ -16,7 +16,10 @@ using CryptoExchange.Net.Objects;
 namespace BinanceBotConsole
 {
     internal class Program
+
     {
+        private static BotMode _BotMode = BotMode.DayTrade;
+
         private static void Main(string[] args)
         {
             Bot.LoadSettings();
@@ -32,6 +35,17 @@ namespace BinanceBotConsole
 
                 Bot.SaveSettings(); // Save API Key and Secret Key
             }
+
+            // Choose Bot mode
+            foreach (BotMode bm in Enum.GetValues(typeof(BotMode)))
+            {
+                Console.WriteLine($"{bm.GetIndex()} for {bm.GetDescription()}");
+            }
+            Console.Write("Choose Bot mode: ");
+
+            int intMode;
+            int.TryParse(Console.ReadLine(), out intMode);
+            _BotMode = (BotMode)intMode;
 
             if (Bot.Settings.DailyProfitTarget <= 0)
             {
@@ -49,7 +63,7 @@ namespace BinanceBotConsole
 
             Random rnd = new Random();
             Timer marketTickTimer = new Timer();
-            marketTickTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
+            marketTickTimer.Interval = rnd.Next(6, 12) * 1000; // Randomly every 1-2 minutes (60-120)
             marketTickTimer.Elapsed += MarketTickTimer_Tick;
             marketTickTimer.Start();
             Console.WriteLine("Bot initiated...");
@@ -60,6 +74,23 @@ namespace BinanceBotConsole
         }
 
         private static void MarketTickTimer_Tick(object sender, ElapsedEventArgs e)
+        {
+            switch (_BotMode)
+            {
+                case BotMode.DayTrade:
+                    DayTrade();
+                    break;
+                case BotMode.SwingTrade:
+                    TradingHelper.SwingTrade();
+                    break;
+                default:
+                    Console.WriteLine("Unhandled Bot Mode.");
+                    Console.ReadLine();
+                    return;
+            }
+        }
+
+        public static void DayTrade()
         {
             using (var client = new BinanceClient())
             {
@@ -124,7 +155,7 @@ namespace BinanceBotConsole
             using (var client = new BinanceClient())
             {
                 var accountInfo = client.GetAccountInfo();
-                decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == "USDT").Free;
+                decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == Coins.USDT).Free;
 
                 decimal myCapitalCost = Bot.Settings.InvestmentMax == 0 ? coinsUSDT : Math.Min(Bot.Settings.InvestmentMax, coinsUSDT);
                 Bot.WriteLog("USDT balance to trade = " + myCapitalCost.ToString());
@@ -168,7 +199,7 @@ namespace BinanceBotConsole
             using (var client = new BinanceClient())
             {
                 var accountInfo = client.GetAccountInfo();
-                var coinsBTC = accountInfo.Data.Balances.Single(s => s.Asset == "BTC").Free;
+                decimal coinsBTC = accountInfo.Data.Balances.Single(s => s.Asset == Coins.BTC).Free;
 
                 // if user has BTC rather than USDT for capital, then calculate SellPrice and CoinQuanitity
                 if (Bot.Settings.SellPrice == 0 || Bot.Settings.CoinQuantity == 0)
