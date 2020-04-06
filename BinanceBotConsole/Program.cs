@@ -17,9 +17,6 @@ namespace BinanceBotConsole
 {
     internal class Program
     {
-        private static Timer marketTickTimer = new Timer();
-        private static Random rnd = new Random();
-
         private static void Main(string[] args)
         {
             Bot.LoadSettings();
@@ -50,6 +47,8 @@ namespace BinanceBotConsole
                 LogWriters = new List<TextWriter> { Console.Out }
             });
 
+            Random rnd = new Random();
+            Timer marketTickTimer = new Timer();
             marketTickTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
             marketTickTimer.Elapsed += MarketTickTimer_Tick;
             marketTickTimer.Start();
@@ -79,7 +78,7 @@ namespace BinanceBotConsole
                             BuyOrder();
                             break;
                         case OrderStatus.New:
-                            Console.WriteLine($"Waiting for the buy order {Bot.Settings.LastBuyOrderID} to fill...");
+                            Console.WriteLine($"Waiting {DateTime.UtcNow - queryBuyOrder.Data.Time} for the {Bot.Settings.BuyPrice} buy order to fill...");
                             break;
                         default:
                             Console.WriteLine("Unhandled buy order outcome. Reload application...");
@@ -98,7 +97,7 @@ namespace BinanceBotConsole
                             SellOrder();
                             break;
                         case OrderStatus.New:
-                            Console.WriteLine($"Waiting for the sell order {Bot.Settings.LastSellOrderID} to fill...");
+                            Console.WriteLine($"Waiting {DateTime.UtcNow - querySellOrder.Data.Time} for the {Bot.Settings.SellPrice} sell order to fill...");
                             break;
                         default:
                             Console.WriteLine("Unhandled sell order outcome. Reload application...");
@@ -134,11 +133,11 @@ namespace BinanceBotConsole
                 decimal myInvestment = myCapitalCost / (1 + fees);
 
                 decimal myRevenue = myCapitalCost + Bot.Settings.DailyProfitTarget;
-                Bot.WriteLog($"Receive target = ${myRevenue}");
+                Bot.WriteLog($"Receive target = {myRevenue}");
 
                 // New method from: https://docs.google.com/spreadsheets/d/1be6zYuzKyJMZ4Yn_pUmIt-YRTON3YJKbq_lenL2Kldc/edit?usp=sharing
                 decimal marketBuyPrice = client.GetPrice(CoinPairs.BTCUSDT).Data.Price;
-                Bot.WriteLog("Market price = $" + marketBuyPrice);
+                Bot.WriteLog($"Market price = {marketBuyPrice}");
 
                 decimal marketSellPrice = myRevenue * (1 + fees) / (myInvestment / marketBuyPrice);
                 decimal priceDiff = marketSellPrice - marketBuyPrice;
@@ -146,14 +145,14 @@ namespace BinanceBotConsole
                 Bot.Settings.BuyPrice = Math.Round(marketBuyPrice - priceDiff / 2, 2);
                 Bot.Settings.CoinQuantity = Math.Round(myInvestment / Bot.Settings.BuyPrice, 6);
 
-                Bot.WriteLog($"Buying {Bot.Settings.CoinQuantity} BTC for ${Bot.Settings.BuyPrice}");
+                Bot.WriteLog($"Buying {Bot.Settings.CoinQuantity} BTC for {Bot.Settings.BuyPrice}");
                 var buyOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Buy, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: Bot.Settings.BuyPrice, timeInForce: TimeInForce.GoodTillCancel);
 
                 if (buyOrder.Success)
                 {
                     // Save Sell Price
                     Bot.Settings.SellPrice = Math.Round(myRevenue * (1 + fees) / Bot.Settings.CoinQuantity, 2);
-                    Bot.WriteLog("Target sell price = $" + Bot.Settings.SellPrice);
+                    Bot.WriteLog("Target sell price = " + Bot.Settings.SellPrice);
 
                     decimal priceChange = Math.Round(priceDiff / Bot.Settings.BuyPrice * 100, 2);
                     Console.WriteLine($"Price change = {priceChange}%");
