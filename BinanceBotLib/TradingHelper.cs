@@ -100,8 +100,6 @@ namespace BinanceBotLib
                     Bot.Settings.BuyPrice = Math.Round(marketBuyPrice - priceDiff / 2, 2);
                     Bot.Settings.CoinQuantity = Math.Round(myInvestment / Bot.Settings.BuyPrice, 6);
                     Bot.Settings.SellPrice = Math.Round(myRevenue * (1 + fees) / Bot.Settings.CoinQuantity, 2);
-
-                    Bot.WriteLog("BTC balance to trade = " + Bot.Settings.CoinQuantity.ToString());
                 }
 
                 if (Bot.Settings.SellPrice > 0 && Bot.Settings.CoinQuantity > 0 && coinsBTC > Bot.Settings.CoinQuantity)
@@ -113,6 +111,7 @@ namespace BinanceBotLib
                         Bot.WriteLog($"Sold {Bot.Settings.CoinQuantity} BTC for {Bot.Settings.SellPrice}");
                         Bot.Settings.LastSellOrderID = sellOrder.Data.OrderId;
                         Bot.WriteLog("Order ID: " + sellOrder.Data.OrderId);
+                        Bot.Settings.TotalProfit += Bot.Settings.DailyProfitTarget;
                         Bot.SaveSettings();
                         Console.WriteLine();
                     }
@@ -221,7 +220,7 @@ namespace BinanceBotLib
                 {
                     trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
                     trade.BuyOrderID = buyOrder.Data.OrderId;
-                    Bot.WriteLog($"ID={trade.ID} Bought {trade.CoinQuantity} BTC for {marketPrice}");
+                    Bot.WriteLog($"ID={trade.ID} Bought {trade.CoinQuantity} BTC using {trade.CapitalCost} for {marketPrice}");
                 }
             }
         }
@@ -245,6 +244,7 @@ namespace BinanceBotLib
                         trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);
                         trade.SellOrderID = sellOrder.Data.OrderId;
                         Bot.WriteLog($"ID={trade.ID} Sold {trade.CoinQuantity} BTC for {marketPrice} with profit {trade.Profit}");
+                        Bot.Settings.TotalProfit += trade.Profit;
                     }
                 }
             }

@@ -47,11 +47,18 @@ namespace BinanceBotConsole
             int.TryParse(Console.ReadLine(), out intMode);
             _BotMode = (BotMode)intMode;
 
-            if (Bot.Settings.DailyProfitTarget <= 0)
+            // TODO: Settings summary for user
+
+            switch (_BotMode)
             {
-                Console.WriteLine("Daily Profit Target must be greater than zero!");
-                Console.ReadLine();
-                return;
+                case BotMode.DayTrade:
+                    if (Bot.Settings.DailyProfitTarget <= 0)
+                    {
+                        Console.WriteLine("Daily Profit Target must be greater than zero!");
+                        Console.ReadLine();
+                        return;
+                    }
+                    break;
             }
 
             BinanceClient.SetDefaultOptions(new BinanceClientOptions()
@@ -66,11 +73,11 @@ namespace BinanceBotConsole
             marketTickTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
             marketTickTimer.Elapsed += MarketTickTimer_Tick;
             marketTickTimer.Start();
-            Console.WriteLine("Bot initiated...");
+            Console.WriteLine($"{_BotMode.GetDescription()} Bot initiated...");
 
             Console.ReadLine();
 
-            Bot.SaveSettings();
+            Bot.SaveSettings(); // Save settings before exiting
         }
 
         private static void MarketTickTimer_Tick(object sender, ElapsedEventArgs e)

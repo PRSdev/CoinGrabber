@@ -9,6 +9,9 @@ namespace BinanceBotLib
         public string APIKey { get; set; }
         public string SecretKey { get; set; }
 
+        // General
+        public decimal TotalProfit { get; set; }
+
         // Day Trade Settings
         public decimal InvestmentMax { get; set; } = 500;
         public decimal DailyProfitTarget { get; set; } = 10;
