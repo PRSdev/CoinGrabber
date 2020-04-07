@@ -1,5 +1,4 @@
-﻿using Binance.Net.Objects;
-using ShareX.HelpersLib;
+﻿using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
 
@@ -21,9 +20,11 @@ namespace BinanceBotLib
         public decimal CoinQuantity { get; set; }
 
         // Swing Trade Settings
-        public List<BinanceOrder> OrdersList { get; set; } = new List<BinanceOrder>();
-        public decimal PriceChange { get; set; } = 4.0m;
-        public decimal BuyBelow { get; set; } = 6500m;
-        public decimal SellAbove { get; set; } = 7000m;
+        public decimal InvestmentMin { get; set; } = 100;
+        public List<TradingData> TradingDataList { get; set; } = new List<TradingData>();
+        public decimal PriceChangePercentage { get; set; } = 4.0m;
+        public decimal BuyBelow { get; set; } = 9000m;
+        public decimal SellAbove { get; set; } = 10000m;
+        public int HydraFactor { get; set; } = 3;
     }
 }
