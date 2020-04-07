@@ -63,7 +63,7 @@ namespace BinanceBotConsole
 
             Random rnd = new Random();
             Timer marketTickTimer = new Timer();
-            marketTickTimer.Interval = rnd.Next(6, 12) * 1000; // Randomly every 1-2 minutes (60-120)
+            marketTickTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
             marketTickTimer.Elapsed += MarketTickTimer_Tick;
             marketTickTimer.Start();
             Console.WriteLine("Bot initiated...");
@@ -75,6 +75,8 @@ namespace BinanceBotConsole
 
         private static void MarketTickTimer_Tick(object sender, ElapsedEventArgs e)
         {
+            Bot.LoadSettings(); // Re-read settings
+
             switch (_BotMode)
             {
                 case BotMode.DayTrade:
@@ -88,6 +90,8 @@ namespace BinanceBotConsole
                     Console.ReadLine();
                     return;
             }
+
+            Bot.SaveSettings();
         }
 
         public static void DayTrade()
@@ -146,8 +150,6 @@ namespace BinanceBotConsole
                     TradingHelper.SellOrderDayTrade();
                 }
             }
-
-            Bot.LoadSettings(); // Re-read settings
         }
     }
 }

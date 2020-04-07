@@ -209,7 +209,7 @@ namespace BinanceBotLib
             using (var client = new BinanceClient())
             {
                 var accountInfo = client.GetAccountInfo();
-
+                Console.WriteLine();
                 Bot.WriteLog("USDT balance to trade = " + Math.Round(trade.CapitalCost, 2));
 
                 decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == CoinPairs.BTCUSDT).MakerFee;
