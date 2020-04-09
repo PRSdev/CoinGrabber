@@ -75,6 +75,10 @@ namespace BinanceBotConsole
             marketTickTimer.Start();
             Console.WriteLine($"{_BotMode.GetDescription()} Bot initiated...");
 
+#if DEBUG
+            TradingHelper.SwingTrade();
+#endif
+
             Console.ReadLine();
 
             Bot.SaveSettings(); // Save settings before exiting

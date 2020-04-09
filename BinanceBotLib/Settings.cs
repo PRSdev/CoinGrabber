@@ -23,6 +23,7 @@ namespace BinanceBotLib
         public decimal CoinQuantity { get; set; }
 
         // Swing Trade Settings
+        public CoinPair CoinPair { get; set; } = new CoinPair("BTC", "USDT");
         public decimal InvestmentMin { get; set; } = 100;
         public List<TradingData> TradingDataList { get; set; } = new List<TradingData>();
         public decimal PriceChangePercentage { get; set; } = 4.0m;

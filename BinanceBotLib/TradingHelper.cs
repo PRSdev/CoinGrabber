@@ -11,6 +11,7 @@ namespace BinanceBotLib
     public class TradingData
     {
         public int ID { get; set; }
+        public CoinPair CoinPair { get; set; }
         public decimal CapitalCost { get; set; }
         public decimal CoinQuantity { get; set; }
         public decimal PriceChangePercentage { get; set; }
@@ -35,8 +36,8 @@ namespace BinanceBotLib
         {
             using (var client = new BinanceClient())
             {
-                var queryBuyOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastBuyOrderID);
-                var querySellOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastSellOrderID);
+                var queryBuyOrder = client.GetOrder(Bot.Settings.CoinPair.ToString(), orderId: Bot.Settings.LastBuyOrderID); ;
+                var querySellOrder = client.GetOrder(Bot.Settings.CoinPair.ToString(), orderId: Bot.Settings.LastSellOrderID);
 
                 if (queryBuyOrder.Data != null)
                 {
@@ -94,19 +95,19 @@ namespace BinanceBotLib
             using (var client = new BinanceClient())
             {
                 var accountInfo = client.GetAccountInfo();
-                decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == Coins.USDT).Free;
+                decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair2).Free;
 
                 decimal myCapitalCost = Bot.Settings.InvestmentMax == 0 ? coinsUSDT : Math.Min(Bot.Settings.InvestmentMax, coinsUSDT);
                 Bot.WriteLog("USDT balance to trade = " + myCapitalCost.ToString());
 
-                decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == CoinPairs.BTCUSDT).MakerFee;
+                decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == Bot.Settings.CoinPair.ToString()).MakerFee;
                 decimal myInvestment = myCapitalCost / (1 + fees);
 
                 decimal myRevenue = myCapitalCost + Bot.Settings.DailyProfitTarget;
                 Bot.WriteLog($"Receive target = {myRevenue}");
 
                 // New method from: https://docs.google.com/spreadsheets/d/1be6zYuzKyJMZ4Yn_pUmIt-YRTON3YJKbq_lenL2Kldc/edit?usp=sharing
-                decimal marketBuyPrice = client.GetPrice(CoinPairs.BTCUSDT).Data.Price;
+                decimal marketBuyPrice = client.GetPrice(Bot.Settings.CoinPair.ToString()).Data.Price;
                 Bot.WriteLog($"Market price = {marketBuyPrice}");
 
                 decimal marketSellPrice = myRevenue * (1 + fees) / (myInvestment / marketBuyPrice);
@@ -116,7 +117,7 @@ namespace BinanceBotLib
                 Bot.Settings.CoinQuantity = Math.Round(myInvestment / Bot.Settings.BuyPrice, 6);
 
                 Bot.WriteLog($"Buying {Bot.Settings.CoinQuantity} BTC for {Bot.Settings.BuyPrice}");
-                var buyOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Buy, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: Bot.Settings.BuyPrice, timeInForce: TimeInForce.GoodTillCancel);
+                var buyOrder = client.PlaceOrder(Bot.Settings.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: Bot.Settings.BuyPrice, timeInForce: TimeInForce.GoodTillCancel);
 
                 if (buyOrder.Success)
                 {
@@ -139,15 +140,15 @@ namespace BinanceBotLib
             using (var client = new BinanceClient())
             {
                 var accountInfo = client.GetAccountInfo();
-                decimal coinsBTC = accountInfo.Data.Balances.Single(s => s.Asset == Coins.BTC).Free;
+                decimal coinsBTC = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair1).Free;
 
                 // if user has BTC rather than USDT for capital, then calculate SellPrice and CoinQuanitity
                 if (Bot.Settings.SellPrice == 0 || Bot.Settings.CoinQuantity == 0)
                 {
-                    decimal marketBuyPrice = client.GetPrice(CoinPairs.BTCUSDT).Data.Price;
+                    decimal marketBuyPrice = client.GetPrice(Bot.Settings.CoinPair.ToString()).Data.Price;
                     decimal myCapitalCost = Bot.Settings.InvestmentMax == 0 ? marketBuyPrice * coinsBTC : Math.Min(Bot.Settings.InvestmentMax, marketBuyPrice * coinsBTC);
 
-                    decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == CoinPairs.BTCUSDT).MakerFee;
+                    decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == Bot.Settings.CoinPair.ToString()).MakerFee;
                     decimal myInvestment = myCapitalCost / (1 + fees);
 
                     decimal myRevenue = myCapitalCost + Bot.Settings.DailyProfitTarget;
@@ -162,7 +163,7 @@ namespace BinanceBotLib
 
                 if (Bot.Settings.SellPrice > 0 && Bot.Settings.CoinQuantity > 0 && coinsBTC > Bot.Settings.CoinQuantity)
                 {
-                    var sellOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Sell, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: Bot.Settings.SellPrice, timeInForce: TimeInForce.GoodTillCancel);
+                    var sellOrder = client.PlaceOrder(Bot.Settings.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: Bot.Settings.SellPrice, timeInForce: TimeInForce.GoodTillCancel);
 
                     if (sellOrder.Success)
                     {
@@ -183,11 +184,11 @@ namespace BinanceBotLib
             using (var client = new BinanceClient())
             {
                 var accountInfo = client.GetAccountInfo();
-                decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == Coins.USDT).Free;
-                decimal coinsBTC = accountInfo.Data.Balances.Single(s => s.Asset == Coins.BTC).Free;
+                decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair2).Free;
+                decimal coinsBTC = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair1).Free;
 
                 // Check if user has more USDT or more BTC
-                decimal marketPrice = client.GetPrice(CoinPairs.BTCUSDT).Data.Price;
+                decimal marketPrice = client.GetPrice(Bot.Settings.CoinPair.ToString()).Data.Price;
                 decimal btcValue = marketPrice * coinsBTC;
 
                 // cleanup
@@ -244,14 +245,14 @@ namespace BinanceBotLib
             }
         }
 
-        public static void SwingTrade(decimal marketPrice)
+        private static void SwingTrade(decimal marketPrice)
         {
             if (marketPrice < Bot.Settings.BuyBelow)
             {
                 using (var client = new BinanceClient())
                 {
                     var accountInfo = client.GetAccountInfo();
-                    decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == Coins.USDT).Free;
+                    decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair2).Free;
 
                     TradingData trade = new TradingData();
                     trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);
@@ -263,7 +264,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void BuyOrderSwingTrade(TradingData trade, decimal marketPrice)
+        private static void BuyOrderSwingTrade(TradingData trade, decimal marketPrice)
         {
             if (marketPrice < Bot.Settings.BuyBelow)
             {
@@ -272,11 +273,11 @@ namespace BinanceBotLib
                     var accountInfo = client.GetAccountInfo();
                     Console.WriteLine();
 
-                    decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == CoinPairs.BTCUSDT).MakerFee;
+                    decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == Bot.Settings.CoinPair.ToString()).MakerFee;
                     decimal myInvestment = trade.CapitalCost / (1 + fees);
                     trade.CoinQuantity = Math.Round(myInvestment / marketPrice, 6);
 
-                    var buyOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: marketPrice, timeInForce: TimeInForce.GoodTillCancel);
+                    var buyOrder = client.PlaceOrder(Bot.Settings.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: marketPrice, timeInForce: TimeInForce.GoodTillCancel);
                     if (buyOrder.Success)
                     {
                         trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
@@ -287,7 +288,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void SellOrderSwingTrade(TradingData trade, decimal marketPrice)
+        private static void SellOrderSwingTrade(TradingData trade, decimal marketPrice)
         {
             if (marketPrice > Bot.Settings.SellAbove)
             {
@@ -297,10 +298,10 @@ namespace BinanceBotLib
 
                     if (trade.CapitalCost > Bot.Settings.InvestmentMin)
                     {
-                        decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == CoinPairs.BTCUSDT).MakerFee;
+                        decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == Bot.Settings.CoinPair.ToString()).MakerFee;
                         decimal myInvestment = trade.CapitalCost / (1 + fees);
 
-                        var sellOrder = client.PlaceOrder(CoinPairs.BTCUSDT, OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: marketPrice, timeInForce: TimeInForce.GoodTillCancel);
+                        var sellOrder = client.PlaceOrder(Bot.Settings.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: marketPrice, timeInForce: TimeInForce.GoodTillCancel);
                         if (sellOrder.Success)
                         {
                             trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);
