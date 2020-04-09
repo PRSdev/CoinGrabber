@@ -31,6 +31,64 @@ namespace BinanceBotLib
 
     public static class TradingHelper
     {
+        public static void DayTrade()
+        {
+            using (var client = new BinanceClient())
+            {
+                var queryBuyOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastBuyOrderID);
+                var querySellOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastSellOrderID);
+
+                if (queryBuyOrder.Data != null)
+                {
+                    switch (queryBuyOrder.Data.Status)
+                    {
+                        case OrderStatus.Filled:
+                            TradingHelper.SellOrderDayTrade();
+                            break;
+                        case OrderStatus.Canceled:
+                            Bot.WriteLog($"Buy order {Bot.Settings.LastBuyOrderID} has been cancelled by the user.");
+                            TradingHelper.BuyOrderDayTrade();
+                            break;
+                        case OrderStatus.New:
+                            Console.WriteLine($"Waiting {DateTime.UtcNow - queryBuyOrder.Data.Time} for the {Bot.Settings.BuyPrice} buy order to fill...");
+                            break;
+                        default:
+                            Console.WriteLine("Unhandled buy order outcome. Reload application...");
+                            break;
+                    }
+                }
+                else if (querySellOrder.Data != null)
+                {
+                    switch (querySellOrder.Data.Status)
+                    {
+                        case OrderStatus.Filled:
+                            TradingHelper.BuyOrderDayTrade();
+                            break;
+                        case OrderStatus.Canceled:
+                            Bot.WriteLog($"Sell order {Bot.Settings.LastSellOrderID} has been cancelled by the user.");
+                            TradingHelper.SellOrderDayTrade();
+                            break;
+                        case OrderStatus.New:
+                            Console.WriteLine($"Waiting {DateTime.UtcNow - querySellOrder.Data.Time} for the {Bot.Settings.SellPrice} sell order to fill...");
+                            break;
+                        default:
+                            Console.WriteLine("Unhandled sell order outcome. Reload application...");
+                            break;
+                    }
+                }
+                else if (queryBuyOrder.Data == null)
+                {
+                    Console.WriteLine("Could not find any previous buy orders.");
+                    TradingHelper.BuyOrderDayTrade();
+                }
+                else if (querySellOrder.Data == null)
+                {
+                    Console.WriteLine("Could not find any previous sell orders.");
+                    TradingHelper.SellOrderDayTrade();
+                }
+            }
+        }
+
         public static void BuyOrderDayTrade()
         {
             using (var client = new BinanceClient())
@@ -119,7 +177,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void SwingTrade()
+        public static void PriceChangeTrade()
         {
             // Check USDT and BTC balances
             using (var client = new BinanceClient())
@@ -144,7 +202,7 @@ namespace BinanceBotLib
                         // buy
                         if (marketPrice < Bot.Settings.BuyBelow)
                         {
-                            BuyOrderSwingTrade(marketPrice);
+                            PriceChangeTrade(marketPrice);
                         }
                     }
                     else
@@ -155,7 +213,7 @@ namespace BinanceBotLib
                             TradingData trade0 = new TradingData();
                             trade0.CoinQuantity = Math.Round(coinsBTC / Bot.Settings.HydraFactor, 6);
                             Bot.Settings.TradingDataList.Add(trade0);
-                            SellOrderSwingTrade(trade0, marketPrice);
+                            SellOrderPriceChangeTrade(trade0, marketPrice);
                         }
                     }
                 }
@@ -172,7 +230,7 @@ namespace BinanceBotLib
                         // sell if positive price change
                         if (trade.PriceChangePercentage > Bot.Settings.PriceChangePercentage)
                         {
-                            SellOrderSwingTrade(trade, marketPrice);
+                            SellOrderPriceChangeTrade(trade, marketPrice);
                         }
                         Thread.Sleep(200);
                     }
@@ -180,13 +238,13 @@ namespace BinanceBotLib
                     if (Bot.Settings.TradingDataList.Last<TradingData>().PriceChangePercentage < Bot.Settings.PriceChangePercentage * -1)
                     {
                         // buy more if negative price change
-                        BuyOrderSwingTrade(marketPrice);
+                        PriceChangeTrade(marketPrice);
                     }
                 }
             }
         }
 
-        public static void BuyOrderSwingTrade(decimal marketPrice)
+        public static void PriceChangeTrade(decimal marketPrice)
         {
             if (marketPrice < Bot.Settings.BuyBelow)
             {
@@ -196,16 +254,16 @@ namespace BinanceBotLib
                     decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == Coins.USDT).Free;
 
                     TradingData trade = new TradingData();
-                    trade.CapitalCost = coinsUSDT / Bot.Settings.HydraFactor;
+                    trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);
                     trade.ID = Bot.Settings.TradingDataList.Count;
                     Bot.Settings.TradingDataList.Add(trade);
 
-                    BuyOrderSwingTrade(trade, marketPrice);
+                    BuyOrderPriceChangeTrade(trade, marketPrice);
                 }
             }
         }
 
-        public static void BuyOrderSwingTrade(TradingData trade, decimal marketPrice)
+        public static void BuyOrderPriceChangeTrade(TradingData trade, decimal marketPrice)
         {
             if (marketPrice < Bot.Settings.BuyBelow)
             {
@@ -229,7 +287,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void SellOrderSwingTrade(TradingData trade, decimal marketPrice)
+        public static void SellOrderPriceChangeTrade(TradingData trade, decimal marketPrice)
         {
             if (marketPrice > Bot.Settings.SellAbove)
             {

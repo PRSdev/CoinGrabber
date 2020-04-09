@@ -87,10 +87,10 @@ namespace BinanceBotConsole
             switch (_BotMode)
             {
                 case BotMode.DayTrade:
-                    DayTrade();
+                    TradingHelper.DayTrade();
                     break;
-                case BotMode.SwingTrade:
-                    TradingHelper.SwingTrade();
+                case BotMode.PriceChangeTrade:
+                    TradingHelper.PriceChangeTrade();
                     break;
                 default:
                     Console.WriteLine("Unhandled Bot Mode.");
@@ -99,64 +99,6 @@ namespace BinanceBotConsole
             }
 
             Bot.SaveSettings();
-        }
-
-        public static void DayTrade()
-        {
-            using (var client = new BinanceClient())
-            {
-                var queryBuyOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastBuyOrderID);
-                var querySellOrder = client.GetOrder(CoinPairs.BTCUSDT, orderId: Bot.Settings.LastSellOrderID);
-
-                if (queryBuyOrder.Data != null)
-                {
-                    switch (queryBuyOrder.Data.Status)
-                    {
-                        case OrderStatus.Filled:
-                            TradingHelper.SellOrderDayTrade();
-                            break;
-                        case OrderStatus.Canceled:
-                            Bot.WriteLog($"Buy order {Bot.Settings.LastBuyOrderID} has been cancelled by the user.");
-                            TradingHelper.BuyOrderDayTrade();
-                            break;
-                        case OrderStatus.New:
-                            Console.WriteLine($"Waiting {DateTime.UtcNow - queryBuyOrder.Data.Time} for the {Bot.Settings.BuyPrice} buy order to fill...");
-                            break;
-                        default:
-                            Console.WriteLine("Unhandled buy order outcome. Reload application...");
-                            break;
-                    }
-                }
-                else if (querySellOrder.Data != null)
-                {
-                    switch (querySellOrder.Data.Status)
-                    {
-                        case OrderStatus.Filled:
-                            TradingHelper.BuyOrderDayTrade();
-                            break;
-                        case OrderStatus.Canceled:
-                            Bot.WriteLog($"Sell order {Bot.Settings.LastSellOrderID} has been cancelled by the user.");
-                            TradingHelper.SellOrderDayTrade();
-                            break;
-                        case OrderStatus.New:
-                            Console.WriteLine($"Waiting {DateTime.UtcNow - querySellOrder.Data.Time} for the {Bot.Settings.SellPrice} sell order to fill...");
-                            break;
-                        default:
-                            Console.WriteLine("Unhandled sell order outcome. Reload application...");
-                            break;
-                    }
-                }
-                else if (queryBuyOrder.Data == null)
-                {
-                    Console.WriteLine("Could not find any previous buy orders.");
-                    TradingHelper.BuyOrderDayTrade();
-                }
-                else if (querySellOrder.Data == null)
-                {
-                    Console.WriteLine("Could not find any previous sell orders.");
-                    TradingHelper.SellOrderDayTrade();
-                }
-            }
         }
     }
 }
