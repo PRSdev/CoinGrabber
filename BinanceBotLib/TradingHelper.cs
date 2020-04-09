@@ -177,7 +177,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void PriceChangeTrade()
+        public static void SwingTrade()
         {
             // Check USDT and BTC balances
             using (var client = new BinanceClient())
@@ -202,7 +202,7 @@ namespace BinanceBotLib
                         // buy
                         if (marketPrice < Bot.Settings.BuyBelow)
                         {
-                            PriceChangeTrade(marketPrice);
+                            SwingTrade(marketPrice);
                         }
                     }
                     else
@@ -213,7 +213,7 @@ namespace BinanceBotLib
                             TradingData trade0 = new TradingData();
                             trade0.CoinQuantity = Math.Round(coinsBTC / Bot.Settings.HydraFactor, 6);
                             Bot.Settings.TradingDataList.Add(trade0);
-                            SellOrderPriceChangeTrade(trade0, marketPrice);
+                            SellOrderSwingTrade(trade0, marketPrice);
                         }
                     }
                 }
@@ -230,7 +230,7 @@ namespace BinanceBotLib
                         // sell if positive price change
                         if (trade.PriceChangePercentage > Bot.Settings.PriceChangePercentage)
                         {
-                            SellOrderPriceChangeTrade(trade, marketPrice);
+                            SellOrderSwingTrade(trade, marketPrice);
                         }
                         Thread.Sleep(200);
                     }
@@ -238,13 +238,13 @@ namespace BinanceBotLib
                     if (Bot.Settings.TradingDataList.Last<TradingData>().PriceChangePercentage < Bot.Settings.PriceChangePercentage * -1)
                     {
                         // buy more if negative price change
-                        PriceChangeTrade(marketPrice);
+                        SwingTrade(marketPrice);
                     }
                 }
             }
         }
 
-        public static void PriceChangeTrade(decimal marketPrice)
+        public static void SwingTrade(decimal marketPrice)
         {
             if (marketPrice < Bot.Settings.BuyBelow)
             {
@@ -258,12 +258,12 @@ namespace BinanceBotLib
                     trade.ID = Bot.Settings.TradingDataList.Count;
                     Bot.Settings.TradingDataList.Add(trade);
 
-                    BuyOrderPriceChangeTrade(trade, marketPrice);
+                    BuyOrderSwingTrade(trade, marketPrice);
                 }
             }
         }
 
-        public static void BuyOrderPriceChangeTrade(TradingData trade, decimal marketPrice)
+        public static void BuyOrderSwingTrade(TradingData trade, decimal marketPrice)
         {
             if (marketPrice < Bot.Settings.BuyBelow)
             {
@@ -287,7 +287,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void SellOrderPriceChangeTrade(TradingData trade, decimal marketPrice)
+        public static void SellOrderSwingTrade(TradingData trade, decimal marketPrice)
         {
             if (marketPrice > Bot.Settings.SellAbove)
             {

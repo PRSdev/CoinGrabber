@@ -10,9 +10,6 @@ namespace BinanceBotLib
         [Description("Daily Trade")]
         DayTrade,
 
-        [Description("Price Change Trade")]
-        PriceChangeTrade,
-
         [Description("Swing Trade")]
         SwingTrade
     }

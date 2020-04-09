@@ -89,8 +89,8 @@ namespace BinanceBotConsole
                 case BotMode.DayTrade:
                     TradingHelper.DayTrade();
                     break;
-                case BotMode.PriceChangeTrade:
-                    TradingHelper.PriceChangeTrade();
+                case BotMode.SwingTrade:
+                    TradingHelper.SwingTrade();
                     break;
                 default:
                     Console.WriteLine("Unhandled Bot Mode.");
