@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BinanceBotLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,9 @@ namespace BinanceBotUI
         public SettingsWindow()
         {
             InitializeComponent();
+
+            this.Text = $"{Application.ProductName} Settings";
+            pgSettings.SelectedObject = Bot.Settings;
         }
     }
 }

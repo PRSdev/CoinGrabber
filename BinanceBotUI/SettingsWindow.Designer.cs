@@ -28,22 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.pgSettings = new System.Windows.Forms.PropertyGrid();
             this.SuspendLayout();
             // 
-            // propertyGrid1
+            // pgSettings
             // 
-            this.propertyGrid1.Location = new System.Drawing.Point(8, 8);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(776, 760);
-            this.propertyGrid1.TabIndex = 0;
+            this.pgSettings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pgSettings.Location = new System.Drawing.Point(0, 0);
+            this.pgSettings.Name = "pgSettings";
+            this.pgSettings.PropertySort = System.Windows.Forms.PropertySort.Categorized;
+            this.pgSettings.Size = new System.Drawing.Size(778, 744);
+            this.pgSettings.TabIndex = 0;
             // 
             // SettingsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(792, 776);
-            this.Controls.Add(this.propertyGrid1);
+            this.ClientSize = new System.Drawing.Size(778, 744);
+            this.Controls.Add(this.pgSettings);
             this.Name = "SettingsWindow";
             this.Text = "SettingsWindow";
             this.ResumeLayout(false);
@@ -52,6 +54,6 @@
 
         #endregion
 
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.PropertyGrid pgSettings;
     }
 }
