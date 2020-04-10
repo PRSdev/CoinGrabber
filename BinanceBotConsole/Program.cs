@@ -70,6 +70,7 @@ namespace BinanceBotConsole
 
 #if DEBUG
             TradingHelper.SwingTrade();
+            Console.WriteLine();
 #endif
 
             Random rnd = new Random();

@@ -121,7 +121,7 @@ namespace BinanceBotLib
                 Bot.Settings.BuyPrice = Math.Round(marketBuyPrice - priceDiff / 2, 2);
                 Bot.Settings.CoinQuantity = Math.Round(myInvestment / Bot.Settings.BuyPrice, 6);
 
-                Bot.WriteLog($"Buying {Bot.Settings.CoinQuantity} BTC for {Bot.Settings.BuyPrice}");
+                Bot.WriteLog($"Buying {Bot.Settings.CoinQuantity} {Bot.Settings.CoinPair.Pair1} for {Bot.Settings.BuyPrice}");
                 var buyOrder = client.PlaceOrder(Bot.Settings.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: Bot.Settings.BuyPrice, timeInForce: TimeInForce.GoodTillCancel);
 
                 if (buyOrder.Success)
@@ -145,13 +145,13 @@ namespace BinanceBotLib
             using (var client = new BinanceClient())
             {
                 var accountInfo = client.GetAccountInfo();
-                decimal coinsBTC = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair1).Free;
+                decimal coinsQuantity = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair1).Free;
 
-                // if user has BTC rather than USDT for capital, then calculate SellPrice and CoinQuanitity
+                // if user has crypto rather than USDT for capital, then calculate SellPrice and CoinQuanitity
                 if (Bot.Settings.SellPrice == 0 || Bot.Settings.CoinQuantity == 0)
                 {
                     decimal marketBuyPrice = client.GetPrice(Bot.Settings.CoinPair.ToString()).Data.Price;
-                    decimal myCapitalCost = Bot.Settings.InvestmentMax == 0 ? marketBuyPrice * coinsBTC : Math.Min(Bot.Settings.InvestmentMax, marketBuyPrice * coinsBTC);
+                    decimal myCapitalCost = Bot.Settings.InvestmentMax == 0 ? marketBuyPrice * coinsQuantity : Math.Min(Bot.Settings.InvestmentMax, marketBuyPrice * coinsQuantity);
 
                     decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == Bot.Settings.CoinPair.ToString()).MakerFee;
                     decimal myInvestment = myCapitalCost / (1 + fees);
@@ -166,13 +166,13 @@ namespace BinanceBotLib
                     Bot.Settings.SellPrice = Math.Round(myRevenue * (1 + fees) / Bot.Settings.CoinQuantity, 2);
                 }
 
-                if (Bot.Settings.SellPrice > 0 && Bot.Settings.CoinQuantity > 0 && coinsBTC > Bot.Settings.CoinQuantity)
+                if (Bot.Settings.SellPrice > 0 && Bot.Settings.CoinQuantity > 0 && coinsQuantity > Bot.Settings.CoinQuantity)
                 {
                     var sellOrder = client.PlaceOrder(Bot.Settings.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: Bot.Settings.CoinQuantity, price: Bot.Settings.SellPrice, timeInForce: TimeInForce.GoodTillCancel);
 
                     if (sellOrder.Success)
                     {
-                        Bot.WriteLog($"Sold {Bot.Settings.CoinQuantity} BTC for {Bot.Settings.SellPrice}");
+                        Bot.WriteLog($"Sold {Bot.Settings.CoinQuantity} {Bot.Settings.CoinPair.Pair1} for {Bot.Settings.SellPrice}");
                         Bot.Settings.LastSellOrderID = sellOrder.Data.OrderId;
                         Bot.WriteLog("Order ID: " + sellOrder.Data.OrderId);
                         Bot.Settings.TotalProfit += Bot.Settings.DailyProfitTarget;
@@ -223,11 +223,9 @@ namespace BinanceBotLib
                     Console.WriteLine();
                     foreach (TradingData trade in Bot.Settings.TradingDataList)
                     {
-                        decimal marketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
-                        Console.WriteLine($"{trade.CoinPair.ToString()} {marketPrice}");
+                        decimal marketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price, 2);
                         trade.PriceChangePercentage = Math.Round((marketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100, 2);
-                        Console.WriteLine($"ID={trade.ID} Price={trade.BuyPriceAfterFees} Change={trade.PriceChangePercentage}%");
-                        Console.WriteLine();
+                        Console.WriteLine($"ID={trade.ID} CoinPair={trade.CoinPair.ToString()} BuyPrice={trade.BuyPriceAfterFees} MarketPrice={marketPrice} Change={trade.PriceChangePercentage}%");
 
                         // sell if positive price change
                         if (trade.PriceChangePercentage > Bot.Settings.PriceChangePercentage)
@@ -255,24 +253,35 @@ namespace BinanceBotLib
                 decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == trade.CoinPair.Pair2).Free;
 
                 trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);
-                decimal marketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
-                if (marketPrice < Bot.Settings.BuyBelow)
+                if (trade.CapitalCost > Bot.Settings.InvestmentMin)
                 {
-                    Console.WriteLine();
-
-                    decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
-                    decimal myInvestment = trade.CapitalCost / (1 + fees);
-                    trade.CoinQuantity = Math.Round(myInvestment / marketPrice, 5);
-
-                    var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: marketPrice, timeInForce: TimeInForce.GoodTillCancel);
-                    if (buyOrder.Success)
+                    decimal marketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
+                    if (marketPrice < Bot.Settings.BuyBelow)
                     {
-                        trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
-                        trade.BuyOrderID = buyOrder.Data.OrderId;
-                        trade.ID = Bot.Settings.TradingDataList.Count;
-                        Bot.Settings.TradingDataList.Add(trade);
-                        Bot.WriteLog($"ID={trade.ID} Bought {trade.CoinQuantity} BTC using {trade.CapitalCost} for {marketPrice}");
+                        Console.WriteLine();
+
+                        decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
+                        decimal myInvestment = trade.CapitalCost / (1 + fees);
+                        trade.CoinQuantity = Math.Round(myInvestment / marketPrice, 5);
+
+                        var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: marketPrice, timeInForce: TimeInForce.GoodTillCancel);
+                        if (buyOrder.Success)
+                        {
+                            trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
+                            trade.BuyOrderID = buyOrder.Data.OrderId;
+                            trade.ID = Bot.Settings.TradingDataList.Count;
+                            Bot.Settings.TradingDataList.Add(trade);
+                            Bot.WriteLog($"ID={trade.ID} Bought {trade.CoinQuantity} {trade.CoinPair.Pair1} using {trade.CapitalCost} for {marketPrice}");
+                        }
                     }
+                    else
+                    {
+                        Console.WriteLine($"Market price is above maximum allowable buy Price.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Capital cost is too low to buy more.");
                 }
             }
         }
@@ -297,7 +306,7 @@ namespace BinanceBotLib
                         {
                             trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);
                             trade.SellOrderID = sellOrder.Data.OrderId;
-                            Bot.WriteLog($"ID={trade.ID} Sold {trade.CoinQuantity} BTC for {marketPrice} with profit {trade.Profit}");
+                            Bot.WriteLog($"ID={trade.ID} Sold {trade.CoinQuantity} {trade.CoinPair.Pair1} for {marketPrice} with profit {trade.Profit}");
                             Bot.Settings.TotalProfit += trade.Profit;
                         }
                     }
