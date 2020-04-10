@@ -68,16 +68,16 @@ namespace BinanceBotConsole
                 LogWriters = new List<TextWriter> { Console.Out }
             });
 
+#if DEBUG
+            TradingHelper.SwingTrade();
+#endif
+
             Random rnd = new Random();
             Timer marketTickTimer = new Timer();
             marketTickTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
             marketTickTimer.Elapsed += MarketTickTimer_Tick;
             marketTickTimer.Start();
             Console.WriteLine($"{_BotMode.GetDescription()} Bot initiated...");
-
-#if DEBUG
-            TradingHelper.SwingTrade();
-#endif
 
             Console.ReadLine();
 

@@ -9,6 +9,10 @@ namespace BinanceBotLib
         public string Pair1 { get; set; }
         public string Pair2 { get; set; }
 
+        public CoinPair()
+        {
+        }
+
         public CoinPair(string pair1, string pair2)
         {
             Pair1 = pair1;
