@@ -18,8 +18,6 @@ namespace BinanceBotConsole
     internal class Program
 
     {
-        private static BotMode _BotMode = BotMode.DayTrade;
-
         private static void Main(string[] args)
         {
             Bot.LoadSettings();
@@ -45,11 +43,11 @@ namespace BinanceBotConsole
 
             int intMode;
             int.TryParse(Console.ReadLine(), out intMode);
-            _BotMode = (BotMode)intMode;
+            Bot.Settings.BotMode = (BotMode)intMode;
 
             // TODO: Settings summary for user
 
-            switch (_BotMode)
+            switch (Bot.Settings.BotMode)
             {
                 case BotMode.DayTrade:
                     if (Bot.Settings.DailyProfitTarget <= 0)
@@ -73,37 +71,12 @@ namespace BinanceBotConsole
             Console.WriteLine();
 #endif
 
-            Random rnd = new Random();
-            Timer marketTickTimer = new Timer();
-            marketTickTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
-            marketTickTimer.Elapsed += MarketTickTimer_Tick;
-            marketTickTimer.Start();
-            Console.WriteLine($"{_BotMode.GetDescription()} Bot initiated...");
+            Bot.SaveSettings(); // Save settings before exiting
+
+            Console.WriteLine($"{Bot.Settings.BotMode.GetDescription()} Bot initiated...");
+            Bot.Start();
 
             Console.ReadLine();
-
-            Bot.SaveSettings(); // Save settings before exiting
-        }
-
-        private static void MarketTickTimer_Tick(object sender, ElapsedEventArgs e)
-        {
-            Bot.LoadSettings(); // Re-read settings
-
-            switch (_BotMode)
-            {
-                case BotMode.DayTrade:
-                    TradingHelper.DayTrade();
-                    break;
-                case BotMode.SwingTrade:
-                    TradingHelper.SwingTrade();
-                    break;
-                default:
-                    Console.WriteLine("Unhandled Bot Mode.");
-                    Console.ReadLine();
-                    return;
-            }
-
-            Bot.SaveSettings();
         }
     }
 }
