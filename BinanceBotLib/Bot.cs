@@ -1,8 +1,13 @@
-﻿using ShareX.HelpersLib;
+﻿using Binance.Net;
+using Binance.Net.Objects;
+using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Logging;
+using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Timers;
 
 namespace BinanceBotLib
@@ -57,16 +62,32 @@ namespace BinanceBotLib
             logger.WriteLine(message);
         }
 
-        public static void Start()
+        private static void ThreadWorker_DoWork()
         {
+#if DEBUG
+            TradingHelper.SwingTrade();
+#endif
+
             Random rnd = new Random();
-            Timer marketTickTimer = new System.Timers.Timer();
-            marketTickTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
-            marketTickTimer.Elapsed += MarketTickTimer_Tick;
-            marketTickTimer.Start();
+            System.Timers.Timer marketTimer = new System.Timers.Timer();
+            marketTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
+            marketTimer.Elapsed += MarketTimer_Tick;
+            marketTimer.Start();
         }
 
-        private static void MarketTickTimer_Tick(object sender, ElapsedEventArgs e)
+        public static void Start()
+        {
+            if (TradingHelper.ThreadWorker == null)
+            {
+                // if timer is null then Init() has not been called
+                TradingHelper.Init();
+                TradingHelper.ThreadWorker.DoWork += ThreadWorker_DoWork;
+            }
+
+            TradingHelper.ThreadWorker.Start(ApartmentState.STA);
+        }
+
+        private static void MarketTimer_Tick(object sender, ElapsedEventArgs e)
         {
             Bot.LoadSettings(); // Re-read settings
 

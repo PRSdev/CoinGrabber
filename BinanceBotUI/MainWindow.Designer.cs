@@ -38,6 +38,7 @@
             this.gbBotMode = new System.Windows.Forms.GroupBox();
             this.gbCoinPair = new System.Windows.Forms.GroupBox();
             this.cboNewDefaultCoinPair = new System.Windows.Forms.ComboBox();
+            this.lbStatus = new System.Windows.Forms.ListBox();
             this.gbStatistics.SuspendLayout();
             this.gbBotMode.SuspendLayout();
             this.gbCoinPair.SuspendLayout();
@@ -127,11 +128,22 @@
             this.cboNewDefaultCoinPair.TabIndex = 3;
             this.cboNewDefaultCoinPair.SelectedIndexChanged += new System.EventHandler(this.cboNewDefaultCoinPair_SelectedIndexChanged);
             // 
+            // lbStatus
+            // 
+            this.lbStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lbStatus.FormattingEnabled = true;
+            this.lbStatus.ItemHeight = 20;
+            this.lbStatus.Location = new System.Drawing.Point(0, 280);
+            this.lbStatus.Name = "lbStatus";
+            this.lbStatus.Size = new System.Drawing.Size(778, 264);
+            this.lbStatus.TabIndex = 6;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 544);
+            this.Controls.Add(this.lbStatus);
             this.Controls.Add(this.gbCoinPair);
             this.Controls.Add(this.gbBotMode);
             this.Controls.Add(this.gbStatistics);
@@ -140,6 +152,7 @@
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.gbStatistics.ResumeLayout(false);
             this.gbStatistics.PerformLayout();
@@ -160,6 +173,7 @@
         private System.Windows.Forms.GroupBox gbBotMode;
         private System.Windows.Forms.GroupBox gbCoinPair;
         private System.Windows.Forms.ComboBox cboNewDefaultCoinPair;
+        private System.Windows.Forms.ListBox lbStatus;
     }
 }
 

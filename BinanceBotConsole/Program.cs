@@ -30,8 +30,6 @@ namespace BinanceBotConsole
 
                 Console.Write("Enter Binance Secret Key: ");
                 Bot.Settings.SecretKey = Console.ReadLine();
-
-                Bot.SaveSettings(); // Save API Key and Secret Key
             }
 
             // Choose Bot mode
@@ -45,7 +43,7 @@ namespace BinanceBotConsole
             int.TryParse(Console.ReadLine(), out intMode);
             Bot.Settings.BotMode = (BotMode)intMode;
 
-            // TODO: Settings summary for user
+            Bot.SaveSettings();
 
             switch (Bot.Settings.BotMode)
             {
@@ -59,22 +57,8 @@ namespace BinanceBotConsole
                     break;
             }
 
-            BinanceClient.SetDefaultOptions(new BinanceClientOptions()
-            {
-                ApiCredentials = new ApiCredentials(Bot.Settings.APIKey, Bot.Settings.SecretKey),
-                LogVerbosity = LogVerbosity.Error,
-                LogWriters = new List<TextWriter> { Console.Out }
-            });
-
-#if DEBUG
-            TradingHelper.SwingTrade();
-            Console.WriteLine();
-#endif
-
-            Bot.SaveSettings(); // Save settings before exiting
-
-            Console.WriteLine($"{Bot.Settings.BotMode.GetDescription()} Bot initiated...");
             Bot.Start();
+            Console.WriteLine($"{Bot.Settings.BotMode.GetDescription()} Bot started...");
 
             Console.ReadLine();
         }

@@ -42,7 +42,20 @@ namespace BinanceBotUI
 
         private void btnStartStop_Click(object sender, EventArgs e)
         {
+            TradingHelper.PriceChecked += TradingHelper_PriceChecked;
+            TradingHelper.OrderSucceeded += TradingHelper_OrderSuccess;
+
             Bot.Start();
+        }
+
+        private void TradingHelper_PriceChecked(TradingData trade)
+        {
+            lbStatus.Items.Add(trade.ToStringPriceCheck());
+        }
+
+        private void TradingHelper_OrderSuccess(TradingData trade)
+        {
+            lbStatus.Items.Add(trade.ToString());
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -59,6 +72,11 @@ namespace BinanceBotUI
         private void cboBotMode_SelectedIndexChanged(object sender, EventArgs e)
         {
             Bot.Settings.BotMode = (BotMode)cboBotMode.SelectedIndex;
+        }
+
+        private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Bot.SaveSettings();
         }
     }
 }

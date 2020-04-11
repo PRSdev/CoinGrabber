@@ -1,42 +1,40 @@
 ﻿using Binance.Net;
 using Binance.Net.Objects;
+using CryptoExchange.Net.Authentication;
+using CryptoExchange.Net.Logging;
+using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 
 namespace BinanceBotLib
 {
-    public class TradingData
+    public static class TradingHelper
     {
-        public int ID { get; set; }
-        public CoinPair CoinPair { get; set; }
-        public decimal CapitalCost { get; set; }
-        public decimal CoinQuantity { get; set; }
-        public decimal PriceChangePercentage { get; set; }
-        public decimal BuyPriceAfterFees { get; set; }
-        public decimal SellPriceAfterFees { get; set; }
+        public delegate void TradingEventHandler(TradingData tradingData);
 
-        public long BuyOrderID { get; set; } = -1;
-        public long SellOrderID { get; set; } = -1;
+        public static event TradingEventHandler PriceChecked, OrderSucceeded;
 
-        public decimal Profit
+        internal static ThreadWorker ThreadWorker { get; private set; }
+
+        public static void Init()
         {
-            get
+            BinanceClient.SetDefaultOptions(new BinanceClientOptions()
             {
-                return SellPriceAfterFees == 0 ? 0 : Math.Round((SellPriceAfterFees - BuyPriceAfterFees) * CoinQuantity, 2);
+                ApiCredentials = new ApiCredentials(Bot.Settings.APIKey, Bot.Settings.SecretKey),
+                LogVerbosity = LogVerbosity.Error,
+                LogWriters = new List<TextWriter> { Console.Out }
+            });
+
+            if (ThreadWorker == null)
+            {
+                ThreadWorker = new ThreadWorker();
             }
         }
 
-        public static TradingData GetNew()
-        {
-            return new TradingData() { CoinPair = Bot.Settings.CoinPair };
-        }
-    }
-
-    public static class TradingHelper
-    {
         public static void DayTrade()
         {
             using (var client = new BinanceClient())
@@ -95,7 +93,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void BuyOrderDayTrade()
+        private static void BuyOrderDayTrade()
         {
             using (var client = new BinanceClient())
             {
@@ -140,7 +138,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void SellOrderDayTrade()
+        private static void SellOrderDayTrade()
         {
             using (var client = new BinanceClient())
             {
@@ -223,10 +221,10 @@ namespace BinanceBotLib
                     Console.WriteLine();
                     foreach (TradingData trade in Bot.Settings.TradingDataList)
                     {
-                        decimal marketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price, 2);
-                        trade.PriceChangePercentage = Math.Round((marketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100, 2);
-                        Console.WriteLine($"ID={trade.ID} CoinPair={trade.CoinPair.ToString()} BuyPrice={trade.BuyPriceAfterFees} MarketPrice={marketPrice} Change={trade.PriceChangePercentage}%");
-
+                        trade.MarketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price, 2);
+                        trade.PriceChangePercentage = Math.Round((trade.MarketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100, 2);
+                        Console.WriteLine(trade.ToStringPriceCheck());
+                        OnPriceChecked(trade);
                         // sell if positive price change
                         if (trade.PriceChangePercentage > Bot.Settings.PriceChangePercentage)
                         {
@@ -255,23 +253,24 @@ namespace BinanceBotLib
                 trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);
                 if (trade.CapitalCost > Bot.Settings.InvestmentMin)
                 {
-                    decimal marketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
-                    if (marketPrice < Bot.Settings.BuyBelow)
+                    trade.MarketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
+                    if (trade.MarketPrice < Bot.Settings.BuyBelow)
                     {
                         Console.WriteLine();
 
                         decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
                         decimal myInvestment = trade.CapitalCost / (1 + fees);
-                        trade.CoinQuantity = Math.Round(myInvestment / marketPrice, 5);
+                        trade.CoinQuantity = Math.Round(myInvestment / trade.MarketPrice, 5);
 
-                        var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: marketPrice, timeInForce: TimeInForce.GoodTillCancel);
+                        var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice, timeInForce: TimeInForce.GoodTillCancel);
                         if (buyOrder.Success)
                         {
                             trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
                             trade.BuyOrderID = buyOrder.Data.OrderId;
                             trade.ID = Bot.Settings.TradingDataList.Count;
                             Bot.Settings.TradingDataList.Add(trade);
-                            Bot.WriteLog($"ID={trade.ID} Bought {trade.CoinQuantity} {trade.CoinPair.Pair1} using {trade.CapitalCost} for {marketPrice}");
+                            Bot.WriteLog(trade.ToStringBought());
+                            OnOrderSucceeded(trade);
                         }
                     }
                     else
@@ -290,28 +289,49 @@ namespace BinanceBotLib
         {
             using (var client = new BinanceClient())
             {
-                decimal marketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
+                trade.MarketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
 
-                if (marketPrice > Bot.Settings.SellAbove)
+                if (trade.MarketPrice > Bot.Settings.SellAbove)
                 {
-                    trade.CapitalCost = trade.CoinQuantity * marketPrice;
+                    trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
 
                     if (trade.CapitalCost > Bot.Settings.InvestmentMin)
                     {
                         decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
                         decimal myInvestment = trade.CapitalCost / (1 + fees);
 
-                        var sellOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: marketPrice, timeInForce: TimeInForce.GoodTillCancel);
+                        var sellOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice, timeInForce: TimeInForce.GoodTillCancel);
                         if (sellOrder.Success)
                         {
                             trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);
                             trade.SellOrderID = sellOrder.Data.OrderId;
-                            Bot.WriteLog($"ID={trade.ID} Sold {trade.CoinQuantity} {trade.CoinPair.Pair1} for {marketPrice} with profit {trade.Profit}");
+                            Bot.WriteLog(trade.ToStringSold());
                             Bot.Settings.TotalProfit += trade.Profit;
+                            OnOrderSucceeded(trade);
                         }
                     }
                 }
             }
         }
+
+        #region Event Handlers
+
+        private static void OnPriceChecked(TradingData data)
+        {
+            if (PriceChecked != null)
+            {
+                ThreadWorker.InvokeAsync(() => PriceChecked(data));
+            }
+        }
+
+        private static void OnOrderSucceeded(TradingData data)
+        {
+            if (OrderSucceeded != null)
+            {
+                ThreadWorker.InvokeAsync(() => OrderSucceeded(data));
+            }
+        }
+
+        #endregion Event Handlers
     }
 }
