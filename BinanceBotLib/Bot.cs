@@ -105,9 +105,8 @@ namespace BinanceBotLib
             SwingTrade();
 #endif
 
-            Random rnd = new Random();
             System.Timers.Timer marketTimer = new System.Timers.Timer();
-            marketTimer.Interval = rnd.Next(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
+            marketTimer.Interval = MathHelpers.Random(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
             marketTimer.Elapsed += MarketTimer_Tick;
             marketTimer.Start();
         }
