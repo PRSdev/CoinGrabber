@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.niTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.btnStartStop = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
@@ -39,12 +40,13 @@
             this.gbCoinPair = new System.Windows.Forms.GroupBox();
             this.cboNewDefaultCoinPair = new System.Windows.Forms.ComboBox();
             this.lvStatus = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCoinPair = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBuyPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMarketPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPriceChangePerc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chkStartWithWindows = new System.Windows.Forms.CheckBox();
             this.gbStatistics.SuspendLayout();
             this.gbBotMode.SuspendLayout();
             this.gbCoinPair.SuspendLayout();
@@ -52,8 +54,9 @@
             // 
             // niTray
             // 
-            this.niTray.Text = "notifyIcon1";
+            this.niTray.Icon = ((System.Drawing.Icon)(resources.GetObject("niTray.Icon")));
             this.niTray.Visible = true;
+            this.niTray.DoubleClick += new System.EventHandler(this.niTray_DoubleClick);
             // 
             // btnStartStop
             // 
@@ -67,7 +70,7 @@
             // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(136, 200);
+            this.btnSettings.Location = new System.Drawing.Point(336, 192);
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(112, 48);
             this.btnSettings.TabIndex = 1;
@@ -80,7 +83,7 @@
             this.gbStatistics.Controls.Add(this.lblProfitTotal);
             this.gbStatistics.Location = new System.Drawing.Point(456, 16);
             this.gbStatistics.Name = "gbStatistics";
-            this.gbStatistics.Size = new System.Drawing.Size(304, 248);
+            this.gbStatistics.Size = new System.Drawing.Size(296, 248);
             this.gbStatistics.TabIndex = 2;
             this.gbStatistics.TabStop = false;
             this.gbStatistics.Text = "Statistics";
@@ -152,6 +155,12 @@
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.DisplayIndex = 5;
+            this.columnHeader1.Text = "";
+            this.columnHeader1.Width = 1;
+            // 
             // chID
             // 
             this.chID.DisplayIndex = 0;
@@ -182,33 +191,42 @@
             this.chPriceChangePerc.Text = "Price Change (%)";
             this.chPriceChangePerc.Width = 140;
             // 
-            // columnHeader1
+            // chkStartWithWindows
             // 
-            this.columnHeader1.DisplayIndex = 5;
-            this.columnHeader1.Text = "";
-            this.columnHeader1.Width = 1;
+            this.chkStartWithWindows.AutoSize = true;
+            this.chkStartWithWindows.Location = new System.Drawing.Point(144, 200);
+            this.chkStartWithWindows.Name = "chkStartWithWindows";
+            this.chkStartWithWindows.Size = new System.Drawing.Size(170, 24);
+            this.chkStartWithWindows.TabIndex = 7;
+            this.chkStartWithWindows.Text = "Start with Windows";
+            this.chkStartWithWindows.UseVisualStyleBackColor = true;
+            this.chkStartWithWindows.CheckedChanged += new System.EventHandler(this.chkStartWithWindows_CheckedChanged);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 544);
+            this.Controls.Add(this.chkStartWithWindows);
             this.Controls.Add(this.lvStatus);
             this.Controls.Add(this.gbCoinPair);
             this.Controls.Add(this.gbBotMode);
             this.Controls.Add(this.gbStatistics);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnStartStop);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.gbStatistics.ResumeLayout(false);
             this.gbStatistics.PerformLayout();
             this.gbBotMode.ResumeLayout(false);
             this.gbCoinPair.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -230,6 +248,7 @@
         private System.Windows.Forms.ColumnHeader chMarketPrice;
         private System.Windows.Forms.ColumnHeader chPriceChangePerc;
         private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.CheckBox chkStartWithWindows;
     }
 }
 

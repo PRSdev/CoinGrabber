@@ -1,4 +1,5 @@
 ﻿using BinanceBotLib;
+using Microsoft.Win32;
 using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,13 @@ namespace BinanceBotUI
 {
     public partial class MainWindow : Form
     {
+        private bool IsReady = false;
+        private RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
         public MainWindow()
         {
             InitializeComponent();
-        }
 
-        private void MainWindow_Load(object sender, EventArgs e)
-        {
             this.Text = Application.ProductName;
 
             Bot.LoadSettings();
@@ -37,6 +38,17 @@ namespace BinanceBotUI
             }
             cboNewDefaultCoinPair.SelectedIndex = Bot.CoinPairs.FindIndex(x => x.ToString() == Bot.Settings.CoinPair.ToString());
 
+            chkStartWithWindows.Checked = rkApp.GetValue(Application.ProductName) != null;
+            if (chkStartWithWindows.Checked)
+            {
+                Trade();
+                ShowInTaskbar = false;
+                WindowState = FormWindowState.Minimized;
+            }
+        }
+
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
             UpdateUI();
         }
 
@@ -45,7 +57,7 @@ namespace BinanceBotUI
             lblProfitTotal.Text = "Profit made to-date: $" + Bot.Settings.TotalProfit;
         }
 
-        private void btnStartStop_Click(object sender, EventArgs e)
+        private void Trade()
         {
             Bot.Started += TradingHelper_Started;
             Bot.PriceChecked += TradingHelper_PriceChecked;
@@ -53,6 +65,11 @@ namespace BinanceBotUI
             Bot.Completed += TradingHelper_Completed;
 
             Bot.Start();
+        }
+
+        private void btnStartStop_Click(object sender, EventArgs e)
+        {
+            Trade();
         }
 
         private void TradingHelper_Completed()
@@ -79,6 +96,7 @@ namespace BinanceBotUI
 
         private void TradingHelper_OrderSuccess(TradingData trade)
         {
+            niTray.BalloonTipText = trade.ToString();
             lvStatus.Items.Add(trade.ToString());
         }
 
@@ -101,6 +119,32 @@ namespace BinanceBotUI
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             Bot.SaveSettings();
+        }
+
+        private void chkStartWithWindows_CheckedChanged(object sender, EventArgs e)
+        {
+            if (IsReady)
+            {
+                if (chkStartWithWindows.Checked)
+                {
+                    rkApp.SetValue(Application.ProductName, Application.ExecutablePath);
+                }
+                else
+                {
+                    rkApp.DeleteValue(Application.ProductName, false);
+                }
+            }
+        }
+
+        private void MainWindow_Shown(object sender, EventArgs e)
+        {
+            IsReady = true;
+        }
+
+        private void niTray_DoubleClick(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Normal;
+            Show();
         }
     }
 }
