@@ -37,6 +37,11 @@ namespace BinanceBotUI
             }
             cboNewDefaultCoinPair.SelectedIndex = Bot.CoinPairs.FindIndex(x => x.ToString() == Bot.Settings.CoinPair.ToString());
 
+            UpdateUI();
+        }
+
+        private void UpdateUI()
+        {
             lblProfitTotal.Text = "Profit made to-date: $" + Bot.Settings.TotalProfit;
         }
 
@@ -45,8 +50,14 @@ namespace BinanceBotUI
             TradingHelper.Started += TradingHelper_Started;
             TradingHelper.PriceChecked += TradingHelper_PriceChecked;
             TradingHelper.OrderSucceeded += TradingHelper_OrderSuccess;
+            TradingHelper.Completed += TradingHelper_Completed;
 
             Bot.Start();
+        }
+
+        private void TradingHelper_Completed()
+        {
+            UpdateUI();
         }
 
         private void TradingHelper_Started()

@@ -17,7 +17,7 @@ namespace BinanceBotLib
         public delegate void ProgressEventHandler();
         public delegate void TradingEventHandler(TradingData tradingData);
 
-        public static event ProgressEventHandler Started;
+        public static event ProgressEventHandler Started, Completed;
         public static event TradingEventHandler PriceChecked, OrderSucceeded;
 
         internal static ThreadWorker ThreadWorker { get; private set; }
@@ -243,6 +243,8 @@ namespace BinanceBotLib
                     }
                 }
             }
+
+            OnCompleted();
         }
 
         private static void BuyOrderSwingTrade()
@@ -340,6 +342,14 @@ namespace BinanceBotLib
             if (OrderSucceeded != null)
             {
                 ThreadWorker.InvokeAsync(() => OrderSucceeded(data));
+            }
+        }
+
+        private static void OnCompleted()
+        {
+            if (Completed != null)
+            {
+                ThreadWorker.InvokeAsync(() => Completed());
             }
         }
 

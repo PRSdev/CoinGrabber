@@ -82,9 +82,15 @@ namespace BinanceBotLib
                 // if timer is null then Init() has not been called
                 TradingHelper.Init();
                 TradingHelper.ThreadWorker.DoWork += ThreadWorker_DoWork;
+                TradingHelper.ThreadWorker.Completed += ThreadWorker_Completed;
             }
 
             TradingHelper.ThreadWorker.Start(ApartmentState.STA);
+        }
+
+        private static void ThreadWorker_Completed()
+        {
+            // throw new NotImplementedException();
         }
 
         private static void MarketTimer_Tick(object sender, ElapsedEventArgs e)
