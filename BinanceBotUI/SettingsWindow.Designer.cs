@@ -49,6 +49,7 @@
             this.Controls.Add(this.pgSettings);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SettingsWindow";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SettingsWindow";
             this.ResumeLayout(false);
 

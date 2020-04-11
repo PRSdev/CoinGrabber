@@ -38,7 +38,7 @@ namespace BinanceBotUI
             }
             cboNewDefaultCoinPair.SelectedIndex = Bot.CoinPairs.FindIndex(x => x.ToString() == Bot.Settings.CoinPair.ToString());
 
-            chkStartWithWindows.Checked = rkApp.GetValue(Application.ProductName) != null;
+            chkStartWithWindows.Checked = rkApp.GetValue(Application.ProductName) != null && rkApp.GetValue(Application.ProductName).Equals(Application.ExecutablePath);
             if (chkStartWithWindows.Checked)
             {
                 Trade();
@@ -96,7 +96,7 @@ namespace BinanceBotUI
 
         private void TradingHelper_OrderSuccess(TradingData trade)
         {
-            niTray.BalloonTipText = trade.ToString();
+            niTray.ShowBalloonTip(5000, Application.ProductName, trade.ToString(), ToolTipIcon.Info);
             lvStatus.Items.Add(trade.ToString());
         }
 
@@ -143,8 +143,9 @@ namespace BinanceBotUI
 
         private void niTray_DoubleClick(object sender, EventArgs e)
         {
+            ShowInTaskbar = true;
             WindowState = FormWindowState.Normal;
-            Show();
+            Activate();
         }
     }
 }

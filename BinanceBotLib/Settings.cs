@@ -13,7 +13,7 @@ namespace BinanceBotLib
         [Category("1 General"), Description("Binance Secret Key.")]
         public string SecretKey { get; set; }
 
-        [Category("1 General"), ReadOnly(true), Description("Total Profit.")]
+        [Category("1 General"), Browsable(false), Description("Total Profit.")]
         public decimal TotalProfit { get; set; }
 
         [Category("1 General"), Browsable(false)]

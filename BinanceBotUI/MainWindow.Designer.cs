@@ -47,9 +47,15 @@
             this.chMarketPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPriceChangePerc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chkStartWithWindows = new System.Windows.Forms.CheckBox();
+            this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
+            this.flpTopRight = new System.Windows.Forms.FlowLayoutPanel();
+            this.flpTopLeft = new System.Windows.Forms.FlowLayoutPanel();
             this.gbStatistics.SuspendLayout();
             this.gbBotMode.SuspendLayout();
             this.gbCoinPair.SuspendLayout();
+            this.tlpMain.SuspendLayout();
+            this.flpTopRight.SuspendLayout();
+            this.flpTopLeft.SuspendLayout();
             this.SuspendLayout();
             // 
             // niTray
@@ -60,9 +66,10 @@
             // 
             // btnStartStop
             // 
-            this.btnStartStop.Location = new System.Drawing.Point(16, 200);
+            this.btnStartStop.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnStartStop.Location = new System.Drawing.Point(3, 33);
             this.btnStartStop.Name = "btnStartStop";
-            this.btnStartStop.Size = new System.Drawing.Size(112, 48);
+            this.btnStartStop.Size = new System.Drawing.Size(170, 48);
             this.btnStartStop.TabIndex = 0;
             this.btnStartStop.Text = "Start";
             this.btnStartStop.UseVisualStyleBackColor = true;
@@ -70,9 +77,10 @@
             // 
             // btnSettings
             // 
-            this.btnSettings.Location = new System.Drawing.Point(336, 192);
+            this.btnSettings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSettings.Location = new System.Drawing.Point(3, 87);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(112, 48);
+            this.btnSettings.Size = new System.Drawing.Size(170, 48);
             this.btnSettings.TabIndex = 1;
             this.btnSettings.Text = "Settings...";
             this.btnSettings.UseVisualStyleBackColor = true;
@@ -81,9 +89,10 @@
             // gbStatistics
             // 
             this.gbStatistics.Controls.Add(this.lblProfitTotal);
-            this.gbStatistics.Location = new System.Drawing.Point(456, 16);
+            this.gbStatistics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbStatistics.Location = new System.Drawing.Point(624, 286);
             this.gbStatistics.Name = "gbStatistics";
-            this.gbStatistics.Size = new System.Drawing.Size(296, 248);
+            this.gbStatistics.Size = new System.Drawing.Size(616, 277);
             this.gbStatistics.TabIndex = 2;
             this.gbStatistics.TabStop = false;
             this.gbStatistics.Text = "Statistics";
@@ -110,7 +119,7 @@
             // gbBotMode
             // 
             this.gbBotMode.Controls.Add(this.cboBotMode);
-            this.gbBotMode.Location = new System.Drawing.Point(8, 8);
+            this.gbBotMode.Location = new System.Drawing.Point(3, 3);
             this.gbBotMode.Name = "gbBotMode";
             this.gbBotMode.Size = new System.Drawing.Size(296, 80);
             this.gbBotMode.TabIndex = 4;
@@ -120,7 +129,7 @@
             // gbCoinPair
             // 
             this.gbCoinPair.Controls.Add(this.cboNewDefaultCoinPair);
-            this.gbCoinPair.Location = new System.Drawing.Point(8, 104);
+            this.gbCoinPair.Location = new System.Drawing.Point(3, 89);
             this.gbCoinPair.Name = "gbCoinPair";
             this.gbCoinPair.Size = new System.Drawing.Size(296, 80);
             this.gbCoinPair.TabIndex = 5;
@@ -146,11 +155,11 @@
             this.chBuyPrice,
             this.chMarketPrice,
             this.chPriceChangePerc});
-            this.lvStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lvStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvStatus.HideSelection = false;
-            this.lvStatus.Location = new System.Drawing.Point(0, 280);
+            this.lvStatus.Location = new System.Drawing.Point(3, 286);
             this.lvStatus.Name = "lvStatus";
-            this.lvStatus.Size = new System.Drawing.Size(778, 264);
+            this.lvStatus.Size = new System.Drawing.Size(615, 277);
             this.lvStatus.TabIndex = 6;
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
@@ -194,7 +203,7 @@
             // chkStartWithWindows
             // 
             this.chkStartWithWindows.AutoSize = true;
-            this.chkStartWithWindows.Location = new System.Drawing.Point(144, 200);
+            this.chkStartWithWindows.Location = new System.Drawing.Point(3, 3);
             this.chkStartWithWindows.Name = "chkStartWithWindows";
             this.chkStartWithWindows.Size = new System.Drawing.Size(170, 24);
             this.chkStartWithWindows.TabIndex = 7;
@@ -202,18 +211,53 @@
             this.chkStartWithWindows.UseVisualStyleBackColor = true;
             this.chkStartWithWindows.CheckedChanged += new System.EventHandler(this.chkStartWithWindows_CheckedChanged);
             // 
+            // tlpMain
+            // 
+            this.tlpMain.ColumnCount = 2;
+            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMain.Controls.Add(this.lvStatus, 0, 1);
+            this.tlpMain.Controls.Add(this.flpTopRight, 1, 0);
+            this.tlpMain.Controls.Add(this.flpTopLeft, 0, 0);
+            this.tlpMain.Controls.Add(this.gbStatistics, 1, 1);
+            this.tlpMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlpMain.Location = new System.Drawing.Point(0, 0);
+            this.tlpMain.Name = "tlpMain";
+            this.tlpMain.RowCount = 2;
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMain.Size = new System.Drawing.Size(1243, 566);
+            this.tlpMain.TabIndex = 8;
+            // 
+            // flpTopRight
+            // 
+            this.flpTopRight.Controls.Add(this.chkStartWithWindows);
+            this.flpTopRight.Controls.Add(this.btnStartStop);
+            this.flpTopRight.Controls.Add(this.btnSettings);
+            this.flpTopRight.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpTopRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpTopRight.Location = new System.Drawing.Point(624, 3);
+            this.flpTopRight.Name = "flpTopRight";
+            this.flpTopRight.Size = new System.Drawing.Size(616, 277);
+            this.flpTopRight.TabIndex = 7;
+            // 
+            // flpTopLeft
+            // 
+            this.flpTopLeft.Controls.Add(this.gbBotMode);
+            this.flpTopLeft.Controls.Add(this.gbCoinPair);
+            this.flpTopLeft.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpTopLeft.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flpTopLeft.Location = new System.Drawing.Point(3, 3);
+            this.flpTopLeft.Name = "flpTopLeft";
+            this.flpTopLeft.Size = new System.Drawing.Size(615, 277);
+            this.flpTopLeft.TabIndex = 8;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(778, 544);
-            this.Controls.Add(this.chkStartWithWindows);
-            this.Controls.Add(this.lvStatus);
-            this.Controls.Add(this.gbCoinPair);
-            this.Controls.Add(this.gbBotMode);
-            this.Controls.Add(this.gbStatistics);
-            this.Controls.Add(this.btnSettings);
-            this.Controls.Add(this.btnStartStop);
+            this.ClientSize = new System.Drawing.Size(1243, 566);
+            this.Controls.Add(this.tlpMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -225,8 +269,11 @@
             this.gbStatistics.PerformLayout();
             this.gbBotMode.ResumeLayout(false);
             this.gbCoinPair.ResumeLayout(false);
+            this.tlpMain.ResumeLayout(false);
+            this.flpTopRight.ResumeLayout(false);
+            this.flpTopRight.PerformLayout();
+            this.flpTopLeft.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -249,6 +296,9 @@
         private System.Windows.Forms.ColumnHeader chPriceChangePerc;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.CheckBox chkStartWithWindows;
+        private System.Windows.Forms.TableLayoutPanel tlpMain;
+        private System.Windows.Forms.FlowLayoutPanel flpTopRight;
+        private System.Windows.Forms.FlowLayoutPanel flpTopLeft;
     }
 }
 
