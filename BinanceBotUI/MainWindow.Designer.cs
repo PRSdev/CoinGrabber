@@ -38,7 +38,13 @@
             this.gbBotMode = new System.Windows.Forms.GroupBox();
             this.gbCoinPair = new System.Windows.Forms.GroupBox();
             this.cboNewDefaultCoinPair = new System.Windows.Forms.ComboBox();
-            this.lbStatus = new System.Windows.Forms.ListBox();
+            this.lvStatus = new System.Windows.Forms.ListView();
+            this.chID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chCoinPair = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chBuyPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chMarketPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chPriceChangePerc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gbStatistics.SuspendLayout();
             this.gbBotMode.SuspendLayout();
             this.gbCoinPair.SuspendLayout();
@@ -128,22 +134,66 @@
             this.cboNewDefaultCoinPair.TabIndex = 3;
             this.cboNewDefaultCoinPair.SelectedIndexChanged += new System.EventHandler(this.cboNewDefaultCoinPair_SelectedIndexChanged);
             // 
-            // lbStatus
+            // lvStatus
             // 
-            this.lbStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lbStatus.FormattingEnabled = true;
-            this.lbStatus.ItemHeight = 20;
-            this.lbStatus.Location = new System.Drawing.Point(0, 280);
-            this.lbStatus.Name = "lbStatus";
-            this.lbStatus.Size = new System.Drawing.Size(778, 264);
-            this.lbStatus.TabIndex = 6;
+            this.lvStatus.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.chID,
+            this.chCoinPair,
+            this.chBuyPrice,
+            this.chMarketPrice,
+            this.chPriceChangePerc});
+            this.lvStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.lvStatus.HideSelection = false;
+            this.lvStatus.Location = new System.Drawing.Point(0, 280);
+            this.lvStatus.Name = "lvStatus";
+            this.lvStatus.Size = new System.Drawing.Size(778, 264);
+            this.lvStatus.TabIndex = 6;
+            this.lvStatus.UseCompatibleStateImageBehavior = false;
+            this.lvStatus.View = System.Windows.Forms.View.Details;
+            // 
+            // chID
+            // 
+            this.chID.DisplayIndex = 0;
+            this.chID.Text = "ID";
+            this.chID.Width = 50;
+            // 
+            // chCoinPair
+            // 
+            this.chCoinPair.DisplayIndex = 1;
+            this.chCoinPair.Text = "Coin Pair";
+            this.chCoinPair.Width = 120;
+            // 
+            // chBuyPrice
+            // 
+            this.chBuyPrice.DisplayIndex = 2;
+            this.chBuyPrice.Text = "Buy Price";
+            this.chBuyPrice.Width = 100;
+            // 
+            // chMarketPrice
+            // 
+            this.chMarketPrice.DisplayIndex = 3;
+            this.chMarketPrice.Text = "Market Price";
+            this.chMarketPrice.Width = 100;
+            // 
+            // chPriceChangePerc
+            // 
+            this.chPriceChangePerc.DisplayIndex = 4;
+            this.chPriceChangePerc.Text = "Price Change (%)";
+            this.chPriceChangePerc.Width = 140;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.DisplayIndex = 5;
+            this.columnHeader1.Text = "";
+            this.columnHeader1.Width = 1;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(778, 544);
-            this.Controls.Add(this.lbStatus);
+            this.Controls.Add(this.lvStatus);
             this.Controls.Add(this.gbCoinPair);
             this.Controls.Add(this.gbBotMode);
             this.Controls.Add(this.gbStatistics);
@@ -173,7 +223,13 @@
         private System.Windows.Forms.GroupBox gbBotMode;
         private System.Windows.Forms.GroupBox gbCoinPair;
         private System.Windows.Forms.ComboBox cboNewDefaultCoinPair;
-        private System.Windows.Forms.ListBox lbStatus;
+        private System.Windows.Forms.ListView lvStatus;
+        private System.Windows.Forms.ColumnHeader chID;
+        private System.Windows.Forms.ColumnHeader chCoinPair;
+        private System.Windows.Forms.ColumnHeader chBuyPrice;
+        private System.Windows.Forms.ColumnHeader chMarketPrice;
+        private System.Windows.Forms.ColumnHeader chPriceChangePerc;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
     }
 }
 

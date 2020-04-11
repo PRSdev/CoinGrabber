@@ -45,6 +45,7 @@ namespace BinanceBotConsole
 
             Bot.SaveSettings();
 
+            // Error handling - Bot mode specific
             switch (Bot.Settings.BotMode)
             {
                 case BotMode.DayTrade:

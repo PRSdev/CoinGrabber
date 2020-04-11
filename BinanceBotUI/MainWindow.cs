@@ -47,10 +47,10 @@ namespace BinanceBotUI
 
         private void btnStartStop_Click(object sender, EventArgs e)
         {
-            TradingHelper.Started += TradingHelper_Started;
-            TradingHelper.PriceChecked += TradingHelper_PriceChecked;
-            TradingHelper.OrderSucceeded += TradingHelper_OrderSuccess;
-            TradingHelper.Completed += TradingHelper_Completed;
+            Bot.Started += TradingHelper_Started;
+            Bot.PriceChecked += TradingHelper_PriceChecked;
+            Bot.OrderSucceeded += TradingHelper_OrderSuccess;
+            Bot.Completed += TradingHelper_Completed;
 
             Bot.Start();
         }
@@ -62,17 +62,24 @@ namespace BinanceBotUI
 
         private void TradingHelper_Started()
         {
-            lbStatus.Items.Clear();
+            lvStatus.Items.Clear();
         }
 
         private void TradingHelper_PriceChecked(TradingData trade)
         {
-            lbStatus.Items.Add(trade.ToStringPriceCheck());
+            ListViewItem lvi = new ListViewItem();
+            lvi.SubItems.Add(trade.ID.ToString());
+            lvi.SubItems.Add(trade.CoinPair.ToString());
+            lvi.SubItems.Add(trade.BuyPriceAfterFees.ToString());
+            lvi.SubItems.Add(trade.MarketPrice.ToString());
+            lvi.SubItems.Add(trade.PriceChangePercentage.ToString());
+            lvi.ForeColor = trade.PriceChangePercentage > 0m ? Color.Green : Color.Red;
+            lvStatus.Items.Add(lvi);
         }
 
         private void TradingHelper_OrderSuccess(TradingData trade)
         {
-            lbStatus.Items.Add(trade.ToString());
+            lvStatus.Items.Add(trade.ToString());
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
