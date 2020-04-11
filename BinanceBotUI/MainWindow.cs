@@ -42,10 +42,16 @@ namespace BinanceBotUI
 
         private void btnStartStop_Click(object sender, EventArgs e)
         {
+            TradingHelper.Started += TradingHelper_Started;
             TradingHelper.PriceChecked += TradingHelper_PriceChecked;
             TradingHelper.OrderSucceeded += TradingHelper_OrderSuccess;
 
             Bot.Start();
+        }
+
+        private void TradingHelper_Started()
+        {
+            lbStatus.Items.Clear();
         }
 
         private void TradingHelper_PriceChecked(TradingData trade)

@@ -14,8 +14,10 @@ namespace BinanceBotLib
 {
     public static class TradingHelper
     {
+        public delegate void ProgressEventHandler();
         public delegate void TradingEventHandler(TradingData tradingData);
 
+        public static event ProgressEventHandler Started;
         public static event TradingEventHandler PriceChecked, OrderSucceeded;
 
         internal static ThreadWorker ThreadWorker { get; private set; }
@@ -219,6 +221,7 @@ namespace BinanceBotLib
                 {
                     // monitor market price for price changes
                     Console.WriteLine();
+                    OnStarted();
                     foreach (TradingData trade in Bot.Settings.TradingDataList)
                     {
                         trade.MarketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price, 2);
@@ -315,6 +318,14 @@ namespace BinanceBotLib
         }
 
         #region Event Handlers
+
+        private static void OnStarted()
+        {
+            if (Started != null)
+            {
+                ThreadWorker.InvokeAsync(() => Started());
+            }
+        }
 
         private static void OnPriceChecked(TradingData data)
         {
