@@ -52,6 +52,7 @@ namespace BinanceBotUI
             UpdateUI();
         }
 
+
         private void UpdateUI()
         {
             lblProfitTotal.Text = "Profit made to-date: $" + Bot.Settings.TotalProfit;
@@ -94,14 +95,7 @@ namespace BinanceBotUI
         {
             this.InvokeSafe(() =>
             {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = trade.ID.ToString();
-                lvi.SubItems.Add(trade.CoinPair.ToString());
-                lvi.SubItems.Add(trade.BuyPriceAfterFees.ToString());
-                lvi.SubItems.Add(trade.MarketPrice.ToString());
-                lvi.SubItems.Add(trade.PriceChangePercentage.ToString());
-                lvi.ForeColor = trade.PriceChangePercentage > 0m ? Color.Green : Color.Red;
-                lvStatus.Items.Add(lvi);
+                lvStatus.Items.Add(trade.ToListViewItem());
             });
         }
 
@@ -110,7 +104,7 @@ namespace BinanceBotUI
             this.InvokeSafe(() =>
             {
                 niTray.ShowBalloonTip(5000, Application.ProductName, trade.ToString(), ToolTipIcon.Info);
-                lvStatus.Items.Add(trade.ToString());
+                lvStatus.Items.Add(trade.ToListViewItem());
             });
         }
 
@@ -163,5 +157,7 @@ namespace BinanceBotUI
             WindowState = FormWindowState.Normal;
             Activate();
         }
+
+ 
     }
 }

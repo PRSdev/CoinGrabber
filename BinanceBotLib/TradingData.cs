@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
 
 namespace BinanceBotLib
 {
@@ -49,6 +51,19 @@ namespace BinanceBotLib
         public override string ToString()
         {
             return Profit > 0 ? ToStringSold() : ToStringBought();
+        }
+
+        public ListViewItem ToListViewItem()
+        {
+            ListViewItem lvi = new ListViewItem();
+            lvi.Text = ID.ToString();
+            lvi.SubItems.Add(CoinQuantity.ToString());
+            lvi.SubItems.Add(CoinPair.ToString());
+            lvi.SubItems.Add(BuyPriceAfterFees.ToString());
+            lvi.SubItems.Add(MarketPrice.ToString());
+            lvi.SubItems.Add(PriceChangePercentage.ToString());
+            lvi.ForeColor = PriceChangePercentage > 0m ? Color.Green : Color.Red;
+            return lvi;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace BinanceBotUI
+﻿using ShareX.HelpersLib;
+
+namespace BinanceBotUI
 {
     partial class MainWindow
     {
@@ -39,8 +41,9 @@
             this.gbBotMode = new System.Windows.Forms.GroupBox();
             this.gbCoinPair = new System.Windows.Forms.GroupBox();
             this.cboNewDefaultCoinPair = new System.Windows.Forms.ComboBox();
-            this.lvStatus = new System.Windows.Forms.ListView();
+            this.lvStatus = new ShareX.HelpersLib.MyListView();
             this.chID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCoinPair = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBuyPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMarketPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -89,9 +92,9 @@
             // 
             this.gbStatistics.Controls.Add(this.lblProfitTotal);
             this.gbStatistics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbStatistics.Location = new System.Drawing.Point(624, 286);
+            this.gbStatistics.Location = new System.Drawing.Point(799, 295);
             this.gbStatistics.Name = "gbStatistics";
-            this.gbStatistics.Size = new System.Drawing.Size(616, 277);
+            this.gbStatistics.Size = new System.Drawing.Size(616, 286);
             this.gbStatistics.TabIndex = 2;
             this.gbStatistics.TabStop = false;
             this.gbStatistics.Text = "Statistics";
@@ -149,15 +152,17 @@
             // 
             this.lvStatus.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chID,
+            this.chQuantity,
             this.chCoinPair,
             this.chBuyPrice,
             this.chMarketPrice,
             this.chPriceChangePerc});
             this.lvStatus.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvStatus.FullRowSelect = true;
             this.lvStatus.HideSelection = false;
-            this.lvStatus.Location = new System.Drawing.Point(3, 286);
+            this.lvStatus.Location = new System.Drawing.Point(3, 295);
             this.lvStatus.Name = "lvStatus";
-            this.lvStatus.Size = new System.Drawing.Size(615, 277);
+            this.lvStatus.Size = new System.Drawing.Size(790, 286);
             this.lvStatus.TabIndex = 6;
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
@@ -167,6 +172,12 @@
             this.chID.Text = "ID";
             this.chID.Width = 50;
             // 
+            // chQuantity
+            // 
+            this.chQuantity.Text = "Quantity";
+            this.chQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.chQuantity.Width = 120;
+            // 
             // chCoinPair
             // 
             this.chCoinPair.Text = "Coin Pair";
@@ -175,16 +186,19 @@
             // chBuyPrice
             // 
             this.chBuyPrice.Text = "Buy Price";
+            this.chBuyPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.chBuyPrice.Width = 100;
             // 
             // chMarketPrice
             // 
             this.chMarketPrice.Text = "Market Price";
-            this.chMarketPrice.Width = 100;
+            this.chMarketPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.chMarketPrice.Width = 110;
             // 
             // chPriceChangePerc
             // 
             this.chPriceChangePerc.Text = "Price Change (%)";
+            this.chPriceChangePerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.chPriceChangePerc.Width = 140;
             // 
             // chkStartWithWindows
@@ -201,8 +215,8 @@
             // tlpMain
             // 
             this.tlpMain.ColumnCount = 2;
-            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlpMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tlpMain.Controls.Add(this.lvStatus, 0, 1);
             this.tlpMain.Controls.Add(this.flpTopRight, 1, 0);
             this.tlpMain.Controls.Add(this.flpTopLeft, 0, 0);
@@ -213,7 +227,7 @@
             this.tlpMain.RowCount = 2;
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpMain.Size = new System.Drawing.Size(1243, 566);
+            this.tlpMain.Size = new System.Drawing.Size(1418, 584);
             this.tlpMain.TabIndex = 8;
             // 
             // flpTopRight
@@ -223,9 +237,9 @@
             this.flpTopRight.Controls.Add(this.btnSettings);
             this.flpTopRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpTopRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpTopRight.Location = new System.Drawing.Point(624, 3);
+            this.flpTopRight.Location = new System.Drawing.Point(799, 3);
             this.flpTopRight.Name = "flpTopRight";
-            this.flpTopRight.Size = new System.Drawing.Size(616, 277);
+            this.flpTopRight.Size = new System.Drawing.Size(616, 286);
             this.flpTopRight.TabIndex = 7;
             // 
             // flpTopLeft
@@ -236,14 +250,14 @@
             this.flpTopLeft.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flpTopLeft.Location = new System.Drawing.Point(3, 3);
             this.flpTopLeft.Name = "flpTopLeft";
-            this.flpTopLeft.Size = new System.Drawing.Size(615, 277);
+            this.flpTopLeft.Size = new System.Drawing.Size(790, 286);
             this.flpTopLeft.TabIndex = 8;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1243, 566);
+            this.ClientSize = new System.Drawing.Size(1418, 584);
             this.Controls.Add(this.tlpMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
@@ -275,7 +289,7 @@
         private System.Windows.Forms.GroupBox gbBotMode;
         private System.Windows.Forms.GroupBox gbCoinPair;
         private System.Windows.Forms.ComboBox cboNewDefaultCoinPair;
-        private System.Windows.Forms.ListView lvStatus;
+        private MyListView lvStatus;
         private System.Windows.Forms.ColumnHeader chID;
         private System.Windows.Forms.ColumnHeader chCoinPair;
         private System.Windows.Forms.ColumnHeader chBuyPrice;
@@ -285,6 +299,7 @@
         private System.Windows.Forms.TableLayoutPanel tlpMain;
         private System.Windows.Forms.FlowLayoutPanel flpTopRight;
         private System.Windows.Forms.FlowLayoutPanel flpTopLeft;
+        private System.Windows.Forms.ColumnHeader chQuantity;
     }
 }
 

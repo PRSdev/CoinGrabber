@@ -101,6 +101,9 @@ namespace BinanceBotLib
         {
             Bot.LoadSettings(); // Re-read settings
 
+            if (string.IsNullOrEmpty(Bot.Settings.APIKey))
+                throw new Exception("Settings reset.");
+
             switch (Bot.Settings.BotMode)
             {
                 case BotMode.DayTrade:
@@ -340,28 +343,22 @@ namespace BinanceBotLib
                 if (trade.CapitalCost > Bot.Settings.InvestmentMin)
                 {
                     trade.MarketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
-                    if (trade.MarketPrice < Bot.Settings.BuyBelow)
-                    {
-                        Console.WriteLine();
 
-                        decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
-                        decimal myInvestment = trade.CapitalCost / (1 + fees);
-                        trade.CoinQuantity = Math.Round(myInvestment / trade.MarketPrice, 5);
+                    Console.WriteLine();
 
-                        var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice, timeInForce: TimeInForce.GoodTillCancel);
-                        if (buyOrder.Success)
-                        {
-                            trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
-                            trade.BuyOrderID = buyOrder.Data.OrderId;
-                            trade.ID = Bot.Settings.TradingDataList.Count;
-                            Bot.Settings.TradingDataList.Add(trade);
-                            Bot.WriteLog(trade.ToStringBought());
-                            OnOrderSucceeded(trade);
-                        }
-                    }
-                    else
+                    decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
+                    decimal myInvestment = trade.CapitalCost / (1 + fees);
+                    trade.CoinQuantity = Math.Round(myInvestment / trade.MarketPrice, 5);
+
+                    var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), timeInForce: TimeInForce.GoodTillCancel);
+                    if (buyOrder.Success)
                     {
-                        Console.WriteLine($"Market price is above maximum allowable buy Price.");
+                        trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
+                        trade.BuyOrderID = buyOrder.Data.OrderId;
+                        trade.ID = Bot.Settings.TradingDataList.Count;
+                        Bot.Settings.TradingDataList.Add(trade);
+                        Bot.WriteLog(trade.ToStringBought());
+                        OnOrderSucceeded(trade);
                     }
                 }
                 else
@@ -377,7 +374,7 @@ namespace BinanceBotLib
             {
                 trade.MarketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
 
-                if (trade.MarketPrice > Bot.Settings.SellAbove)
+                if (trade.MarketPrice > trade.BuyPriceAfterFees)
                 {
                     trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
 
@@ -386,7 +383,7 @@ namespace BinanceBotLib
                         decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
                         decimal myInvestment = trade.CapitalCost / (1 + fees);
 
-                        var sellOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice, timeInForce: TimeInForce.GoodTillCancel);
+                        var sellOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), timeInForce: TimeInForce.GoodTillCancel);
                         if (sellOrder.Success)
                         {
                             trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);

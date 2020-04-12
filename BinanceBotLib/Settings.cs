@@ -40,23 +40,23 @@ namespace BinanceBotLib
         [Category("2 Day Trade / Last Trade"), Browsable(false)]
         public decimal CoinQuantity { get; set; }
 
-        [Category("3 Swing Trade")]
+        [Category("3 Swing Trade"), Browsable(false)]
         public CoinPair CoinPair { get; set; } = new CoinPair("BTC", "USDT");
 
-        [Category("3 Swing Trade"), Description("Minimum capital investment in USDT")]
+        [Category("3 Swing Trade"), DefaultValue(100), Description("Minimum capital investment in USDT")]
         public decimal InvestmentMin { get; set; } = 100;
 
         [Category("3 Swing Trade"), Description("The subdivision number for your coin balance e.g. if you have 600 USDT as balance, HydraFactor of 3 will make Bot only invest 200 USDT.")]
-        public int HydraFactor { get; set; } = 3;
+        public int HydraFactor { get; set; } = 5;
 
         [Category("3 Swing Trade"), Description("When current price is below or above this percentage, buy or sell order triggers.")]
-        public decimal PriceChangePercentage { get; set; } = 1.67m;
+        public decimal PriceChangePercentage { get; set; } = 2m;
 
-        [Category("3 Swing Trade"), Description("Do not buy above this price")]
-        public decimal BuyBelow { get; set; } = 9000m;
+        [Category("3 Swing Trade"), Description("Buy below this % from market price")]
+        public decimal BuyBelowPerc { get; set; } = 1m;
 
-        [Category("3 Swing Trade"), Description("Do not sell below this price")]
-        public decimal SellAbove { get; set; } = 10000m;
+        [Category("3 Swing Trade"), Description("Sell above this % from market price")]
+        public decimal SellAbovePerc { get; set; } = 1m;
 
         [Category("3 Swing Trade"), Browsable(false)]
         public List<TradingData> TradingDataList { get; set; } = new List<TradingData>();
