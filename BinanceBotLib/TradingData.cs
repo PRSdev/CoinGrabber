@@ -45,7 +45,12 @@ namespace BinanceBotLib
 
         public string ToStringSold()
         {
-            return $"ID={ID} Sold {CoinQuantity} {CoinPair.Pair1} for {MarketPrice} with profit {Profit}";
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"ID={ID} Sold {CoinQuantity} {CoinPair.Pair1} for {MarketPrice}");
+            if (BuyPriceAfterFees > 0)
+                sb.Append($"with profit {Profit}");
+
+            return sb.ToString();
         }
 
         public override string ToString()

@@ -389,7 +389,7 @@ namespace BinanceBotLib
                             trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);
                             trade.SellOrderID = sellOrder.Data.OrderId;
                             Bot.WriteLog(trade.ToStringSold());
-                            Bot.Settings.TotalProfit += trade.Profit;
+                            if (trade.BuyPriceAfterFees > 0) Bot.Settings.TotalProfit += trade.Profit;
                             OnOrderSucceeded(trade);
                         }
                     }
