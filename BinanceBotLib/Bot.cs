@@ -65,15 +65,15 @@ namespace BinanceBotLib
         public static event ProgressEventHandler Started, Completed;
         public static event TradingEventHandler PriceChecked, OrderSucceeded;
 
-        private static ThreadWorker _threadWorker = null;
-
         public static List<CoinPair> CoinPairs = new List<CoinPair>()
         {
             new CoinPair("BTC", "USDT"),
             new CoinPair("BCH", "USDT")
         };
 
-        public static void Init()
+        private static bool _init = false;
+
+        private static void Init()
         {
             BinanceClient.SetDefaultOptions(new BinanceClientOptions()
             {
@@ -81,26 +81,12 @@ namespace BinanceBotLib
                 LogVerbosity = LogVerbosity.Error,
                 LogWriters = new List<TextWriter> { Console.Out }
             });
-
-            if (_threadWorker == null)
-            {
-                _threadWorker = new ThreadWorker();
-                _threadWorker.DoWork += ThreadWorker_DoWork;
-            }
         }
 
         public static void Start()
         {
-            if (_threadWorker == null)
-            {
-                Init();
-            }
+            if (!_init) Init();
 
-            _threadWorker.Start(ApartmentState.STA);
-        }
-
-        private static void ThreadWorker_DoWork()
-        {
 #if DEBUG
             SwingTrade();
 #endif
@@ -418,34 +404,22 @@ namespace BinanceBotLib
 
         private static void OnStarted()
         {
-            if (Started != null)
-            {
-                _threadWorker.InvokeAsync(() => Started());
-            }
+            Started?.Invoke();
         }
 
         private static void OnPriceChecked(TradingData data)
         {
-            if (PriceChecked != null)
-            {
-                _threadWorker.InvokeAsync(() => PriceChecked(data));
-            }
+            PriceChecked?.Invoke(data);
         }
 
         private static void OnOrderSucceeded(TradingData data)
         {
-            if (OrderSucceeded != null)
-            {
-                _threadWorker.InvokeAsync(() => OrderSucceeded(data));
-            }
+            OrderSucceeded?.Invoke(data);
         }
 
         private static void OnCompleted()
         {
-            if (Completed != null)
-            {
-                _threadWorker.InvokeAsync(() => Completed());
-            }
+            Completed?.Invoke();
         }
 
         #endregion Event Handlers

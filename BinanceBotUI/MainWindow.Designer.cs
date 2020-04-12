@@ -40,7 +40,6 @@
             this.gbCoinPair = new System.Windows.Forms.GroupBox();
             this.cboNewDefaultCoinPair = new System.Windows.Forms.ComboBox();
             this.lvStatus = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCoinPair = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chBuyPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -149,7 +148,6 @@
             // lvStatus
             // 
             this.lvStatus.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
             this.chID,
             this.chCoinPair,
             this.chBuyPrice,
@@ -164,39 +162,28 @@
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader1
-            // 
-            this.columnHeader1.DisplayIndex = 5;
-            this.columnHeader1.Text = "";
-            this.columnHeader1.Width = 1;
-            // 
             // chID
             // 
-            this.chID.DisplayIndex = 0;
             this.chID.Text = "ID";
             this.chID.Width = 50;
             // 
             // chCoinPair
             // 
-            this.chCoinPair.DisplayIndex = 1;
             this.chCoinPair.Text = "Coin Pair";
             this.chCoinPair.Width = 120;
             // 
             // chBuyPrice
             // 
-            this.chBuyPrice.DisplayIndex = 2;
             this.chBuyPrice.Text = "Buy Price";
             this.chBuyPrice.Width = 100;
             // 
             // chMarketPrice
             // 
-            this.chMarketPrice.DisplayIndex = 3;
             this.chMarketPrice.Text = "Market Price";
             this.chMarketPrice.Width = 100;
             // 
             // chPriceChangePerc
             // 
-            this.chPriceChangePerc.DisplayIndex = 4;
             this.chPriceChangePerc.Text = "Price Change (%)";
             this.chPriceChangePerc.Width = 140;
             // 
@@ -294,7 +281,6 @@
         private System.Windows.Forms.ColumnHeader chBuyPrice;
         private System.Windows.Forms.ColumnHeader chMarketPrice;
         private System.Windows.Forms.ColumnHeader chPriceChangePerc;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.CheckBox chkStartWithWindows;
         private System.Windows.Forms.TableLayoutPanel tlpMain;
         private System.Windows.Forms.FlowLayoutPanel flpTopRight;

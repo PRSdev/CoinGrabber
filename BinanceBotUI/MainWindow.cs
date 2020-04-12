@@ -72,33 +72,49 @@ namespace BinanceBotUI
             Trade();
         }
 
+        #region Bot events
+
         private void TradingHelper_Completed()
         {
-            UpdateUI();
+            this.InvokeSafe(() =>
+            {
+                UpdateUI();
+            });
         }
 
         private void TradingHelper_Started()
         {
-            lvStatus.Items.Clear();
+            this.InvokeSafe(() =>
+            {
+                lvStatus.Items.Clear();
+            });
         }
 
         private void TradingHelper_PriceChecked(TradingData trade)
         {
-            ListViewItem lvi = new ListViewItem();
-            lvi.SubItems.Add(trade.ID.ToString());
-            lvi.SubItems.Add(trade.CoinPair.ToString());
-            lvi.SubItems.Add(trade.BuyPriceAfterFees.ToString());
-            lvi.SubItems.Add(trade.MarketPrice.ToString());
-            lvi.SubItems.Add(trade.PriceChangePercentage.ToString());
-            lvi.ForeColor = trade.PriceChangePercentage > 0m ? Color.Green : Color.Red;
-            lvStatus.Items.Add(lvi);
+            this.InvokeSafe(() =>
+            {
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = trade.ID.ToString();
+                lvi.SubItems.Add(trade.CoinPair.ToString());
+                lvi.SubItems.Add(trade.BuyPriceAfterFees.ToString());
+                lvi.SubItems.Add(trade.MarketPrice.ToString());
+                lvi.SubItems.Add(trade.PriceChangePercentage.ToString());
+                lvi.ForeColor = trade.PriceChangePercentage > 0m ? Color.Green : Color.Red;
+                lvStatus.Items.Add(lvi);
+            });
         }
 
         private void TradingHelper_OrderSuccess(TradingData trade)
         {
-            niTray.ShowBalloonTip(5000, Application.ProductName, trade.ToString(), ToolTipIcon.Info);
-            lvStatus.Items.Add(trade.ToString());
+            this.InvokeSafe(() =>
+            {
+                niTray.ShowBalloonTip(5000, Application.ProductName, trade.ToString(), ToolTipIcon.Info);
+                lvStatus.Items.Add(trade.ToString());
+            });
         }
+
+        #endregion Bot events
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
