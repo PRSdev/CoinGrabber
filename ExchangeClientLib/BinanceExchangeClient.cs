@@ -15,11 +15,11 @@ namespace BinanceBotLib
     {
         private BinanceClient client = null;
 
-        public BinanceExchangeClient()
+        public BinanceExchangeClient(string apiKey, string secretKey)
         {
             BinanceClient.SetDefaultOptions(new BinanceClientOptions()
             {
-                ApiCredentials = new ApiCredentials(Bot.Settings.APIKey, Bot.Settings.SecretKey),
+                ApiCredentials = new ApiCredentials(apiKey, secretKey),
                 LogVerbosity = LogVerbosity.Error,
                 LogWriters = new List<TextWriter> { Console.Out }
             });
@@ -49,7 +49,7 @@ namespace BinanceBotLib
                 OrderSide.Buy,
                 OrderType.Limit,
                 quantity: trade.CoinQuantity,
-                price: Math.Round(trade.MarketPrice * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), 2),
+                price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
             return buyOrder;
@@ -62,7 +62,7 @@ namespace BinanceBotLib
                 OrderSide.Sell,
                 OrderType.Limit,
                 quantity: trade.CoinQuantity,
-                price: Math.Round(trade.MarketPrice * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2),
+                price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
             return sellOrder;

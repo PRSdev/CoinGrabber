@@ -82,16 +82,7 @@ namespace BinanceBotLib
             switch (_exchange)
             {
                 case ExchangeType.BinanceExchange:
-
-                    BinanceClient.SetDefaultOptions(new BinanceClientOptions()
-                    {
-                        ApiCredentials = new ApiCredentials(Bot.Settings.APIKey, Bot.Settings.SecretKey),
-                        LogVerbosity = LogVerbosity.Error,
-                        LogWriters = new List<TextWriter> { Console.Out }
-                    });
-
-                    _client = new BinanceExchangeClient();
-
+                    _client = new BinanceExchangeClient(Bot.Settings.APIKey, Bot.Settings.SecretKey);
                     break;
                 case ExchangeType.SimulatedExchange:
                     _client = new MockupExchangeClient();
@@ -137,6 +128,11 @@ namespace BinanceBotLib
             }
 
             Bot.SaveSettings();
+        }
+
+        public static TradingData GetNew()
+        {
+            return new TradingData() { CoinPair = Bot.Settings.CoinPair };
         }
 
         public static void DayTrade()
@@ -311,7 +307,7 @@ namespace BinanceBotLib
                 else
                 {
                     // sell
-                    TradingData trade0 = TradingData.GetNew();
+                    TradingData trade0 = GetNew();
                     trade0.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
                     Bot.Settings.TradingDataList.Add(trade0);
                     SellOrderSwingTrade(trade0);
@@ -348,7 +344,7 @@ namespace BinanceBotLib
 
         private static void BuyOrderSwingTrade()
         {
-            TradingData trade = TradingData.GetNew();
+            TradingData trade = GetNew();
             decimal coinsUSDT = _client.GetBalance(trade.CoinPair.Pair2);
 
             trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);

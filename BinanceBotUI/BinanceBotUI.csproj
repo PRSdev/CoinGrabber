@@ -187,6 +187,10 @@
       <Project>{878309be-5294-4f2c-a04c-d0528b42fd8b}</Project>
       <Name>BinanceBotLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExchangeClientLib\ExchangeClientLib.csproj">
+      <Project>{165bbdf9-6783-4b1a-8ac6-dfdb56a39622}</Project>
+      <Name>ExchangeClientLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Binance.ico" />

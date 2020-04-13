@@ -12,6 +12,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj" />
+		<ProjectReference Include="..\ExchangeClientLib\ExchangeClientLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
