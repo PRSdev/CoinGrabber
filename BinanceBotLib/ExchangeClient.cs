@@ -23,12 +23,12 @@ namespace BinanceBotLib
             throw new NotImplementedException();
         }
 
-        public virtual bool PlaceBuyOrder(TradingData trade)
+        public virtual WebCallResult<BinancePlacedOrder> PlaceBuyOrder(TradingData trade)
         {
             throw new NotImplementedException();
         }
 
-        public virtual bool PlaceSellOrder(TradingData trade)
+        public virtual WebCallResult<BinancePlacedOrder> PlaceSellOrder(TradingData trade)
         {
             throw new NotImplementedException();
         }

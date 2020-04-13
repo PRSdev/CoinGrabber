@@ -16,6 +16,8 @@ namespace BinanceBotUI
     public partial class MainWindow : Form
     {
         private bool IsReady = false;
+        private bool IsBotRunning = false;
+
         private RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
         public MainWindow()
@@ -52,7 +54,6 @@ namespace BinanceBotUI
             UpdateUI();
         }
 
-
         private void UpdateUI()
         {
             lblProfitTotal.Text = "Profit made to-date: $" + Bot.Settings.TotalProfit;
@@ -60,6 +61,8 @@ namespace BinanceBotUI
 
         private void Trade()
         {
+            btnStartStop.Text = "Stop";
+
             Bot.Started += TradingHelper_Started;
             Bot.PriceChecked += TradingHelper_PriceChecked;
             Bot.OrderSucceeded += TradingHelper_OrderSuccess;
@@ -70,7 +73,17 @@ namespace BinanceBotUI
 
         private void btnStartStop_Click(object sender, EventArgs e)
         {
-            Trade();
+            IsBotRunning = !IsBotRunning;
+
+            if (IsBotRunning)
+            {
+                Trade();
+            }
+            else
+            {
+                Bot.Stop();
+                btnStartStop.Text = "Start";
+            }
         }
 
         #region Bot events
@@ -157,7 +170,5 @@ namespace BinanceBotUI
             WindowState = FormWindowState.Normal;
             Activate();
         }
-
- 
     }
 }

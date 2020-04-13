@@ -14,8 +14,8 @@ namespace BinanceBotLib
 
         decimal GetTradeFee(CoinPair coinPair);
 
-        bool PlaceBuyOrder(TradingData trade);
+        WebCallResult<BinancePlacedOrder> PlaceBuyOrder(TradingData trade);
 
-        bool PlaceSellOrder(TradingData trade);
+        WebCallResult<BinancePlacedOrder> PlaceSellOrder(TradingData trade);
     }
 }

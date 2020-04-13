@@ -1,17 +1,6 @@
-﻿using Binance.Net;
-using Binance.Net.Objects;
-using BinanceBotLib;
+﻿using BinanceBotLib;
 using ShareX.HelpersLib;
 using System;
-using System.Collections.Generic;
-using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Logging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using CryptoExchange.Net.Objects;
 
 namespace BinanceBotConsole
 {

@@ -29,12 +29,12 @@ namespace BinanceBotLib
 
         public override decimal GetBalance(string coin)
         {
-            return base.GetBalance(coin);
+            return client.GetAccountInfo().Data.Balances.Single(s => s.Asset == coin).Free;
         }
 
         public override decimal GetPrice(CoinPair coinPair)
         {
-            return client.GetPrice(coinPair.ToString()).Data.Price;
+            return Math.Round(client.GetPrice(coinPair.ToString()).Data.Price, 2);
         }
 
         public override decimal GetTradeFee(CoinPair coinPair)
@@ -42,30 +42,30 @@ namespace BinanceBotLib
             return client.GetTradeFee().Data.Single(s => s.Symbol == coinPair.ToString()).MakerFee;
         }
 
-        public override bool PlaceBuyOrder(TradingData trade)
+        public override WebCallResult<BinancePlacedOrder> PlaceBuyOrder(TradingData trade)
         {
             var buyOrder = client.PlaceOrder(
                 trade.CoinPair.ToString(),
                 OrderSide.Buy,
                 OrderType.Limit,
                 quantity: trade.CoinQuantity,
-                price: trade.MarketPrice * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100),
+                price: Math.Round(trade.MarketPrice * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
-            return buyOrder.Success;
+            return buyOrder;
         }
 
-        public override bool PlaceSellOrder(TradingData trade)
+        public override WebCallResult<BinancePlacedOrder> PlaceSellOrder(TradingData trade)
         {
             var sellOrder = client.PlaceOrder(
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
                 OrderType.Limit,
                 quantity: trade.CoinQuantity,
-                price: trade.MarketPrice * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100),
+                price: Math.Round(trade.MarketPrice * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
-            return sellOrder.Success;
+            return sellOrder;
         }
     }
 }

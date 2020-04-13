@@ -75,6 +75,7 @@ namespace BinanceBotLib
 
         private static readonly ExchangeType _exchange = ExchangeType.BinanceExchange;
         private static ExchangeClient _client = null;
+        private static System.Timers.Timer _marketTimer = new System.Timers.Timer();
 
         private static void Init()
         {
@@ -93,6 +94,7 @@ namespace BinanceBotLib
 
                     break;
                 case ExchangeType.SimulatedExchange:
+                    _client = new MockupExchangeClient();
                     break;
             }
         }
@@ -105,10 +107,14 @@ namespace BinanceBotLib
             SwingTrade();
 #endif
 
-            System.Timers.Timer marketTimer = new System.Timers.Timer();
-            marketTimer.Interval = MathHelpers.Random(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
-            marketTimer.Elapsed += MarketTimer_Tick;
-            marketTimer.Start();
+            _marketTimer.Interval = MathHelpers.Random(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
+            _marketTimer.Elapsed += MarketTimer_Tick;
+            _marketTimer.Start();
+        }
+
+        public static void Stop()
+        {
+            _marketTimer.Stop();
         }
 
         private static void MarketTimer_Tick(object sender, ElapsedEventArgs e)
@@ -282,61 +288,58 @@ namespace BinanceBotLib
         public static void SwingTrade()
         {
             // Check USDT and BTC balances
-            using (var client = new BinanceClient())
+
+            decimal coins = _client.GetBalance(Bot.Settings.CoinPair.Pair1);
+            decimal fiatValue = _client.GetBalance(Bot.Settings.CoinPair.Pair2);
+
+            // Check if user has more USDT or more BTC
+            decimal coinsValue = coins * _client.GetPrice(Bot.Settings.CoinPair);
+
+            // cleanup
+            Bot.Settings.TradingDataList.RemoveAll(trade => trade.BuyOrderID > -1 && trade.SellOrderID > -1);
+
+            // If no buy or sell orders for the required coin pair, then place an order
+            TradingData tdSearch = Bot.Settings.TradingDataList.Find(x => x.CoinPair.Pair1 == Bot.Settings.CoinPair.Pair1);
+            if (tdSearch == null)
             {
-                var accountInfo = client.GetAccountInfo();
-                decimal coins = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair1).Free;
-                decimal fiatValue = accountInfo.Data.Balances.Single(s => s.Asset == Bot.Settings.CoinPair.Pair2).Free;
-
-                // Check if user has more USDT or more BTC
-                decimal coinsValue = coins * client.GetPrice(Bot.Settings.CoinPair.ToString()).Data.Price;
-
-                // cleanup
-                Bot.Settings.TradingDataList.RemoveAll(trade => trade.BuyOrderID > -1 && trade.SellOrderID > -1);
-
-                // If no buy or sell orders for the required coin pair, then place an order
-                TradingData tdSearch = Bot.Settings.TradingDataList.Find(x => x.CoinPair.Pair1 == Bot.Settings.CoinPair.Pair1);
-                if (tdSearch == null)
+                // buy or sell?
+                if (fiatValue > coinsValue)
                 {
-                    // buy or sell?
-                    if (fiatValue > coinsValue)
-                    {
-                        // buy
-                        BuyOrderSwingTrade();
-                    }
-                    else
-                    {
-                        // sell
-                        TradingData trade0 = TradingData.GetNew();
-                        trade0.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
-                        Bot.Settings.TradingDataList.Add(trade0);
-                        SellOrderSwingTrade(trade0);
-                    }
+                    // buy
+                    BuyOrderSwingTrade();
                 }
                 else
                 {
-                    // monitor market price for price changes
-                    Console.WriteLine();
-                    OnStarted();
-                    foreach (TradingData trade in Bot.Settings.TradingDataList)
+                    // sell
+                    TradingData trade0 = TradingData.GetNew();
+                    trade0.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
+                    Bot.Settings.TradingDataList.Add(trade0);
+                    SellOrderSwingTrade(trade0);
+                }
+            }
+            else
+            {
+                // monitor market price for price changes
+                Console.WriteLine();
+                OnStarted();
+                foreach (TradingData trade in Bot.Settings.TradingDataList)
+                {
+                    trade.MarketPrice = _client.GetPrice(trade.CoinPair);
+                    trade.PriceChangePercentage = Math.Round((trade.MarketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100, 2);
+                    Console.WriteLine(trade.ToStringPriceCheck());
+                    OnPriceChecked(trade);
+                    // sell if positive price change
+                    if (trade.PriceChangePercentage > Bot.Settings.PriceChangePercentage)
                     {
-                        trade.MarketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price, 2);
-                        trade.PriceChangePercentage = Math.Round((trade.MarketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100, 2);
-                        Console.WriteLine(trade.ToStringPriceCheck());
-                        OnPriceChecked(trade);
-                        // sell if positive price change
-                        if (trade.PriceChangePercentage > Bot.Settings.PriceChangePercentage)
-                        {
-                            SellOrderSwingTrade(trade);
-                        }
-                        Thread.Sleep(200);
+                        SellOrderSwingTrade(trade);
                     }
+                    Thread.Sleep(200);
+                }
 
-                    if (Bot.Settings.TradingDataList.Last<TradingData>().PriceChangePercentage < Bot.Settings.PriceChangePercentage * -1)
-                    {
-                        // buy more if negative price change
-                        BuyOrderSwingTrade();
-                    }
+                if (Bot.Settings.TradingDataList.Last<TradingData>().PriceChangePercentage < Bot.Settings.PriceChangePercentage * -1)
+                {
+                    // buy more if negative price change
+                    BuyOrderSwingTrade();
                 }
             }
 
@@ -345,69 +348,62 @@ namespace BinanceBotLib
 
         private static void BuyOrderSwingTrade()
         {
-            using (var client = new BinanceClient())
+            TradingData trade = TradingData.GetNew();
+            decimal coinsUSDT = _client.GetBalance(trade.CoinPair.Pair2);
+
+            trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);
+            if (trade.CapitalCost > Bot.Settings.InvestmentMin)
             {
-                var accountInfo = client.GetAccountInfo();
-                TradingData trade = TradingData.GetNew();
-                decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == trade.CoinPair.Pair2).Free;
+                trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), 2);
 
-                trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);
-                if (trade.CapitalCost > Bot.Settings.InvestmentMin)
+                Console.WriteLine();
+
+                decimal fees = _client.GetTradeFee(trade.CoinPair);
+                decimal myInvestment = trade.CapitalCost / (1 + fees);
+                trade.CoinQuantity = Math.Round(myInvestment / trade.MarketPrice, 5);
+
+                var buyOrder = _client.PlaceBuyOrder(trade);
+                if (buyOrder.Success)
                 {
-                    trade.MarketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), 2);
-
-                    Console.WriteLine();
-
-                    decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
-                    decimal myInvestment = trade.CapitalCost / (1 + fees);
-                    trade.CoinQuantity = Math.Round(myInvestment / trade.MarketPrice, 5);
-
-                    var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice, timeInForce: TimeInForce.GoodTillCancel);
-                    if (buyOrder.Success)
-                    {
-                        trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
-                        trade.BuyOrderID = buyOrder.Data.OrderId;
-                        trade.ID = Bot.Settings.TradingDataList.Count;
-                        Bot.Settings.TradingDataList.Add(trade);
-                        Bot.WriteLog(trade.ToStringBought());
-                        OnOrderSucceeded(trade);
-                    }
-                    else
-                    {
-                        Bot.WriteLog(buyOrder.Error.Message.ToString());
-                    }
+                    trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
+                    trade.BuyOrderID = buyOrder.Data.OrderId;
+                    trade.ID = Bot.Settings.TradingDataList.Count;
+                    Bot.Settings.TradingDataList.Add(trade);
+                    Bot.WriteLog(trade.ToStringBought());
+                    OnOrderSucceeded(trade);
                 }
                 else
                 {
-                    Console.WriteLine($"Capital cost is too low to buy more.");
+                    Bot.WriteLog(buyOrder.Error.Message.ToString());
                 }
+            }
+            else
+            {
+                Console.WriteLine($"Capital cost is too low to buy more.");
             }
         }
 
         private static void SellOrderSwingTrade(TradingData trade)
         {
-            using (var client = new BinanceClient())
+            trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
+
+            if (trade.MarketPrice > trade.BuyPriceAfterFees)
             {
-                trade.MarketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
+                trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
 
-                if (trade.MarketPrice > trade.BuyPriceAfterFees)
+                if (trade.CapitalCost > Bot.Settings.InvestmentMin)
                 {
-                    trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
+                    decimal fees = _client.GetTradeFee(trade.CoinPair);
+                    decimal myInvestment = trade.CapitalCost / (1 + fees);
 
-                    if (trade.CapitalCost > Bot.Settings.InvestmentMin)
+                    var sellOrder = _client.PlaceSellOrder(trade);
+                    if (sellOrder.Success)
                     {
-                        decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
-                        decimal myInvestment = trade.CapitalCost / (1 + fees);
-
-                        var sellOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice, timeInForce: TimeInForce.GoodTillCancel);
-                        if (sellOrder.Success)
-                        {
-                            trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);
-                            trade.SellOrderID = sellOrder.Data.OrderId;
-                            Bot.WriteLog(trade.ToStringSold());
-                            if (trade.BuyPriceAfterFees > 0) Bot.Settings.TotalProfit += trade.Profit;
-                            OnOrderSucceeded(trade);
-                        }
+                        trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);
+                        trade.SellOrderID = sellOrder.Data.OrderId;
+                        Bot.WriteLog(trade.ToStringSold());
+                        if (trade.BuyPriceAfterFees > 0) Bot.Settings.TotalProfit += trade.Profit;
+                        OnOrderSucceeded(trade);
                     }
                 }
             }
