@@ -117,7 +117,6 @@ namespace BinanceBotUI
             this.InvokeSafe(() =>
             {
                 niTray.ShowBalloonTip(5000, Application.ProductName, trade.ToString(), ToolTipIcon.Info);
-                lvStatus.Items.Add(trade.ToListViewItem());
             });
         }
 

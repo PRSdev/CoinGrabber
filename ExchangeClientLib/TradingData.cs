@@ -16,9 +16,9 @@ namespace BinanceBotLib
         public decimal PriceChangePercentage { get; set; }
         public decimal BuyPriceAfterFees { get; set; }
         public decimal SellPriceAfterFees { get; set; }
-
         public long BuyOrderID { get; set; } = -1;
         public long SellOrderID { get; set; } = -1;
+        public DateTime DateTime { get; set; } = DateTime.UtcNow;
 
         public decimal Profit
         {
