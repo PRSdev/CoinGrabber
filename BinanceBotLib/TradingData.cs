@@ -48,7 +48,7 @@ namespace BinanceBotLib
             StringBuilder sb = new StringBuilder();
             sb.Append($"ID={ID} Sold {CoinQuantity} {CoinPair.Pair1} for {MarketPrice}");
             if (BuyPriceAfterFees > 0)
-                sb.Append($"with profit {Profit}");
+                sb.Append($" with profit {Profit}");
 
             return sb.ToString();
         }

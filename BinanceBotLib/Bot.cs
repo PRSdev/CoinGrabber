@@ -73,14 +73,28 @@ namespace BinanceBotLib
 
         private static bool _init = false;
 
+        private static readonly ExchangeType _exchange = ExchangeType.BinanceExchange;
+        private static ExchangeClient _client = null;
+
         private static void Init()
         {
-            BinanceClient.SetDefaultOptions(new BinanceClientOptions()
+            switch (_exchange)
             {
-                ApiCredentials = new ApiCredentials(Bot.Settings.APIKey, Bot.Settings.SecretKey),
-                LogVerbosity = LogVerbosity.Error,
-                LogWriters = new List<TextWriter> { Console.Out }
-            });
+                case ExchangeType.BinanceExchange:
+
+                    BinanceClient.SetDefaultOptions(new BinanceClientOptions()
+                    {
+                        ApiCredentials = new ApiCredentials(Bot.Settings.APIKey, Bot.Settings.SecretKey),
+                        LogVerbosity = LogVerbosity.Error,
+                        LogWriters = new List<TextWriter> { Console.Out }
+                    });
+
+                    _client = new BinanceExchangeClient();
+
+                    break;
+                case ExchangeType.SimulatedExchange:
+                    break;
+            }
         }
 
         public static void Start()
@@ -99,8 +113,6 @@ namespace BinanceBotLib
 
         private static void MarketTimer_Tick(object sender, ElapsedEventArgs e)
         {
-            Bot.LoadSettings(); // Re-read settings
-
             if (string.IsNullOrEmpty(Bot.Settings.APIKey))
                 throw new Exception("Settings reset.");
 
@@ -342,7 +354,7 @@ namespace BinanceBotLib
                 trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);
                 if (trade.CapitalCost > Bot.Settings.InvestmentMin)
                 {
-                    trade.MarketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
+                    trade.MarketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), 2);
 
                     Console.WriteLine();
 
@@ -350,7 +362,7 @@ namespace BinanceBotLib
                     decimal myInvestment = trade.CapitalCost / (1 + fees);
                     trade.CoinQuantity = Math.Round(myInvestment / trade.MarketPrice, 5);
 
-                    var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), timeInForce: TimeInForce.GoodTillCancel);
+                    var buyOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice, timeInForce: TimeInForce.GoodTillCancel);
                     if (buyOrder.Success)
                     {
                         trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
@@ -359,6 +371,10 @@ namespace BinanceBotLib
                         Bot.Settings.TradingDataList.Add(trade);
                         Bot.WriteLog(trade.ToStringBought());
                         OnOrderSucceeded(trade);
+                    }
+                    else
+                    {
+                        Bot.WriteLog(buyOrder.Error.Message.ToString());
                     }
                 }
                 else
@@ -372,7 +388,7 @@ namespace BinanceBotLib
         {
             using (var client = new BinanceClient())
             {
-                trade.MarketPrice = client.GetPrice(trade.CoinPair.ToString()).Data.Price;
+                trade.MarketPrice = Math.Round(client.GetPrice(trade.CoinPair.ToString()).Data.Price * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
 
                 if (trade.MarketPrice > trade.BuyPriceAfterFees)
                 {
@@ -383,7 +399,7 @@ namespace BinanceBotLib
                         decimal fees = client.GetTradeFee().Data.Single(s => s.Symbol == trade.CoinPair.ToString()).MakerFee;
                         decimal myInvestment = trade.CapitalCost / (1 + fees);
 
-                        var sellOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), timeInForce: TimeInForce.GoodTillCancel);
+                        var sellOrder = client.PlaceOrder(trade.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: trade.CoinQuantity, price: trade.MarketPrice, timeInForce: TimeInForce.GoodTillCancel);
                         if (sellOrder.Success)
                         {
                             trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);

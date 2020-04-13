@@ -13,4 +13,13 @@ namespace BinanceBotLib
         [Description("Swing Trade")]
         SwingTrade
     }
+
+    public enum ExchangeType
+    {
+        [Description("Binance")]
+        BinanceExchange,
+
+        [Description("Simulated Exchange")]
+        SimulatedExchange
+    }
 }

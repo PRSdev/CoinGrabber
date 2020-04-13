@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Binance.Net.Objects;
+using CryptoExchange.Net.Objects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,10 +8,14 @@ namespace BinanceBotLib
 {
     public interface IExchangeClient
     {
-        void Init();
+        decimal GetBalance(string coin);
 
-        void Start();
+        decimal GetPrice(CoinPair coinPair);
 
-        void SwingTrade();
+        decimal GetTradeFee(CoinPair coinPair);
+
+        bool PlaceBuyOrder(TradingData trade);
+
+        bool PlaceSellOrder(TradingData trade);
     }
 }
