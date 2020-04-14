@@ -7,11 +7,11 @@ namespace BinanceBotLib
 {
     public enum BotMode
     {
-        [Description("Daily Trade")]
-        DayTrade,
+        [Description("Fixed Profit")]
+        FixedProfit,
 
-        [Description("Swing Trade")]
-        SwingTrade
+        [Description("Fixed Price Change")]
+        FixedPriceChanage
     }
 
     public enum ExchangeType

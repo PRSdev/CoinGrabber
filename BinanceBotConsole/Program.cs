@@ -37,7 +37,7 @@ namespace BinanceBotConsole
             // Error handling - Bot mode specific
             switch (Bot.Settings.BotMode)
             {
-                case BotMode.DayTrade:
+                case BotMode.FixedProfit:
                     if (Bot.Settings.DailyProfitTarget <= 0)
                     {
                         Console.WriteLine("Daily Profit Target must be greater than zero!");

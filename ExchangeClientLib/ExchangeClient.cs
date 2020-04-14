@@ -8,6 +8,14 @@ namespace BinanceBotLib
 {
     public class ExchangeClient : IExchangeClient
     {
+        public ExchangeClient(string apiKey, string secretKey)
+        {
+            if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(secretKey))
+            {
+                throw new Exception("API Key or Secret Key is empty!");
+            }
+        }
+
         public virtual decimal GetBalance(string coin)
         {
             throw new NotImplementedException();

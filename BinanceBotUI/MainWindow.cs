@@ -24,7 +24,7 @@ namespace BinanceBotUI
         {
             InitializeComponent();
 
-            this.Text = Application.ProductName;
+            this.Text = $"{Application.ProductName} {Application.ProductVersion}";
 
             Bot.LoadSettings();
 
@@ -34,11 +34,10 @@ namespace BinanceBotUI
             }
             cboBotMode.SelectedIndex = 1;
 
-            foreach (CoinPair cp in Bot.CoinPairs)
+            foreach (CoinPair cp in CoinPairs.CoinPairsList)
             {
-                cboNewDefaultCoinPair.Items.Add(cp);
+                cboCoinPairDefaultNew.Items.Add(cp);
             }
-            cboNewDefaultCoinPair.SelectedIndex = Bot.CoinPairs.FindIndex(x => x.ToString() == Bot.Settings.CoinPair.ToString());
 
             chkStartWithWindows.Checked = rkApp.GetValue(Application.ProductName) != null && rkApp.GetValue(Application.ProductName).Equals(Application.ExecutablePath);
             if (chkStartWithWindows.Checked)
@@ -56,7 +55,21 @@ namespace BinanceBotUI
 
         private void UpdateUI()
         {
-            lblProfitTotal.Text = "Profit made to-date: $" + Bot.Settings.TotalProfit;
+            cboCoinPairDefaultNew.SelectedIndex = CoinPairs.GetCoinPairIndex();
+            cboCoinPairDefaultNew.Enabled = !Bot.Settings.RandomNewCoinPair;
+
+            lvStatistics.Items.Clear();
+            ListViewItem lvStat1 = new ListViewItem("Total profit made to-date ($)");
+            lvStat1.SubItems.Add(Statistics.GetTotalProfit());
+            lvStatistics.Items.Add(lvStat1);
+
+            ListViewItem lvStat2 = new ListViewItem("Profit per day ($/day)");
+            lvStat2.SubItems.Add(Statistics.GetProfitPerDay());
+            lvStatistics.Items.Add(lvStat2);
+
+            ListViewItem lvStat3 = new ListViewItem("Total current investment ($)");
+            lvStat3.SubItems.Add(Statistics.GetTotalInvestment());
+            lvStatistics.Items.Add(lvStat3);
         }
 
         private void Trade()
@@ -126,11 +139,12 @@ namespace BinanceBotUI
         {
             SettingsWindow frm = new SettingsWindow();
             frm.ShowDialog();
+            UpdateUI();
         }
 
         private void cboNewDefaultCoinPair_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Bot.Settings.CoinPair = cboNewDefaultCoinPair.SelectedItem as CoinPair;
+            Bot.Settings.CoinPair = cboCoinPairDefaultNew.SelectedItem as CoinPair;
         }
 
         private void cboBotMode_SelectedIndexChanged(object sender, EventArgs e)

@@ -32,15 +32,15 @@ namespace BinanceBotUI
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Total Profit earned to-date");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Profit per day");
             this.niTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.btnStartStop = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
-            this.gbStatistics = new System.Windows.Forms.GroupBox();
-            this.lblProfitTotal = new System.Windows.Forms.Label();
             this.cboBotMode = new System.Windows.Forms.ComboBox();
             this.gbBotMode = new System.Windows.Forms.GroupBox();
             this.gbCoinPair = new System.Windows.Forms.GroupBox();
-            this.cboNewDefaultCoinPair = new System.Windows.Forms.ComboBox();
+            this.cboCoinPairDefaultNew = new System.Windows.Forms.ComboBox();
             this.lvStatus = new ShareX.HelpersLib.MyListView();
             this.chID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -52,7 +52,10 @@ namespace BinanceBotUI
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             this.flpTopRight = new System.Windows.Forms.FlowLayoutPanel();
             this.flpTopLeft = new System.Windows.Forms.FlowLayoutPanel();
-            this.gbStatistics.SuspendLayout();
+            this.lvStatistics = new ShareX.HelpersLib.MyListView();
+            this.chStatistic = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chStatisticValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chCost = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gbBotMode.SuspendLayout();
             this.gbCoinPair.SuspendLayout();
             this.tlpMain.SuspendLayout();
@@ -69,9 +72,10 @@ namespace BinanceBotUI
             // btnStartStop
             // 
             this.btnStartStop.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnStartStop.Location = new System.Drawing.Point(3, 33);
+            this.btnStartStop.Location = new System.Drawing.Point(2, 23);
+            this.btnStartStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStartStop.Name = "btnStartStop";
-            this.btnStartStop.Size = new System.Drawing.Size(170, 48);
+            this.btnStartStop.Size = new System.Drawing.Size(117, 31);
             this.btnStartStop.TabIndex = 0;
             this.btnStartStop.Text = "Start";
             this.btnStartStop.UseVisualStyleBackColor = true;
@@ -80,73 +84,60 @@ namespace BinanceBotUI
             // btnSettings
             // 
             this.btnSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSettings.Location = new System.Drawing.Point(3, 87);
+            this.btnSettings.Location = new System.Drawing.Point(2, 58);
+            this.btnSettings.Margin = new System.Windows.Forms.Padding(2);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(170, 48);
+            this.btnSettings.Size = new System.Drawing.Size(117, 31);
             this.btnSettings.TabIndex = 1;
             this.btnSettings.Text = "Settings...";
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
-            // gbStatistics
-            // 
-            this.gbStatistics.Controls.Add(this.lblProfitTotal);
-            this.gbStatistics.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gbStatistics.Location = new System.Drawing.Point(799, 295);
-            this.gbStatistics.Name = "gbStatistics";
-            this.gbStatistics.Size = new System.Drawing.Size(616, 286);
-            this.gbStatistics.TabIndex = 2;
-            this.gbStatistics.TabStop = false;
-            this.gbStatistics.Text = "Statistics";
-            // 
-            // lblProfitTotal
-            // 
-            this.lblProfitTotal.AutoSize = true;
-            this.lblProfitTotal.Location = new System.Drawing.Point(16, 32);
-            this.lblProfitTotal.Name = "lblProfitTotal";
-            this.lblProfitTotal.Size = new System.Drawing.Size(85, 20);
-            this.lblProfitTotal.TabIndex = 0;
-            this.lblProfitTotal.Text = "Total Profit";
-            // 
             // cboBotMode
             // 
             this.cboBotMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboBotMode.FormattingEnabled = true;
-            this.cboBotMode.Location = new System.Drawing.Point(16, 32);
+            this.cboBotMode.Location = new System.Drawing.Point(11, 21);
+            this.cboBotMode.Margin = new System.Windows.Forms.Padding(2);
             this.cboBotMode.Name = "cboBotMode";
-            this.cboBotMode.Size = new System.Drawing.Size(232, 28);
+            this.cboBotMode.Size = new System.Drawing.Size(156, 21);
             this.cboBotMode.TabIndex = 3;
             this.cboBotMode.SelectedIndexChanged += new System.EventHandler(this.cboBotMode_SelectedIndexChanged);
             // 
             // gbBotMode
             // 
             this.gbBotMode.Controls.Add(this.cboBotMode);
-            this.gbBotMode.Location = new System.Drawing.Point(3, 3);
+            this.gbBotMode.Location = new System.Drawing.Point(2, 2);
+            this.gbBotMode.Margin = new System.Windows.Forms.Padding(2);
             this.gbBotMode.Name = "gbBotMode";
-            this.gbBotMode.Size = new System.Drawing.Size(296, 80);
+            this.gbBotMode.Padding = new System.Windows.Forms.Padding(2);
+            this.gbBotMode.Size = new System.Drawing.Size(197, 52);
             this.gbBotMode.TabIndex = 4;
             this.gbBotMode.TabStop = false;
-            this.gbBotMode.Text = "Bot mode";
+            this.gbBotMode.Text = "Trading strategy";
             // 
             // gbCoinPair
             // 
-            this.gbCoinPair.Controls.Add(this.cboNewDefaultCoinPair);
-            this.gbCoinPair.Location = new System.Drawing.Point(3, 89);
+            this.gbCoinPair.Controls.Add(this.cboCoinPairDefaultNew);
+            this.gbCoinPair.Location = new System.Drawing.Point(2, 58);
+            this.gbCoinPair.Margin = new System.Windows.Forms.Padding(2);
             this.gbCoinPair.Name = "gbCoinPair";
-            this.gbCoinPair.Size = new System.Drawing.Size(296, 80);
+            this.gbCoinPair.Padding = new System.Windows.Forms.Padding(2);
+            this.gbCoinPair.Size = new System.Drawing.Size(197, 52);
             this.gbCoinPair.TabIndex = 5;
             this.gbCoinPair.TabStop = false;
             this.gbCoinPair.Text = "Coin Pair for new trades";
             // 
-            // cboNewDefaultCoinPair
+            // cboCoinPairDefaultNew
             // 
-            this.cboNewDefaultCoinPair.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboNewDefaultCoinPair.FormattingEnabled = true;
-            this.cboNewDefaultCoinPair.Location = new System.Drawing.Point(16, 32);
-            this.cboNewDefaultCoinPair.Name = "cboNewDefaultCoinPair";
-            this.cboNewDefaultCoinPair.Size = new System.Drawing.Size(232, 28);
-            this.cboNewDefaultCoinPair.TabIndex = 3;
-            this.cboNewDefaultCoinPair.SelectedIndexChanged += new System.EventHandler(this.cboNewDefaultCoinPair_SelectedIndexChanged);
+            this.cboCoinPairDefaultNew.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboCoinPairDefaultNew.FormattingEnabled = true;
+            this.cboCoinPairDefaultNew.Location = new System.Drawing.Point(11, 21);
+            this.cboCoinPairDefaultNew.Margin = new System.Windows.Forms.Padding(2);
+            this.cboCoinPairDefaultNew.Name = "cboCoinPairDefaultNew";
+            this.cboCoinPairDefaultNew.Size = new System.Drawing.Size(156, 21);
+            this.cboCoinPairDefaultNew.TabIndex = 3;
+            this.cboCoinPairDefaultNew.SelectedIndexChanged += new System.EventHandler(this.cboNewDefaultCoinPair_SelectedIndexChanged);
             // 
             // lvStatus
             // 
@@ -155,14 +146,16 @@ namespace BinanceBotUI
             this.chQuantity,
             this.chCoinPair,
             this.chBuyPrice,
+            this.chCost,
             this.chMarketPrice,
             this.chPriceChangePerc});
             this.lvStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvStatus.FullRowSelect = true;
             this.lvStatus.HideSelection = false;
-            this.lvStatus.Location = new System.Drawing.Point(3, 295);
+            this.lvStatus.Location = new System.Drawing.Point(2, 142);
+            this.lvStatus.Margin = new System.Windows.Forms.Padding(2);
             this.lvStatus.Name = "lvStatus";
-            this.lvStatus.Size = new System.Drawing.Size(790, 286);
+            this.lvStatus.Size = new System.Drawing.Size(248, 137);
             this.lvStatus.TabIndex = 6;
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
@@ -170,43 +163,44 @@ namespace BinanceBotUI
             // chID
             // 
             this.chID.Text = "ID";
-            this.chID.Width = 50;
+            this.chID.Width = 33;
             // 
             // chQuantity
             // 
             this.chQuantity.Text = "Quantity";
             this.chQuantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.chQuantity.Width = 120;
+            this.chQuantity.Width = 80;
             // 
             // chCoinPair
             // 
             this.chCoinPair.Text = "Coin Pair";
-            this.chCoinPair.Width = 120;
+            this.chCoinPair.Width = 80;
             // 
             // chBuyPrice
             // 
-            this.chBuyPrice.Text = "Buy Price";
+            this.chBuyPrice.Text = "Buy Price ($)";
             this.chBuyPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.chBuyPrice.Width = 100;
+            this.chBuyPrice.Width = 75;
             // 
             // chMarketPrice
             // 
-            this.chMarketPrice.Text = "Market Price";
+            this.chMarketPrice.Text = "Market Price ($)";
             this.chMarketPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.chMarketPrice.Width = 110;
+            this.chMarketPrice.Width = 90;
             // 
             // chPriceChangePerc
             // 
             this.chPriceChangePerc.Text = "Price Change (%)";
             this.chPriceChangePerc.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.chPriceChangePerc.Width = 140;
+            this.chPriceChangePerc.Width = 93;
             // 
             // chkStartWithWindows
             // 
             this.chkStartWithWindows.AutoSize = true;
-            this.chkStartWithWindows.Location = new System.Drawing.Point(3, 3);
+            this.chkStartWithWindows.Location = new System.Drawing.Point(2, 2);
+            this.chkStartWithWindows.Margin = new System.Windows.Forms.Padding(2);
             this.chkStartWithWindows.Name = "chkStartWithWindows";
-            this.chkStartWithWindows.Size = new System.Drawing.Size(170, 24);
+            this.chkStartWithWindows.Size = new System.Drawing.Size(117, 17);
             this.chkStartWithWindows.TabIndex = 7;
             this.chkStartWithWindows.Text = "Start with Windows";
             this.chkStartWithWindows.UseVisualStyleBackColor = true;
@@ -220,14 +214,15 @@ namespace BinanceBotUI
             this.tlpMain.Controls.Add(this.lvStatus, 0, 1);
             this.tlpMain.Controls.Add(this.flpTopRight, 1, 0);
             this.tlpMain.Controls.Add(this.flpTopLeft, 0, 0);
-            this.tlpMain.Controls.Add(this.gbStatistics, 1, 1);
+            this.tlpMain.Controls.Add(this.lvStatistics, 1, 1);
             this.tlpMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpMain.Location = new System.Drawing.Point(0, 0);
+            this.tlpMain.Margin = new System.Windows.Forms.Padding(2);
             this.tlpMain.Name = "tlpMain";
             this.tlpMain.RowCount = 2;
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpMain.Size = new System.Drawing.Size(1418, 584);
+            this.tlpMain.Size = new System.Drawing.Size(667, 281);
             this.tlpMain.TabIndex = 8;
             // 
             // flpTopRight
@@ -237,9 +232,10 @@ namespace BinanceBotUI
             this.flpTopRight.Controls.Add(this.btnSettings);
             this.flpTopRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpTopRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpTopRight.Location = new System.Drawing.Point(799, 3);
+            this.flpTopRight.Location = new System.Drawing.Point(254, 2);
+            this.flpTopRight.Margin = new System.Windows.Forms.Padding(2);
             this.flpTopRight.Name = "flpTopRight";
-            this.flpTopRight.Size = new System.Drawing.Size(616, 286);
+            this.flpTopRight.Size = new System.Drawing.Size(411, 136);
             this.flpTopRight.TabIndex = 7;
             // 
             // flpTopLeft
@@ -248,26 +244,60 @@ namespace BinanceBotUI
             this.flpTopLeft.Controls.Add(this.gbCoinPair);
             this.flpTopLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpTopLeft.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpTopLeft.Location = new System.Drawing.Point(3, 3);
+            this.flpTopLeft.Location = new System.Drawing.Point(2, 2);
+            this.flpTopLeft.Margin = new System.Windows.Forms.Padding(2);
             this.flpTopLeft.Name = "flpTopLeft";
-            this.flpTopLeft.Size = new System.Drawing.Size(790, 286);
+            this.flpTopLeft.Size = new System.Drawing.Size(248, 136);
             this.flpTopLeft.TabIndex = 8;
+            // 
+            // lvStatistics
+            // 
+            this.lvStatistics.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.chStatistic,
+            this.chStatisticValue});
+            this.lvStatistics.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvStatistics.FullRowSelect = true;
+            this.lvStatistics.HideSelection = false;
+            listViewItem1.StateImageIndex = 0;
+            this.lvStatistics.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1,
+            listViewItem2});
+            this.lvStatistics.Location = new System.Drawing.Point(255, 143);
+            this.lvStatistics.Name = "lvStatistics";
+            this.lvStatistics.Size = new System.Drawing.Size(409, 135);
+            this.lvStatistics.TabIndex = 1;
+            this.lvStatistics.UseCompatibleStateImageBehavior = false;
+            this.lvStatistics.View = System.Windows.Forms.View.Details;
+            // 
+            // chStatistic
+            // 
+            this.chStatistic.Text = "Statistic";
+            this.chStatistic.Width = 230;
+            // 
+            // chStatisticValue
+            // 
+            this.chStatisticValue.Text = "Value";
+            this.chStatisticValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // chCost
+            // 
+            this.chCost.Text = "Cost ($)";
+            this.chCost.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // MainWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1418, 584);
+            this.ClientSize = new System.Drawing.Size(1000, 421);
             this.Controls.Add(this.tlpMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.Shown += new System.EventHandler(this.MainWindow_Shown);
-            this.gbStatistics.ResumeLayout(false);
-            this.gbStatistics.PerformLayout();
             this.gbBotMode.ResumeLayout(false);
             this.gbCoinPair.ResumeLayout(false);
             this.tlpMain.ResumeLayout(false);
@@ -283,12 +313,10 @@ namespace BinanceBotUI
         private System.Windows.Forms.NotifyIcon niTray;
         private System.Windows.Forms.Button btnStartStop;
         private System.Windows.Forms.Button btnSettings;
-        private System.Windows.Forms.GroupBox gbStatistics;
-        private System.Windows.Forms.Label lblProfitTotal;
         private System.Windows.Forms.ComboBox cboBotMode;
         private System.Windows.Forms.GroupBox gbBotMode;
         private System.Windows.Forms.GroupBox gbCoinPair;
-        private System.Windows.Forms.ComboBox cboNewDefaultCoinPair;
+        private System.Windows.Forms.ComboBox cboCoinPairDefaultNew;
         private MyListView lvStatus;
         private System.Windows.Forms.ColumnHeader chID;
         private System.Windows.Forms.ColumnHeader chCoinPair;
@@ -300,6 +328,10 @@ namespace BinanceBotUI
         private System.Windows.Forms.FlowLayoutPanel flpTopRight;
         private System.Windows.Forms.FlowLayoutPanel flpTopLeft;
         private System.Windows.Forms.ColumnHeader chQuantity;
+        private MyListView lvStatistics;
+        private System.Windows.Forms.ColumnHeader chStatistic;
+        private System.Windows.Forms.ColumnHeader chStatisticValue;
+        private System.Windows.Forms.ColumnHeader chCost;
     }
 }
 

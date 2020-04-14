@@ -13,7 +13,7 @@ namespace BinanceBotLib
 {
     public class BinanceExchangeClient : ExchangeClient
     {
-        public BinanceExchangeClient(string apiKey, string secretKey)
+        public BinanceExchangeClient(string apiKey, string secretKey) : base(apiKey, secretKey)
         {
             BinanceClient.SetDefaultOptions(new BinanceClientOptions()
             {

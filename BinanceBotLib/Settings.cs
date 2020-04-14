@@ -7,6 +7,9 @@ namespace BinanceBotLib
 {
     public class Settings : SettingsBase<Settings>
     {
+        [Category("1 General"), Browsable(false)]
+        public DateTime StartDate { get; set; } = DateTime.Now;
+
         [Category("1 General"), Description("Binance API Key.")]
         public string APIKey { get; set; }
 
@@ -17,7 +20,7 @@ namespace BinanceBotLib
         public decimal TotalProfit { get; set; }
 
         [Category("1 General"), Browsable(false)]
-        public BotMode BotMode { get; set; } = BotMode.SwingTrade;
+        public BotMode BotMode { get; set; } = BotMode.FixedPriceChanage;
 
         [Category("2 Day Trade"), Description("Maximum investment.")]
         public decimal InvestmentMax { get; set; } = 500;
@@ -41,7 +44,10 @@ namespace BinanceBotLib
         public decimal CoinQuantity { get; set; }
 
         [Category("3 Swing Trade"), Browsable(false)]
-        public CoinPair CoinPair { get; set; } = new CoinPair("BTC", "USDT");
+        public CoinPair CoinPair { get; set; } = CoinPairs.CoinPairsList[0];
+
+        [Category("3 Swing Trade"), Description("Let the bot decide which coin to buy.")]
+        public bool RandomNewCoinPair { get; set; } = false;
 
         [Category("3 Swing Trade"), DefaultValue(100), Description("Minimum capital investment in USDT")]
         public decimal InvestmentMin { get; set; } = 100;

@@ -65,12 +65,6 @@ namespace BinanceBotLib
         public static event ProgressEventHandler Started, Completed;
         public static event TradingEventHandler PriceChecked, OrderSucceeded;
 
-        public static List<CoinPair> CoinPairs = new List<CoinPair>()
-        {
-            new CoinPair("BTC", "USDT"),
-            new CoinPair("BCH", "USDT")
-        };
-
         private static bool _init = false;
 
         private static readonly ExchangeType _exchange = ExchangeType.BinanceExchange;
@@ -85,7 +79,7 @@ namespace BinanceBotLib
                     _client = new BinanceExchangeClient(Bot.Settings.APIKey, Bot.Settings.SecretKey);
                     break;
                 case ExchangeType.SimulatedExchange:
-                    _client = new MockupExchangeClient();
+                    _client = new MockupExchangeClient(Bot.Settings.APIKey, Bot.Settings.SecretKey);
                     break;
             }
         }
@@ -115,10 +109,10 @@ namespace BinanceBotLib
 
             switch (Bot.Settings.BotMode)
             {
-                case BotMode.DayTrade:
+                case BotMode.FixedProfit:
                     DayTrade();
                     break;
-                case BotMode.SwingTrade:
+                case BotMode.FixedPriceChanage:
                     SwingTrade();
                     break;
                 default:
@@ -130,9 +124,9 @@ namespace BinanceBotLib
             Bot.SaveSettings();
         }
 
-        public static TradingData GetNew()
+        public static TradingData GetNewTradingData()
         {
-            return new TradingData() { CoinPair = Bot.Settings.CoinPair };
+            return new TradingData() { CoinPair = CoinPairs.GetCoinPair() };
         }
 
         public static void DayTrade()
@@ -307,7 +301,7 @@ namespace BinanceBotLib
                 else
                 {
                     // sell
-                    TradingData trade0 = GetNew();
+                    TradingData trade0 = GetNewTradingData();
                     trade0.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
                     Bot.Settings.TradingDataList.Add(trade0);
                     SellOrderSwingTrade(trade0);
@@ -344,7 +338,7 @@ namespace BinanceBotLib
 
         private static void BuyOrderSwingTrade()
         {
-            TradingData trade = GetNew();
+            TradingData trade = GetNewTradingData();
             decimal coinsUSDT = _client.GetBalance(trade.CoinPair.Pair2);
 
             trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);

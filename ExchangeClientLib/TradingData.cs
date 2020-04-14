@@ -18,7 +18,7 @@ namespace BinanceBotLib
         public decimal SellPriceAfterFees { get; set; }
         public long BuyOrderID { get; set; } = -1;
         public long SellOrderID { get; set; } = -1;
-        public DateTime DateTime { get; set; } = DateTime.UtcNow;
+        public DateTime DateTime { get; set; } = DateTime.Now;
 
         public decimal Profit
         {
@@ -60,6 +60,7 @@ namespace BinanceBotLib
             lvi.SubItems.Add(CoinQuantity.ToString());
             lvi.SubItems.Add(CoinPair.ToString());
             lvi.SubItems.Add(BuyPriceAfterFees.ToString());
+            lvi.SubItems.Add(CapitalCost.ToString());
             lvi.SubItems.Add(MarketPrice.ToString());
             lvi.SubItems.Add(PriceChangePercentage.ToString());
             lvi.ForeColor = PriceChangePercentage > 0m ? Color.Green : Color.Red;
