@@ -20,7 +20,7 @@ namespace BinanceBotLib
         public decimal TotalProfit { get; set; }
 
         [Category("1 General"), Browsable(false)]
-        public BotMode BotMode { get; set; } = BotMode.FixedPriceChanage;
+        public BotMode BotMode { get; set; } = BotMode.FixedPriceChange;
 
         [Category("2 Day Trade"), Description("Maximum investment.")]
         public decimal InvestmentMax { get; set; } = 500;
