@@ -11,7 +11,10 @@ namespace BinanceBotLib
         FixedProfit,
 
         [Description("Fixed Price Change")]
-        FixedPriceChanage
+        FixedPriceChanage,
+
+        [Description("TradingView Signal")]
+        TradingViewSignal
     }
 
     public enum ExchangeType

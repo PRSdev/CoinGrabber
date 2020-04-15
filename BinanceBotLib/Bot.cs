@@ -91,8 +91,15 @@ namespace BinanceBotLib
 #if DEBUG
             SwingTrade();
 #endif
-
-            _marketTimer.Interval = MathHelpers.Random(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
+            switch (Bot.Settings.BotMode)
+            {
+                case BotMode.TradingViewSignal:
+                    _marketTimer.Interval = 5000; // Every 5 seconds
+                    break;
+                default:
+                    _marketTimer.Interval = MathHelpers.Random(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
+                    break;
+            }
             _marketTimer.Elapsed += MarketTimer_Tick;
             _marketTimer.Start();
         }
@@ -128,6 +135,8 @@ namespace BinanceBotLib
         {
             return new TradingData() { CoinPair = CoinPairs.GetCoinPair() };
         }
+
+        #region Day Trading
 
         public static void DayTrade()
         {
@@ -274,6 +283,8 @@ namespace BinanceBotLib
                 }
             }
         }
+
+        #endregion Day Trading
 
         public static void SwingTrade()
         {
