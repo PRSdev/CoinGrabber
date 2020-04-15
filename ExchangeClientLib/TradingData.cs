@@ -28,6 +28,15 @@ namespace BinanceBotLib
             }
         }
 
+        public TradingData()
+        {
+        }
+
+        public TradingData(CoinPair coinPair)
+        {
+            CoinPair = coinPair;
+        }
+
         public string ToStringPriceCheck()
         {
             return $"ID={ID} CoinPair={CoinPair.ToString()} BuyPriceAfterFees={BuyPriceAfterFees} MarketPrice={MarketPrice} Change={PriceChangePercentage}%";

@@ -30,5 +30,16 @@ namespace BinanceBotLib
                 return CoinPairsList.FindIndex(x => x.ToString() == Bot.Settings.CoinPair.ToString());
             }
         }
+
+        public static CoinPair GetCoinPair(string signal)
+        {
+            foreach (CoinPair cp in CoinPairsList)
+            {
+                if (signal.Contains(cp.ToString()))
+                    return cp;
+            }
+
+            return null;
+        }
     }
 }

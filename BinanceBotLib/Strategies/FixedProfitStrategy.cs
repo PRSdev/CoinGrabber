@@ -71,7 +71,7 @@ namespace BinanceBotLib
             }
         }
 
-        private static void PlaceBuyOrder()
+        public override void PlaceBuyOrder()
         {
             using (var client = new BinanceClient())
             {
@@ -116,7 +116,7 @@ namespace BinanceBotLib
             }
         }
 
-        private static void PlaceSellOrder()
+        public override void PlaceSellOrder()
         {
             using (var client = new BinanceClient())
             {

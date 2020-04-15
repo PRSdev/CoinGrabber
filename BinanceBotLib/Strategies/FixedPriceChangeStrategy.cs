@@ -32,15 +32,15 @@ namespace BinanceBotLib
                 if (fiatValue > coinsValue)
                 {
                     // buy
-                    BuyOrderSwingTrade();
+                    PlaceBuyOrder(GetNewTradingData());
                 }
                 else
                 {
                     // sell
-                    TradingData trade0 = Bot.GetNewTradingData();
+                    TradingData trade0 = GetNewTradingData();
                     trade0.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
-                    Bot.Settings.TradingDataList.Add(trade0);
-                    SellOrderSwingTrade(trade0);
+                    Bot.Settings.TradingDataList.Add(trade0); // Add because this is the seed
+                    PlaceSellOrder(trade0);
                 }
             }
             else
@@ -57,7 +57,7 @@ namespace BinanceBotLib
                     // sell if positive price change
                     if (trade.PriceChangePercentage > Bot.Settings.PriceChangePercentage)
                     {
-                        SellOrderSwingTrade(trade);
+                        PlaceSellOrder(trade);
                     }
                     Thread.Sleep(200);
                 }
@@ -65,19 +65,18 @@ namespace BinanceBotLib
                 if (Bot.Settings.TradingDataList.Last<TradingData>().PriceChangePercentage < Bot.Settings.PriceChangePercentage * -1)
                 {
                     // buy more if negative price change
-                    BuyOrderSwingTrade();
+                    PlaceBuyOrder(GetNewTradingData());
                 }
             }
 
             OnCompleted();
         }
 
-        private void BuyOrderSwingTrade()
+        public void PlaceBuyOrder(TradingData trade)
         {
-            TradingData trade = Bot.GetNewTradingData();
-            decimal coinsUSDT = _client.GetBalance(trade.CoinPair.Pair2);
+            decimal fiatValue = _client.GetBalance(trade.CoinPair.Pair2);
 
-            trade.CapitalCost = Math.Round(coinsUSDT / Bot.Settings.HydraFactor, 2);
+            trade.CapitalCost = Math.Round(fiatValue / Bot.Settings.HydraFactor, 2);
             if (trade.CapitalCost > Bot.Settings.InvestmentMin)
             {
                 trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), 2);
@@ -109,7 +108,7 @@ namespace BinanceBotLib
             }
         }
 
-        private void SellOrderSwingTrade(TradingData trade)
+        private void PlaceSellOrder(TradingData trade)
         {
             trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
 
@@ -133,6 +132,11 @@ namespace BinanceBotLib
                     }
                 }
             }
+        }
+
+        public TradingData GetNewTradingData()
+        {
+            return new TradingData() { CoinPair = CoinPairs.GetCoinPair() };
         }
     }
 }

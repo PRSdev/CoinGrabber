@@ -112,20 +112,11 @@ namespace BinanceBotLib
         private static void MarketTimer_Tick(object sender, ElapsedEventArgs e)
         {
             if (string.IsNullOrEmpty(Bot.Settings.APIKey))
-                throw new Exception("Settings reset.");
+                throw new Exception("Settings reset!");
 
             Strategy.Trade();
 
             Bot.SaveSettings();
         }
-
-        public static TradingData GetNewTradingData()
-        {
-            return new TradingData() { CoinPair = CoinPairs.GetCoinPair() };
-        }
-
-        #region Event Handlers
-
-        #endregion Event Handlers
     }
 }

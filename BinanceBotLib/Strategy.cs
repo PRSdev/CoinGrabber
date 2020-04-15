@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BinanceBotLib
 {
-    public class Strategy
+    public class Strategy : IStrategy
     {
         public delegate void ProgressEventHandler();
         public delegate void TradingEventHandler(TradingData tradingData);
@@ -14,9 +14,9 @@ namespace BinanceBotLib
 
         protected static ExchangeClient _client = null;
 
-        public Strategy(ExchangeType exchange)
+        public Strategy(ExchangeType exchangeType)
         {
-            switch (exchange)
+            switch (exchangeType)
             {
                 case ExchangeType.BinanceExchange:
                     _client = new BinanceExchangeClient(Bot.Settings.APIKey, Bot.Settings.SecretKey);
@@ -29,6 +29,7 @@ namespace BinanceBotLib
 
         public virtual void Trade()
         {
+            throw new Exception("Strategy is not implemented!");
         }
 
         protected void OnStarted()
@@ -49,6 +50,16 @@ namespace BinanceBotLib
         protected void OnCompleted()
         {
             Completed?.Invoke();
+        }
+
+        public virtual void PlaceBuyOrder()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void PlaceSellOrder()
+        {
+            throw new NotImplementedException();
         }
     }
 }
