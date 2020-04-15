@@ -89,6 +89,8 @@ namespace BinanceBotLib
                     Console.ReadLine();
                     return;
             }
+
+            _init = true;
         }
 
         public static void Start()
