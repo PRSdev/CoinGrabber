@@ -40,5 +40,20 @@ namespace BinanceBotLib
         {
             throw new NotImplementedException();
         }
+
+        public virtual WebCallResult<BinancePlacedOrder> PlaceTestBuyOrder(TradingData trade)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual WebCallResult<BinancePlacedOrder> PlaceTestSellOrder(TradingData trade)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual WebCallResult<BinancePlacedOrder> PlaceStopLoss(TradingData trade, decimal stopLossPerc)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

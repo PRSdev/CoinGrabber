@@ -78,6 +78,9 @@ namespace BinanceBotLib
         public string SecretWord { get; set; } = "MySecretWord";
 
         [Category("4 Trading View"), Description("If set to 10, then the bot will sell if the market price goes 10% below buy price.")]
-        public decimal StopLossAt { get; set; } = 10m;
+        public decimal StopLossPerc { get; set; } = 10m;
+
+        [Category("4 Trading View"), Browsable(false)]
+        public List<TradingData> TradingViewTradesList { get; set; } = new List<TradingData>();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Binance.Net.Objects;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -19,6 +20,7 @@ namespace BinanceBotLib
         public long BuyOrderID { get; set; } = -1;
         public long SellOrderID { get; set; } = -1;
         public DateTime DateTime { get; set; } = DateTime.Now;
+        public OrderSide LastAction { get; set; }
 
         public decimal Profit
         {
@@ -59,7 +61,7 @@ namespace BinanceBotLib
 
         public override string ToString()
         {
-            return Profit > 0 ? ToStringSold() : ToStringBought();
+            return LastAction == OrderSide.Sell ? ToStringSold() : ToStringBought();
         }
 
         public ListViewItem ToListViewItem()

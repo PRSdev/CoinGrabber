@@ -115,8 +115,6 @@ namespace BinanceBotLib
                 throw new Exception("Settings reset!");
 
             Strategy.Trade();
-
-            Bot.SaveSettings();
         }
     }
 }

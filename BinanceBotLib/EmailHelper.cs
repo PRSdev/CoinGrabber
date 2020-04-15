@@ -7,7 +7,8 @@ namespace BinanceBotLib
 {
     public class EmailHelper
     {
-        public string Signal { get; private set; }
+        public string Advice { get; private set; }
+        public int UnreadEmails { get; private set; }
 
         public EmailHelper(string email, string password)
         {
@@ -22,7 +23,11 @@ namespace BinanceBotLib
 
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(response);
-                Signal = GetSubject(doc);
+
+                int.TryParse(doc.SelectSingleNode(@"/feed/fullcount").InnerText, out int nr);
+                UnreadEmails = nr;
+
+                Advice = GetSubject(doc);
             }
             catch (Exception ex)
             {

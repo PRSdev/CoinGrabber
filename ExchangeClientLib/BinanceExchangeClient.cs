@@ -78,5 +78,54 @@ namespace BinanceBotLib
                 return sellOrder;
             }
         }
+
+        public override WebCallResult<BinancePlacedOrder> PlaceTestBuyOrder(TradingData trade)
+        {
+            using (var client = new BinanceClient())
+            {
+                var buyOrder = client.PlaceTestOrder(
+                trade.CoinPair.ToString(),
+                OrderSide.Buy,
+                OrderType.Limit,
+                quantity: trade.CoinQuantity,
+                price: Math.Round(trade.MarketPrice, 2),
+                timeInForce: TimeInForce.GoodTillCancel);
+
+                return buyOrder;
+            }
+        }
+
+        public override WebCallResult<BinancePlacedOrder> PlaceTestSellOrder(TradingData trade)
+        {
+            using (var client = new BinanceClient())
+            {
+                var sellOrder = client.PlaceTestOrder(
+                trade.CoinPair.ToString(),
+                OrderSide.Sell,
+                OrderType.Limit,
+                quantity: trade.CoinQuantity,
+                price: Math.Round(trade.MarketPrice, 2),
+                timeInForce: TimeInForce.GoodTillCancel);
+
+                return sellOrder;
+            }
+        }
+
+        public override WebCallResult<BinancePlacedOrder> PlaceStopLoss(TradingData trade, decimal percStopLoss)
+        {
+            using (var client = new BinanceClient())
+            {
+                var sellOrder = client.PlaceTestOrder(
+                trade.CoinPair.ToString(),
+                OrderSide.Sell,
+                OrderType.StopLoss,
+                quantity: trade.CoinQuantity,
+                price: Math.Round(trade.MarketPrice, 2),
+                timeInForce: TimeInForce.GoodTillCancel,
+                stopPrice: Math.Round(trade.BuyPriceAfterFees * (1 - percStopLoss / 100), 2));
+
+                return sellOrder;
+            }
+        }
     }
 }

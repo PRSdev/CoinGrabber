@@ -17,5 +17,11 @@ namespace BinanceBotLib
         WebCallResult<BinancePlacedOrder> PlaceBuyOrder(TradingData trade);
 
         WebCallResult<BinancePlacedOrder> PlaceSellOrder(TradingData trade);
+
+        WebCallResult<BinancePlacedOrder> PlaceTestBuyOrder(TradingData trade);
+
+        WebCallResult<BinancePlacedOrder> PlaceTestSellOrder(TradingData trade);
+
+        WebCallResult<BinancePlacedOrder> PlaceStopLoss(TradingData trade, decimal stopLossPerc);
     }
 }

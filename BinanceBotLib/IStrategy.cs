@@ -8,6 +8,8 @@ namespace BinanceBotLib
     {
         void Trade();
 
+        void Trade(List<TradingData> tradesList);
+
         void PlaceBuyOrder();
 
         void PlaceSellOrder();
