@@ -76,10 +76,12 @@ namespace BinanceBotUI
         {
             btnStartStop.Text = "Stop";
 
-            Bot.Started += TradingHelper_Started;
-            Bot.PriceChecked += TradingHelper_PriceChecked;
-            Bot.OrderSucceeded += TradingHelper_OrderSuccess;
-            Bot.Completed += TradingHelper_Completed;
+            Bot.Init();
+
+            Bot.Strategy.Started += Strategy_Started;
+            Bot.Strategy.PriceChecked += Strategy_PriceChecked;
+            Bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
+            Bot.Strategy.Completed += Strategy_Completed;
 
             Bot.Start();
         }
@@ -101,7 +103,7 @@ namespace BinanceBotUI
 
         #region Bot events
 
-        private void TradingHelper_Completed()
+        private void Strategy_Completed()
         {
             this.InvokeSafe(() =>
             {
@@ -109,7 +111,7 @@ namespace BinanceBotUI
             });
         }
 
-        private void TradingHelper_Started()
+        private void Strategy_Started()
         {
             this.InvokeSafe(() =>
             {
@@ -117,7 +119,7 @@ namespace BinanceBotUI
             });
         }
 
-        private void TradingHelper_PriceChecked(TradingData trade)
+        private void Strategy_PriceChecked(TradingData trade)
         {
             this.InvokeSafe(() =>
             {
@@ -125,7 +127,7 @@ namespace BinanceBotUI
             });
         }
 
-        private void TradingHelper_OrderSuccess(TradingData trade)
+        private void Strategy_OrderSuccess(TradingData trade)
         {
             this.InvokeSafe(() =>
             {

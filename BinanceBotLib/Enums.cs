@@ -11,7 +11,7 @@ namespace BinanceBotLib
         FixedProfit,
 
         [Description("Fixed Price Change")]
-        FixedPriceChanage,
+        FixedPriceChange,
 
         [Description("TradingView Signal")]
         TradingViewSignal
