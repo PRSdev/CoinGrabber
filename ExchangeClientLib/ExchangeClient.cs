@@ -8,6 +8,15 @@ namespace ExchangeClientLib
 {
     public class ExchangeClient : IExchangeClient
     {
+        public static List<CoinPair> CoinPairsList = new List<CoinPair>()
+        {
+            new CoinPair("BTC", "USDT"),
+            new CoinPair("BCH", "USDT"),
+            new CoinPair("BNB", "USDT")
+        };
+
+        public static PortfolioHelper Portfolio { get; protected set; } = new PortfolioHelper();
+
         public ExchangeClient(string apiKey, string secretKey)
         {
             if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(secretKey))

@@ -37,6 +37,11 @@ namespace BinanceBotLib
             nvc.Add("Total profit made to-date ($)", GetTotalProfit());
             nvc.Add("Profit per day ($/day)", GetProfitPerDay());
             nvc.Add("Total current investment ($)", GetTotalInvestment());
+
+            foreach (CoinData coin in ExchangeClient.Portfolio.Coins)
+            {
+                nvc.Add($"{coin.Name} balance", coin.Balance.ToString());
+            }
             return nvc;
         }
     }

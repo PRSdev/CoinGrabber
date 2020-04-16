@@ -46,7 +46,7 @@ namespace BinanceBotLib
         public decimal CoinQuantity { get; set; }
 
         [Category("3 Fixed Price Change"), Browsable(false)]
-        public CoinPair CoinPair { get; set; } = CoinPairs.CoinPairsList[0];
+        public CoinPair CoinPair { get; set; } = ExchangeClient.CoinPairsList[0];
 
         [Category("3 Fixed Price Change"), Description("Let the bot decide which coin to buy.")]
         public bool RandomNewCoinPair { get; set; } = false;

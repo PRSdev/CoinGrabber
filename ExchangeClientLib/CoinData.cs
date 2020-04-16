@@ -8,7 +8,7 @@ namespace ExchangeClientLib
     {
         public string Name { get; set; }
 
-        public decimal Quantity { get; set; }
+        public decimal Balance { get; set; }
 
         public decimal MarketPrice { get; set; }
 
@@ -16,8 +16,13 @@ namespace ExchangeClientLib
         {
             get
             {
-                return Math.Round(Quantity * MarketPrice, 2);
+                return Math.Round(Balance * MarketPrice, 2);
             }
+        }
+
+        public CoinData(string name)
+        {
+            Name = name;
         }
     }
 }

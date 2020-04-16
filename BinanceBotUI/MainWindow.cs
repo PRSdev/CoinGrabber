@@ -36,7 +36,7 @@ namespace BinanceBotUI
             }
             cboBotMode.SelectedIndex = (int)Bot.Settings.BotMode;
 
-            foreach (CoinPair cp in CoinPairs.CoinPairsList)
+            foreach (CoinPair cp in ExchangeClient.CoinPairsList)
             {
                 cboCoinPairDefaultNew.Items.Add(cp);
             }
@@ -57,7 +57,7 @@ namespace BinanceBotUI
 
         private void UpdateUI()
         {
-            cboCoinPairDefaultNew.SelectedIndex = CoinPairs.GetCoinPairIndex();
+            cboCoinPairDefaultNew.SelectedIndex = CoinPairHelper.GetCoinPairIndex();
             cboCoinPairDefaultNew.Enabled = !Bot.Settings.RandomNewCoinPair;
 
             lvStatistics.Items.Clear();

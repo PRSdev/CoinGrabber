@@ -80,7 +80,7 @@ namespace BinanceBotLib
 
         public TradingData GetNewTradingData()
         {
-            return new TradingData() { CoinPair = CoinPairs.GetCoinPair() };
+            return new TradingData() { CoinPair = CoinPairHelper.GetCoinPair() };
         }
     }
 }

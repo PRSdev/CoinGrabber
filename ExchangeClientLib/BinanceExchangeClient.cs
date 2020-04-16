@@ -23,11 +23,13 @@ namespace ExchangeClientLib
             });
         }
 
-        public override decimal GetBalance(string coin)
+        public override decimal GetBalance(string coinName)
         {
             using (var client = new BinanceClient())
             {
-                return client.GetAccountInfo().Data.Balances.Single(s => s.Asset == coin).Free;
+                decimal balance = client.GetAccountInfo().Data.Balances.Single(s => s.Asset == coinName).Free;
+                Portfolio.UpdateCoinBalance(coinName, balance);
+                return balance;
             }
         }
 

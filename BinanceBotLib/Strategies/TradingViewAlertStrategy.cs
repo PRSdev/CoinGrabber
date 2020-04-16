@@ -58,7 +58,7 @@ namespace BinanceBotLib
                 }
 
                 // Match coin pair
-                CoinPair coinPair = CoinPairs.GetCoinPair(agent.Subject);
+                CoinPair coinPair = CoinPairHelper.GetCoinPair(agent.Subject);
                 if (coinPair == null)
                 {
                     throw new Exception("CoinPair not supported!");
