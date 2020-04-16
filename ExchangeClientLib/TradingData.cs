@@ -66,7 +66,7 @@ namespace BinanceBotLib
             }
             set
             {
-                _priceChangePerc = Math.Round(_priceChangePerc, 2);
+                _priceChangePerc = Math.Round(value, 2);
             }
         }
 

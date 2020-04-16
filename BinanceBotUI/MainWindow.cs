@@ -89,6 +89,7 @@ namespace BinanceBotUI
         private void btnStartStop_Click(object sender, EventArgs e)
         {
             IsBotRunning = !IsBotRunning;
+            cboBotMode.Enabled = !IsBotRunning;
 
             if (IsBotRunning)
             {
