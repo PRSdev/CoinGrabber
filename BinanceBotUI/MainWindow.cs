@@ -156,6 +156,7 @@ namespace BinanceBotUI
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
+            BinanceBotLib.NativeMethods.AllowSleep();
             Bot.SaveSettings();
         }
 

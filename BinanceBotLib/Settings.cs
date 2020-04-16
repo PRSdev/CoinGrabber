@@ -60,25 +60,34 @@ namespace BinanceBotLib
         public decimal PriceChangePercentage { get; set; } = 2m;
 
         [Category("3 Fixed Price Change"), Description("Buy below this % from market price")]
-        public decimal BuyBelowPerc { get; set; } = 1m;
+        public decimal BuyBelowPerc { get; set; } = 0m;
 
         [Category("3 Fixed Price Change"), Description("Sell above this % from market price")]
-        public decimal SellAbovePerc { get; set; } = 1m;
+        public decimal SellAbovePerc { get; set; } = 0m;
 
         [Category("3 Fixed Price Change"), Browsable(false)]
         public List<TradingData> TradingDataList { get; set; } = new List<TradingData>();
 
-        [Category("4 Trading View"), DefaultValue("user@gmail.com")]
+        [Category("4 Trading View")]
         public string GmailAddress { get; set; } = "user@gmail.com";
 
-        [Category("4 Trading View"), DefaultValue("MyPassword"), PasswordPropertyTextAttribute(true)]
+        [Category("4 Trading View"), PasswordPropertyTextAttribute(true)]
         public string GmailPassword { get; set; } = "MyPassword";
 
-        [Category("4 Trading View"), DefaultValue("MySecretWord"), Description("Secret word of your choice for anti-phishing purposes. Input the same secrete word in your Trading View account alert message.")]
+        [Category("4 Trading View"), Description("Secret word of your choice for anti-phishing purposes. Input the same secrete word in your Trading View account alert message.")]
         public string SecretWord { get; set; } = "MySecretWord";
+
+        [Category("4 Trading View"), Browsable(false)]
+        public DateTime LastEmailDateTime { get; set; } = DateTime.Now;
 
         [Category("4 Trading View"), Description("If set to 10, then the bot will sell if the market price goes 10% below buy price.")]
         public decimal StopLossPerc { get; set; } = 10m;
+
+        [Category("4 Trading View"), Description("If set to 25, then 25% of the quantity will be sold on the sell signal.")]
+        public decimal SellQuantityPerc { get; set; } = 25m;
+
+        [Category("4 Trading View"), Description("If set to 50, then max 50% of the quantity will be sold on the sell signal.")]
+        public decimal SellMaxQuantityPerc { get; set; } = 50m;
 
         [Category("4 Trading View"), Browsable(false)]
         public List<TradingData> TradingViewTradesList { get; set; } = new List<TradingData>();

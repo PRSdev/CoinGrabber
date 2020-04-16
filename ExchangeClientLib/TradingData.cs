@@ -13,7 +13,22 @@ namespace BinanceBotLib
         public decimal MarketPrice { get; set; }
         public CoinPair CoinPair { get; set; }
         public decimal CapitalCost { get; set; }
-        public decimal CoinQuantity { get; set; }
+        private decimal _quantity;
+        public decimal CoinQuantity
+        {
+            get
+            {
+                return _quantity;
+            }
+            set
+            {
+                if (CoinOriginalQuantity == 0)
+                    CoinOriginalQuantity = value;
+                _quantity = value;
+            }
+        }
+
+        public decimal CoinOriginalQuantity { get; set; }
         public decimal PriceChangePercentage { get; set; }
         public decimal BuyPriceAfterFees { get; set; }
         public decimal SellPriceAfterFees { get; set; }

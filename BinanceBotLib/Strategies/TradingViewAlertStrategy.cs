@@ -8,7 +8,6 @@ namespace BinanceBotLib
 {
     public class TradingViewAlertStrategy : Strategy
     {
-        private int _intUnreadEmails = -1;
         private OrderSide _signal;
 
         public TradingViewAlertStrategy(ExchangeType exchange) : base(exchange)
@@ -25,49 +24,50 @@ namespace BinanceBotLib
             // Check for new email every second
             EmailHelper agent = new EmailHelper(Bot.Settings.GmailAddress, Bot.Settings.GmailPassword);
 
-            // Check for stop losses
-            foreach (TradingData trade in tradesList)
+            if (tradesList.Count > 0)
             {
-                trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair));
-                decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - Bot.Settings.StopLossPerc / 100);
-                if (trade.MarketPrice < stopLossPrice)
+                // Check for stop losses
+                foreach (TradingData trade in tradesList)
                 {
-                    PlaceSellOrder(trade, forReal: false, stopLoss: true);
+                    trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair));
+                    decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - Bot.Settings.StopLossPerc / 100);
+                    if (trade.MarketPrice < stopLossPrice)
+                    {
+                        PlaceSellOrder(trade, forReal: false, stopLoss: true);
+                    }
                 }
+
+                // cleanup
+                tradesList.RemoveAll(td => td.BuyOrderID > -1 && td.SellOrderID > -1);
             }
 
             // Check for new email
-            if (agent.UnreadEmails == _intUnreadEmails)
+            if (!agent.NewMail)
                 return;
-            else
-                _intUnreadEmails = agent.UnreadEmails;
 
             // buy or sell signal
-            if (!string.IsNullOrEmpty(agent.Advice))
+            if (!string.IsNullOrEmpty(agent.Subject))
             {
-                if (!agent.Advice.Contains(Bot.Settings.SecretWord))
+                if (!agent.Subject.Contains(Bot.Settings.SecretWord))
                 {
                     // return; // SPAM!
                 }
 
                 // Match coin pair
-                CoinPair coinPair = CoinPairs.GetCoinPair(agent.Advice);
+                CoinPair coinPair = CoinPairs.GetCoinPair(agent.Subject);
                 if (coinPair == null)
                 {
                     throw new Exception("CoinPair not supported!");
                 }
 
-                if (agent.Advice.Contains("Buy"))
+                if (agent.Subject.Contains("Buy"))
                 {
                     _signal = OrderSide.Buy;
                 }
-                else if (agent.Advice.Contains("Sell"))
+                else if (agent.Subject.Contains("Sell"))
                 {
                     _signal = OrderSide.Sell;
                 }
-
-                // cleanup
-                tradesList.RemoveAll(td => td.BuyOrderID > -1 && td.SellOrderID > -1);
 
                 // If no buy or sell orders for the required coin pair, then place an order
                 TradingData tdSearch = tradesList.Find(x => x.CoinPair.Pair1 == coinPair.Pair1);
@@ -89,13 +89,15 @@ namespace BinanceBotLib
                             break;
                     }
                 }
-                else
+                else // existing trades detected
                 {
                     OnStarted();
+
                     foreach (TradingData trade in tradesList)
                     {
-                        if (_signal == OrderSide.Sell)
+                        if (_signal == OrderSide.Sell && trade.CoinQuantity > trade.CoinOriginalQuantity * Bot.Settings.SellMaxQuantityPerc / 100)
                         {
+                            trade.CoinQuantity = Math.Round(trade.CoinQuantity * Bot.Settings.SellQuantityPerc / 100, 5);
                             PlaceSellOrder(trade, forReal: false);
                             Thread.Sleep(250);
                         }

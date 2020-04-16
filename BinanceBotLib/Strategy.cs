@@ -63,7 +63,7 @@ namespace BinanceBotLib
             throw new NotImplementedException();
         }
 
-        protected void PlaceBuyOrder(TradingData trade, List<TradingData> tradesList, bool forReal = true)
+        protected virtual void PlaceBuyOrder(TradingData trade, List<TradingData> tradesList, bool forReal = true)
         {
             decimal fiatValue = _client.GetBalance(trade.CoinPair.Pair2);
 
@@ -100,13 +100,13 @@ namespace BinanceBotLib
             }
         }
 
-        protected void PlaceSellOrder(TradingData trade, bool forReal = true, bool stopLoss = false)
+        protected virtual void PlaceSellOrder(TradingData trade, bool forReal = true, bool stopLoss = false)
         {
             trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
 
             if (trade.MarketPrice > trade.BuyPriceAfterFees || stopLoss)
             {
-                trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
+                trade.CapitalCost = Math.Round(trade.CoinQuantity * trade.MarketPrice, 2);
 
                 if (trade.CapitalCost > Bot.Settings.InvestmentMin || stopLoss)
                 {

@@ -7,8 +7,10 @@ namespace BinanceBotLib
 {
     public class EmailHelper
     {
-        public string Advice { get; private set; }
-        public int UnreadEmails { get; private set; }
+        public string Subject { get; private set; }
+        public DateTime ModifiedDate { get; private set; }
+
+        public bool NewMail { get; private set; }
 
         public EmailHelper(string email, string password)
         {
@@ -24,10 +26,7 @@ namespace BinanceBotLib
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(response);
 
-                int.TryParse(doc.SelectSingleNode(@"/feed/fullcount").InnerText, out int nr);
-                UnreadEmails = nr;
-
-                Advice = GetSubject(doc);
+                ReadLatestEmail(doc);
             }
             catch (Exception ex)
             {
@@ -35,16 +34,27 @@ namespace BinanceBotLib
             }
         }
 
-        private string GetSubject(XmlDocument doc)
+        private void ReadLatestEmail(XmlDocument doc)
         {
             foreach (XmlNode node in doc.SelectNodes(@"/feed/entry"))
             {
                 string title = node.SelectSingleNode("title").InnerText;
                 if (!string.IsNullOrEmpty(title))
-                    return title;
-            }
+                    Subject = title;
 
-            return null;
+                string modified = node.SelectSingleNode("modified").InnerText;
+                if (!string.IsNullOrEmpty(modified))
+                {
+                    DateTime dateTime;
+                    DateTime.TryParse(modified, out dateTime);
+                    ModifiedDate = dateTime;
+
+                    NewMail = ModifiedDate > Bot.Settings.LastEmailDateTime;
+                    if(NewMail)
+                    Bot.Settings.LastEmailDateTime = ModifiedDate;
+                    return;
+                }
+            }
         }
     }
 }
