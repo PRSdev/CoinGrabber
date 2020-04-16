@@ -61,14 +61,17 @@ namespace BinanceBotLib
                     Console.WriteLine(trade.ToStringPriceCheck());
                     OnTradeListItemHandled(trade);
                     // sell if positive price change
-                    if (trade.PriceChangePercentage > Bot.Settings.PriceChangePercentage)
+                    if (trade.PriceChangePercentage > Strategy.PriceChangePercentage)
                     {
                         PlaceSellOrder(trade);
                     }
                     Thread.Sleep(200);
                 }
 
-                if (tradesList.Last<TradingData>().PriceChangePercentage < Bot.Settings.PriceChangePercentage * -1)
+                TradingData lastTrade = tradesList.Last<TradingData>();
+                Statistics.PriceChanges.Add(Math.Abs(lastTrade.PriceChangePercentage));
+                Console.WriteLine($"User={Bot.Settings.PriceChangePercentage}% Bot={Statistics.GetPriceChangePercAuto()}% Interation={Statistics.PriceChanges.Count.ToString()}");
+                if (lastTrade.PriceChangePercentage < Strategy.PriceChangePercentage * -1)
                 {
                     // buy more if negative price change
                     PlaceBuyOrder(GetNewTradingData(), Bot.Settings.TradingDataList);

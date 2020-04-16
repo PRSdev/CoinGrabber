@@ -38,6 +38,15 @@ namespace BinanceBotLib
             throw new Exception("Strategy is not implemented!");
         }
 
+        protected static decimal PriceChangePercentage
+        {
+            get
+            {
+            
+                return Bot.Settings.AutoAdjustPriceChangePercentage && Statistics.PriceChanges.Count > 1000 ? Statistics.GetPriceChangePercAuto() : Math.Abs(Bot.Settings.PriceChangePercentage);
+            }
+        }
+
         protected void OnStarted()
         {
             Started?.Invoke();

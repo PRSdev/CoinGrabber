@@ -10,6 +10,8 @@ namespace ExchangeClientLib
 
         public PortfolioHelper()
         {
+            Coins.Add(new CoinData("USDT"));
+
             foreach (CoinPair cp in ExchangeClient.CoinPairsList)
             {
                 Coins.Add(new CoinData(cp.Pair1));

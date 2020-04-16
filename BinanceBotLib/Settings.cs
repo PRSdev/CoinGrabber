@@ -55,10 +55,13 @@ namespace BinanceBotLib
         public decimal InvestmentMin { get; set; } = 100m;
 
         [Category("3 Fixed Price Change"), Description("The subdivision number for your coin balance e.g. if you have 600 USDT as balance, HydraFactor of 3 will make Bot only invest 200 USDT.")]
-        public int HydraFactor { get; set; } = 5;
+        public int HydraFactor { get; set; } = 10;
 
         [Category("3 Fixed Price Change"), Description("When current price is below or above this percentage, buy or sell order triggers.")]
-        public decimal PriceChangePercentage { get; set; } = 2m;
+        public decimal PriceChangePercentage { get; set; } = 1m;
+
+        [Category("3 Fixed Price Change"), Description("Let the bot automatically determine the most common Price Change Percentage to maximise the number trades per day.")]
+        public bool AutoAdjustPriceChangePercentage { get; set; } = false;
 
         [Category("3 Fixed Price Change"), Description("Buy below this % from market price")]
         public decimal BuyBelowPerc { get; set; } = 0m;
