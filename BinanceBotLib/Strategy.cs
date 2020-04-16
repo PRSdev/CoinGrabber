@@ -10,7 +10,7 @@ namespace BinanceBotLib
         public delegate void TradingEventHandler(TradingData tradingData);
 
         public event ProgressEventHandler Started, Completed;
-        public event TradingEventHandler PriceChecked, OrderSucceeded;
+        public event TradingEventHandler TradeListItemHandled, OrderSucceeded;
 
         protected static ExchangeClient _client = null;
 
@@ -42,9 +42,9 @@ namespace BinanceBotLib
             Started?.Invoke();
         }
 
-        protected void OnPriceChecked(TradingData data)
+        protected void OnTradeListItemHandled(TradingData data)
         {
-            PriceChecked?.Invoke(data);
+            TradeListItemHandled?.Invoke(data);
         }
 
         protected void OnOrderSucceeded(TradingData data)
@@ -67,21 +67,21 @@ namespace BinanceBotLib
         {
             decimal fiatValue = _client.GetBalance(trade.CoinPair.Pair2);
 
-            trade.CapitalCost = Math.Round(fiatValue / Bot.Settings.HydraFactor, 2);
+            trade.CapitalCost = fiatValue / Bot.Settings.HydraFactor;
             if (trade.CapitalCost > Bot.Settings.InvestmentMin)
             {
-                trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100), 2);
+                trade.MarketPrice = _client.GetPrice(trade.CoinPair) * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100);
 
                 Console.WriteLine();
 
                 decimal fees = _client.GetTradeFee(trade.CoinPair);
                 decimal myInvestment = trade.CapitalCost / (1 + fees);
-                trade.CoinQuantity = Math.Round(myInvestment / trade.MarketPrice, 5);
+                trade.CoinQuantity = myInvestment / trade.MarketPrice;
 
                 var buyOrder = forReal ? _client.PlaceBuyOrder(trade) : _client.PlaceTestBuyOrder(trade);
                 if (buyOrder.Success)
                 {
-                    trade.BuyPriceAfterFees = Math.Round(trade.CapitalCost / trade.CoinQuantity, 2);
+                    trade.BuyPriceAfterFees = trade.CapitalCost / trade.CoinQuantity;
                     trade.BuyOrderID = buyOrder.Data.OrderId;
                     trade.ID = tradesList.Count;
                     trade.LastAction = Binance.Net.Objects.OrderSide.Buy;
@@ -106,7 +106,7 @@ namespace BinanceBotLib
 
             if (trade.MarketPrice > trade.BuyPriceAfterFees || stopLoss)
             {
-                trade.CapitalCost = Math.Round(trade.CoinQuantity * trade.MarketPrice, 2);
+                trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
 
                 if (trade.CapitalCost > Bot.Settings.InvestmentMin || stopLoss)
                 {
@@ -116,7 +116,7 @@ namespace BinanceBotLib
                     var sellOrder = forReal ? _client.PlaceSellOrder(trade) : _client.PlaceTestSellOrder(trade);
                     if (sellOrder.Success)
                     {
-                        trade.SellPriceAfterFees = Math.Round(myInvestment / trade.CoinQuantity, 2);
+                        trade.SellPriceAfterFees = myInvestment / trade.CoinQuantity;
                         trade.SellOrderID = sellOrder.Data.OrderId;
                         trade.LastAction = Binance.Net.Objects.OrderSide.Sell;
                         Bot.WriteLog(trade.ToStringSold());

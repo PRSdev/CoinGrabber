@@ -21,15 +21,15 @@ namespace BinanceBotLib
 
         public override void Trade(List<TradingData> tradesList)
         {
-            // Check for new email every second
-            EmailHelper agent = new EmailHelper(Bot.Settings.GmailAddress, Bot.Settings.GmailPassword);
+            OnStarted();
 
             if (tradesList.Count > 0)
             {
                 // Check for stop losses
                 foreach (TradingData trade in tradesList)
                 {
-                    trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair));
+                    OnTradeListItemHandled(trade);
+                    trade.MarketPrice = _client.GetPrice(trade.CoinPair);
                     decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - Bot.Settings.StopLossPerc / 100);
                     if (trade.MarketPrice < stopLossPrice)
                     {
@@ -40,6 +40,9 @@ namespace BinanceBotLib
                 // cleanup
                 tradesList.RemoveAll(td => td.BuyOrderID > -1 && td.SellOrderID > -1);
             }
+
+            // Check for new email every second
+            EmailHelper agent = new EmailHelper(Bot.Settings.GmailAddress, Bot.Settings.GmailPassword);
 
             // Check for new email
             if (!agent.NewMail)
@@ -91,8 +94,6 @@ namespace BinanceBotLib
                 }
                 else // existing trades detected
                 {
-                    OnStarted();
-
                     foreach (TradingData trade in tradesList)
                     {
                         if (_signal == OrderSide.Sell && trade.CoinQuantity > trade.CoinOriginalQuantity * Bot.Settings.SellMaxQuantityPerc / 100)

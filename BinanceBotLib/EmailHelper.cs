@@ -50,8 +50,8 @@ namespace BinanceBotLib
                     ModifiedDate = dateTime;
 
                     NewMail = ModifiedDate > Bot.Settings.LastEmailDateTime;
-                    if(NewMail)
-                    Bot.Settings.LastEmailDateTime = ModifiedDate;
+                    if (NewMail)
+                        Bot.Settings.LastEmailDateTime = ModifiedDate;
                     return;
                 }
             }

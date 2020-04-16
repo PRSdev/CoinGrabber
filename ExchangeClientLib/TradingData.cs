@@ -10,9 +10,35 @@ namespace BinanceBotLib
     public class TradingData
     {
         public int ID { get; set; }
-        public decimal MarketPrice { get; set; }
+
+        private decimal _marketPrice;
+        public decimal MarketPrice
+        {
+            get
+            {
+                return _marketPrice;
+            }
+            set
+            {
+                _marketPrice = Math.Round(value, 2);
+            }
+        }
+
         public CoinPair CoinPair { get; set; }
-        public decimal CapitalCost { get; set; }
+
+        private decimal _capitalCost;
+        public decimal CapitalCost
+        {
+            get
+            {
+                return _capitalCost;
+            }
+            set
+            {
+                _capitalCost = Math.Round(value, 2);
+            }
+        }
+
         private decimal _quantity;
         public decimal CoinQuantity
         {
@@ -22,16 +48,53 @@ namespace BinanceBotLib
             }
             set
             {
+                _quantity = Math.Round(value, 5);
+
                 if (CoinOriginalQuantity == 0)
-                    CoinOriginalQuantity = value;
-                _quantity = value;
+                    CoinOriginalQuantity = _quantity;
             }
         }
 
         public decimal CoinOriginalQuantity { get; set; }
-        public decimal PriceChangePercentage { get; set; }
-        public decimal BuyPriceAfterFees { get; set; }
-        public decimal SellPriceAfterFees { get; set; }
+
+        private decimal _priceChangePerc;
+        public decimal PriceChangePercentage
+        {
+            get
+            {
+                return _priceChangePerc;
+            }
+            set
+            {
+                _priceChangePerc = Math.Round(_priceChangePerc, 2);
+            }
+        }
+
+        private decimal _buyPrice;
+        public decimal BuyPriceAfterFees
+        {
+            get
+            {
+                return _buyPrice;
+            }
+            set
+            {
+                _buyPrice = Math.Round(value, 2);
+            }
+        }
+
+        private decimal _sellPrice;
+        public decimal SellPriceAfterFees
+        {
+            get
+            {
+                return _sellPrice;
+            }
+            set
+            {
+                _sellPrice = Math.Round(value, 2);
+            }
+        }
         public long BuyOrderID { get; set; } = -1;
         public long SellOrderID { get; set; } = -1;
         public DateTime DateTime { get; set; } = DateTime.Now;
@@ -41,7 +104,7 @@ namespace BinanceBotLib
         {
             get
             {
-                return SellPriceAfterFees == 0 ? 0 : Math.Round((SellPriceAfterFees - BuyPriceAfterFees) * CoinQuantity, 2);
+                return SellPriceAfterFees == 0 ? 0 : (SellPriceAfterFees - BuyPriceAfterFees) * CoinQuantity;
             }
         }
 

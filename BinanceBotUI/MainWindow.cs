@@ -32,7 +32,7 @@ namespace BinanceBotUI
             {
                 cboBotMode.Items.Add(botMode.GetDescription());
             }
-            cboBotMode.SelectedIndex = 1;
+            cboBotMode.SelectedIndex = (int)Bot.Settings.BotMode;
 
             foreach (CoinPair cp in CoinPairs.CoinPairsList)
             {
@@ -79,7 +79,7 @@ namespace BinanceBotUI
             Bot.Init();
 
             Bot.Strategy.Started += Strategy_Started;
-            Bot.Strategy.PriceChecked += Strategy_PriceChecked;
+            Bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
             Bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
             Bot.Strategy.Completed += Strategy_Completed;
 
