@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
-namespace BinanceBotLib
+namespace ExchangeClientLib
 {
     public class TradingData
     {

@@ -1,4 +1,5 @@
-﻿using ShareX.HelpersLib;
+﻿using ExchangeClientLib;
+using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

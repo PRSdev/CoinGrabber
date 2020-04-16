@@ -1,8 +1,10 @@
 ﻿using BinanceBotLib;
+using ExchangeClientLib;
 using Microsoft.Win32;
 using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -59,17 +61,18 @@ namespace BinanceBotUI
             cboCoinPairDefaultNew.Enabled = !Bot.Settings.RandomNewCoinPair;
 
             lvStatistics.Items.Clear();
-            ListViewItem lvStat1 = new ListViewItem("Total profit made to-date ($)");
-            lvStat1.SubItems.Add(Statistics.GetTotalProfit());
-            lvStatistics.Items.Add(lvStat1);
+            NameValueCollection nvc = Statistics.GetReport();
+            for (int i = 0; i < nvc.Count; i++)
+            {
+                AddStatistic(nvc.GetKey(i), nvc.Get(i));
+            }
+        }
 
-            ListViewItem lvStat2 = new ListViewItem("Profit per day ($/day)");
-            lvStat2.SubItems.Add(Statistics.GetProfitPerDay());
-            lvStatistics.Items.Add(lvStat2);
-
-            ListViewItem lvStat3 = new ListViewItem("Total current investment ($)");
-            lvStat3.SubItems.Add(Statistics.GetTotalInvestment());
-            lvStatistics.Items.Add(lvStat3);
+        private void AddStatistic(string name, string value)
+        {
+            ListViewItem lvi = new ListViewItem(name);
+            lvi.SubItems.Add(value);
+            lvStatistics.Items.Add(lvi);
         }
 
         private void Trade()

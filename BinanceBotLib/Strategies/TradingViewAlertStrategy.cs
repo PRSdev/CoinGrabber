@@ -1,4 +1,5 @@
 ﻿using Binance.Net.Objects;
+using ExchangeClientLib;
 using System;
 using System.Collections.Generic;
 using System.Text;

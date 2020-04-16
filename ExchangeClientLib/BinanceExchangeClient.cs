@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace BinanceBotLib
+namespace ExchangeClientLib
 {
     public class BinanceExchangeClient : ExchangeClient
     {

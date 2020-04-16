@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BinanceBotLib
+namespace ExchangeClientLib
 {
     public class CoinPair
     {

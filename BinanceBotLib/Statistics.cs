@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ExchangeClientLib;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Text;
 
 namespace BinanceBotLib
@@ -27,6 +29,15 @@ namespace BinanceBotLib
             }
 
             return cost.ToString();
+        }
+
+        public static NameValueCollection GetReport()
+        {
+            NameValueCollection nvc = new NameValueCollection();
+            nvc.Add("Total profit made to-date ($)", GetTotalProfit());
+            nvc.Add("Profit per day ($/day)", GetProfitPerDay());
+            nvc.Add("Total current investment ($)", GetTotalInvestment());
+            return nvc;
         }
     }
 }
