@@ -53,6 +53,7 @@ namespace BinanceBotLib
             {
                 // monitor market price for price changes
                 Console.WriteLine();
+
                 OnStarted();
                 foreach (TradingData trade in tradesList)
                 {

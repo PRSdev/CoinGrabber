@@ -1,4 +1,5 @@
 ﻿using Binance.Net.Objects;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,15 +13,16 @@ namespace ExchangeClientLib
         public int ID { get; set; }
 
         private decimal _marketPrice;
+        [JsonIgnore]
         public decimal MarketPrice
         {
             get
             {
-                return _marketPrice;
+                return Math.Round(_marketPrice, 2);
             }
             set
             {
-                _marketPrice = Math.Round(value, 2);
+                _marketPrice = value;
             }
         }
 
@@ -44,11 +46,11 @@ namespace ExchangeClientLib
         {
             get
             {
-                return _quantity;
+                return Math.Round(_quantity, CoinPair.Precision);
             }
             set
             {
-                _quantity = Math.Round(value, 4);
+                _quantity = value;
 
                 if (CoinOriginalQuantity == 0)
                     CoinOriginalQuantity = _quantity;
@@ -58,6 +60,7 @@ namespace ExchangeClientLib
         public decimal CoinOriginalQuantity { get; set; }
 
         private decimal _priceChangePerc;
+        [JsonIgnore]
         public decimal PriceChangePercentage
         {
             get

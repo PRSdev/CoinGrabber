@@ -93,7 +93,12 @@ namespace BinanceBotUI
             }
             catch (Exception ex)
             {
+#if RELEASE
                 Bot.WriteLog(ex.Message);
+#endif
+#if DEBUG
+                throw ex;
+#endif
             }
         }
 

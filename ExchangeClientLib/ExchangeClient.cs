@@ -10,9 +10,9 @@ namespace ExchangeClientLib
     {
         public static List<CoinPair> CoinPairsList = new List<CoinPair>()
         {
-            new CoinPair("BTC", "USDT"),
-            new CoinPair("BCH", "USDT"),
-            new CoinPair("BNB", "USDT")
+            new CoinPair("BTC", "USDT", 6),
+            new CoinPair("BCH", "USDT", 5),
+            new CoinPair("BNB", "USDT", 2)
         };
 
         public static PortfolioHelper Portfolio { get; protected set; } = new PortfolioHelper();
