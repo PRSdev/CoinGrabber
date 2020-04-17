@@ -9,16 +9,24 @@ namespace BinanceBotLib
 {
     public static class Statistics
     {
-        public static List<decimal> PriceChanges { get; set; } = new List<decimal>();
+        public static List<double> PriceChanges { get; set; } = new List<double>();
 
         public static decimal GetPriceChangePercAuto()
         {
-            return Math.Abs(PriceChanges.GroupBy(i => i).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).First());
+            // max 3 days
+            int intMax = 3 * 24 * 60;
+            int intExtra = PriceChanges.Count - intMax;
+            if (PriceChanges.Count > intMax) PriceChanges.RemoveRange(intExtra, PriceChanges.Count - intExtra);
+
+            double avg = Math.Abs(PriceChanges.Average());
+            double sd = Math.Abs(Math.Sqrt(PriceChanges.Average(v => Math.Pow(v - avg, 2))));
+
+            return (decimal)(avg + sd); // Math.Abs(PriceChanges.GroupBy(i => i).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).First());
         }
 
         public static string GetTotalProfit()
         {
-            return Math.Round(Bot.Settings.TotalProfit,2).ToString();
+            return Math.Round(Bot.Settings.TotalProfit, 2).ToString();
         }
 
         public static string GetProfitPerDay()

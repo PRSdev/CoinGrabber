@@ -70,7 +70,7 @@ namespace BinanceBotLib
                 }
 
                 TradingData lastTrade = tradesList.Last<TradingData>();
-                Statistics.PriceChanges.Add(Math.Abs(lastTrade.PriceChangePercentage));
+                Statistics.PriceChanges.Add((double)Math.Abs(lastTrade.PriceChangePercentage));
                 Console.WriteLine($"User={Bot.Settings.PriceChangePercentage}% Bot={Statistics.GetPriceChangePercAuto()}% Interation={Statistics.PriceChanges.Count.ToString()}");
                 if (lastTrade.PriceChangePercentage < Strategy.PriceChangePercentage * -1)
                 {

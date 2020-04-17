@@ -114,8 +114,15 @@ namespace BinanceBotLib
             if (string.IsNullOrEmpty(Bot.Settings.APIKey))
                 throw new Exception("Settings reset!");
 
-            Strategy.Trade();
-            NativeMethods.PreventSleep();
+            try
+            {
+                NativeMethods.PreventSleep();
+                Strategy.Trade();
+            }
+            catch (Exception ex)
+            {
+                Bot.WriteLog(ex.Message);
+            }
         }
     }
 }
