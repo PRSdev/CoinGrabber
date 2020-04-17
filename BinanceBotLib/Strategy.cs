@@ -42,7 +42,6 @@ namespace BinanceBotLib
         {
             get
             {
-            
                 return Bot.Settings.AutoAdjustPriceChangePercentage && Statistics.PriceChanges.Count > 1000 ? Statistics.GetPriceChangePercAuto() : Math.Abs(Bot.Settings.PriceChangePercentage);
             }
         }
@@ -110,30 +109,20 @@ namespace BinanceBotLib
             }
         }
 
-        protected virtual void PlaceSellOrder(TradingData trade, bool forReal = true, bool stopLoss = false)
+        protected virtual void PlaceSellOrder(TradingData trade, bool forReal = true)
         {
-            trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
+            decimal fees = _client.GetTradeFee(trade.CoinPair);
+            decimal myInvestment = trade.CapitalCost / (1 + fees);
 
-            if (trade.MarketPrice > trade.BuyPriceAfterFees || stopLoss)
+            var sellOrder = forReal ? _client.PlaceSellOrder(trade) : _client.PlaceTestSellOrder(trade);
+            if (sellOrder.Success)
             {
-                trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
-
-                if (trade.CapitalCost > Bot.Settings.InvestmentMin || stopLoss)
-                {
-                    decimal fees = _client.GetTradeFee(trade.CoinPair);
-                    decimal myInvestment = trade.CapitalCost / (1 + fees);
-
-                    var sellOrder = forReal ? _client.PlaceSellOrder(trade) : _client.PlaceTestSellOrder(trade);
-                    if (sellOrder.Success)
-                    {
-                        trade.SellPriceAfterFees = myInvestment / trade.CoinQuantity;
-                        trade.SellOrderID = sellOrder.Data.OrderId;
-                        trade.LastAction = Binance.Net.Objects.OrderSide.Sell;
-                        Bot.WriteLog(trade.ToStringSold());
-                        if (trade.BuyPriceAfterFees > 0) Bot.Settings.TotalProfit += trade.Profit;
-                        OnOrderSucceeded(trade);
-                    }
-                }
+                trade.SellPriceAfterFees = myInvestment / trade.CoinQuantity;
+                trade.SellOrderID = sellOrder.Data.OrderId;
+                trade.LastAction = Binance.Net.Objects.OrderSide.Sell;
+                Bot.WriteLog(trade.ToStringSold());
+                if (forReal && trade.BuyPriceAfterFees > 0) Bot.Settings.TotalProfit += trade.Profit;
+                OnOrderSucceeded(trade);
             }
         }
 

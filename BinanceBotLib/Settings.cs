@@ -85,7 +85,7 @@ namespace BinanceBotLib
         public DateTime LastEmailDateTime { get; set; } = DateTime.Now;
 
         [Category("4 Trading View"), Description("If set to 10, then the bot will sell if the market price goes 10% below buy price.")]
-        public decimal StopLossPerc { get; set; } = 10m;
+        public decimal StopLossPerc { get; set; } = 2m;
 
         [Category("4 Trading View"), Description("If set to 25, then 25% of the quantity will be sold on the sell signal.")]
         public decimal SellQuantityPerc { get; set; } = 25m;

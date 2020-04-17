@@ -148,7 +148,13 @@ namespace ExchangeClientLib
             lvi.Text = ID.ToString();
             lvi.SubItems.Add(CoinQuantity.ToString());
             lvi.SubItems.Add(CoinPair.ToString());
-            lvi.SubItems.Add(BuyPriceAfterFees.ToString());
+            lvi.SubItems.Add(LastAction.ToString());
+
+            if (LastAction == OrderSide.Buy)
+                lvi.SubItems.Add(BuyPriceAfterFees.ToString());
+            else
+                lvi.SubItems.Add(SellPriceAfterFees.ToString());
+
             lvi.SubItems.Add(CapitalCost.ToString());
             lvi.SubItems.Add(MarketPrice.ToString());
             lvi.SubItems.Add(PriceChangePercentage.ToString());

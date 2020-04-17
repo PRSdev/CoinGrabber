@@ -45,7 +45,8 @@ namespace BinanceBotUI
             this.chID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCoinPair = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chBuyPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chCost = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMarketPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPriceChangePerc = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chkStartWithWindows = new System.Windows.Forms.CheckBox();
@@ -55,7 +56,8 @@ namespace BinanceBotUI
             this.lvStatistics = new ShareX.HelpersLib.MyListView();
             this.chStatistic = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chStatisticValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chCost = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnLog = new System.Windows.Forms.Button();
+            this.chOrderSide = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gbBotMode.SuspendLayout();
             this.gbCoinPair.SuspendLayout();
             this.tlpMain.SuspendLayout();
@@ -75,7 +77,7 @@ namespace BinanceBotUI
             this.btnStartStop.Location = new System.Drawing.Point(2, 23);
             this.btnStartStop.Margin = new System.Windows.Forms.Padding(2);
             this.btnStartStop.Name = "btnStartStop";
-            this.btnStartStop.Size = new System.Drawing.Size(117, 31);
+            this.btnStartStop.Size = new System.Drawing.Size(120, 31);
             this.btnStartStop.TabIndex = 0;
             this.btnStartStop.Text = "Start";
             this.btnStartStop.UseVisualStyleBackColor = true;
@@ -87,7 +89,7 @@ namespace BinanceBotUI
             this.btnSettings.Location = new System.Drawing.Point(2, 58);
             this.btnSettings.Margin = new System.Windows.Forms.Padding(2);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(117, 31);
+            this.btnSettings.Size = new System.Drawing.Size(120, 31);
             this.btnSettings.TabIndex = 1;
             this.btnSettings.Text = "Settings...";
             this.btnSettings.UseVisualStyleBackColor = true;
@@ -145,17 +147,18 @@ namespace BinanceBotUI
             this.chID,
             this.chQuantity,
             this.chCoinPair,
-            this.chBuyPrice,
+            this.chOrderSide,
+            this.chPrice,
             this.chCost,
             this.chMarketPrice,
             this.chPriceChangePerc});
             this.lvStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvStatus.FullRowSelect = true;
             this.lvStatus.HideSelection = false;
-            this.lvStatus.Location = new System.Drawing.Point(2, 142);
+            this.lvStatus.Location = new System.Drawing.Point(2, 212);
             this.lvStatus.Margin = new System.Windows.Forms.Padding(2);
             this.lvStatus.Name = "lvStatus";
-            this.lvStatus.Size = new System.Drawing.Size(248, 137);
+            this.lvStatus.Size = new System.Drawing.Size(581, 207);
             this.lvStatus.TabIndex = 6;
             this.lvStatus.UseCompatibleStateImageBehavior = false;
             this.lvStatus.View = System.Windows.Forms.View.Details;
@@ -176,11 +179,16 @@ namespace BinanceBotUI
             this.chCoinPair.Text = "Coin Pair";
             this.chCoinPair.Width = 80;
             // 
-            // chBuyPrice
+            // chPrice
             // 
-            this.chBuyPrice.Text = "Buy Price ($)";
-            this.chBuyPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.chBuyPrice.Width = 75;
+            this.chPrice.Text = "Price ($)";
+            this.chPrice.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.chPrice.Width = 75;
+            // 
+            // chCost
+            // 
+            this.chCost.Text = "Cost ($)";
+            this.chCost.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // chMarketPrice
             // 
@@ -222,7 +230,7 @@ namespace BinanceBotUI
             this.tlpMain.RowCount = 2;
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tlpMain.Size = new System.Drawing.Size(667, 281);
+            this.tlpMain.Size = new System.Drawing.Size(1000, 421);
             this.tlpMain.TabIndex = 8;
             // 
             // flpTopRight
@@ -230,12 +238,13 @@ namespace BinanceBotUI
             this.flpTopRight.Controls.Add(this.chkStartWithWindows);
             this.flpTopRight.Controls.Add(this.btnStartStop);
             this.flpTopRight.Controls.Add(this.btnSettings);
+            this.flpTopRight.Controls.Add(this.btnLog);
             this.flpTopRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpTopRight.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpTopRight.Location = new System.Drawing.Point(254, 2);
+            this.flpTopRight.Location = new System.Drawing.Point(587, 2);
             this.flpTopRight.Margin = new System.Windows.Forms.Padding(2);
             this.flpTopRight.Name = "flpTopRight";
-            this.flpTopRight.Size = new System.Drawing.Size(411, 136);
+            this.flpTopRight.Size = new System.Drawing.Size(411, 206);
             this.flpTopRight.TabIndex = 7;
             // 
             // flpTopLeft
@@ -247,7 +256,7 @@ namespace BinanceBotUI
             this.flpTopLeft.Location = new System.Drawing.Point(2, 2);
             this.flpTopLeft.Margin = new System.Windows.Forms.Padding(2);
             this.flpTopLeft.Name = "flpTopLeft";
-            this.flpTopLeft.Size = new System.Drawing.Size(248, 136);
+            this.flpTopLeft.Size = new System.Drawing.Size(581, 206);
             this.flpTopLeft.TabIndex = 8;
             // 
             // lvStatistics
@@ -262,9 +271,9 @@ namespace BinanceBotUI
             this.lvStatistics.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1,
             listViewItem2});
-            this.lvStatistics.Location = new System.Drawing.Point(255, 143);
+            this.lvStatistics.Location = new System.Drawing.Point(588, 213);
             this.lvStatistics.Name = "lvStatistics";
-            this.lvStatistics.Size = new System.Drawing.Size(409, 135);
+            this.lvStatistics.Size = new System.Drawing.Size(409, 205);
             this.lvStatistics.TabIndex = 1;
             this.lvStatistics.UseCompatibleStateImageBehavior = false;
             this.lvStatistics.View = System.Windows.Forms.View.Details;
@@ -278,11 +287,22 @@ namespace BinanceBotUI
             // 
             this.chStatisticValue.Text = "Value";
             this.chStatisticValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.chStatisticValue.Width = 94;
             // 
-            // chCost
+            // btnLog
             // 
-            this.chCost.Text = "Cost ($)";
-            this.chCost.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.btnLog.Location = new System.Drawing.Point(3, 94);
+            this.btnLog.Name = "btnLog";
+            this.btnLog.Size = new System.Drawing.Size(118, 31);
+            this.btnLog.TabIndex = 8;
+            this.btnLog.Text = "Log...";
+            this.btnLog.UseVisualStyleBackColor = true;
+            this.btnLog.Click += new System.EventHandler(this.btnLog_Click);
+            // 
+            // chOrderSide
+            // 
+            this.chOrderSide.Text = "Side";
+            this.chOrderSide.Width = 53;
             // 
             // MainWindow
             // 
@@ -320,7 +340,7 @@ namespace BinanceBotUI
         private MyListView lvStatus;
         private System.Windows.Forms.ColumnHeader chID;
         private System.Windows.Forms.ColumnHeader chCoinPair;
-        private System.Windows.Forms.ColumnHeader chBuyPrice;
+        private System.Windows.Forms.ColumnHeader chPrice;
         private System.Windows.Forms.ColumnHeader chMarketPrice;
         private System.Windows.Forms.ColumnHeader chPriceChangePerc;
         private System.Windows.Forms.CheckBox chkStartWithWindows;
@@ -332,6 +352,8 @@ namespace BinanceBotUI
         private System.Windows.Forms.ColumnHeader chStatistic;
         private System.Windows.Forms.ColumnHeader chStatisticValue;
         private System.Windows.Forms.ColumnHeader chCost;
+        private System.Windows.Forms.Button btnLog;
+        private System.Windows.Forms.ColumnHeader chOrderSide;
     }
 }
 

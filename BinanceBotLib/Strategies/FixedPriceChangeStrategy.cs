@@ -85,5 +85,20 @@ namespace BinanceBotLib
         {
             return new TradingData() { CoinPair = CoinPairHelper.GetCoinPair() };
         }
+
+        protected override void PlaceSellOrder(TradingData trade, bool forReal = true)
+        {
+            trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
+
+            if (trade.MarketPrice > trade.BuyPriceAfterFees)
+            {
+                trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
+
+                if (trade.CapitalCost > Bot.Settings.InvestmentMin)
+                {
+                    base.PlaceSellOrder(trade, forReal);
+                }
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -77,16 +78,23 @@ namespace BinanceBotUI
 
         private void Trade()
         {
-            btnStartStop.Text = "Stop";
+            try
+            {
+                btnStartStop.Text = "Stop";
 
-            Bot.Init();
+                Bot.Init();
 
-            Bot.Strategy.Started += Strategy_Started;
-            Bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
-            Bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
-            Bot.Strategy.Completed += Strategy_Completed;
+                Bot.Strategy.Started += Strategy_Started;
+                Bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
+                Bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
+                Bot.Strategy.Completed += Strategy_Completed;
 
-            Bot.Start();
+                Bot.Start();
+            }
+            catch (Exception ex)
+            {
+                Bot.WriteLog(ex.Message);
+            }
         }
 
         private void btnStartStop_Click(object sender, EventArgs e)
@@ -189,6 +197,11 @@ namespace BinanceBotUI
             ShowInTaskbar = true;
             WindowState = FormWindowState.Normal;
             Activate();
+        }
+
+        private void btnLog_Click(object sender, EventArgs e)
+        {
+            Helpers.OpenFile(Bot.LogFilePath);
         }
     }
 }
