@@ -46,7 +46,7 @@ namespace BinanceBotLib
                     TradingData trade0 = GetNewTradingData();
                     trade0.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
                     tradesList.Add(trade0); // Add because this is the seed
-                    PlaceSellOrder(trade0);
+                    PlaceSellOrder(trade0, forReal: true);
                 }
             }
             else
@@ -63,7 +63,7 @@ namespace BinanceBotLib
                     // sell if positive price change
                     if (trade.PriceChangePercentage > Strategy.PriceChangePercentage)
                     {
-                        PlaceSellOrder(trade);
+                        PlaceSellOrder(trade, forReal: true);
                     }
                     Thread.Sleep(200);
                 }
@@ -86,7 +86,7 @@ namespace BinanceBotLib
             return new TradingData() { CoinPair = CoinPairHelper.GetCoinPair() };
         }
 
-        protected override void PlaceSellOrder(TradingData trade, bool forReal = true)
+        protected override void PlaceSellOrder(TradingData trade, bool forReal)
         {
             trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
 

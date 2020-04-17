@@ -48,7 +48,7 @@ namespace ExchangeClientLib
             }
             set
             {
-                _quantity = Math.Round(value, 5);
+                _quantity = Math.Round(value, 4);
 
                 if (CoinOriginalQuantity == 0)
                     CoinOriginalQuantity = _quantity;

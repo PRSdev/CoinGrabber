@@ -125,7 +125,7 @@ namespace BinanceBotLib
             }
         }
 
-        protected override void PlaceSellOrder(TradingData trade, bool forReal = true)
+        protected override void PlaceSellOrder(TradingData trade, bool forReal)
         {
             trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair), 2);
             trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;

@@ -109,7 +109,7 @@ namespace BinanceBotLib
             }
         }
 
-        protected virtual void PlaceSellOrder(TradingData trade, bool forReal = true)
+        protected virtual void PlaceSellOrder(TradingData trade, bool forReal)
         {
             decimal fees = _client.GetTradeFee(trade.CoinPair);
             decimal myInvestment = trade.CapitalCost / (1 + fees);

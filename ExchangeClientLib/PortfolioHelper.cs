@@ -23,7 +23,7 @@ namespace ExchangeClientLib
             CoinData coin = Coins.Find(x => x.Name == coinName);
             if (coin != null)
             {
-                coin.Balance = Math.Round(balance, 5);
+                coin.Balance = Math.Round(balance, 4);
             }
         }
     }
