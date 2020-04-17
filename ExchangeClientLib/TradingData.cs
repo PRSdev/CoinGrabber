@@ -124,15 +124,15 @@ namespace ExchangeClientLib
 
         public string ToStringBought()
         {
-            return $"ID={ID} Bought {CoinQuantity} {CoinPair.Pair1} using {CapitalCost} for {MarketPrice}";
+            return $"ID={ID}; Side=Buy; Quantity={CoinQuantity}; Coin={CoinPair.Pair1}; Cost={CapitalCost}; Price={MarketPrice}";
         }
 
         public string ToStringSold()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"ID={ID} Sold {CoinQuantity} {CoinPair.Pair1} for {MarketPrice}");
+            sb.Append($"ID={ID}; Side=Sell; Quantity={CoinQuantity}; Coin={CoinPair.Pair1}; Price={MarketPrice};");
             if (BuyPriceAfterFees > 0)
-                sb.Append($" with profit {Profit}");
+                sb.Append($"Profit={Profit}");
 
             return sb.ToString();
         }
