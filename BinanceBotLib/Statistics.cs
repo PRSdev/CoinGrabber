@@ -21,7 +21,7 @@ namespace BinanceBotLib
             double avg = Math.Abs(PriceChanges.Average());
             double sd = Math.Abs(Math.Sqrt(PriceChanges.Average(v => Math.Pow(v - avg, 2))));
 
-            return (decimal)(avg + sd); // Math.Abs(PriceChanges.GroupBy(i => i).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).First());
+            return Math.Max(0.5m, (decimal)(avg + sd)); // Math.Abs(PriceChanges.GroupBy(i => i).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).First());
         }
 
         public static string GetTotalProfit()

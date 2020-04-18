@@ -57,7 +57,7 @@ namespace BinanceBotLib
             // Check for new email
             if (!agent.NewMail)
             {
-                Console.WriteLine("No new mail!");
+                Console.WriteLine($"{DateTime.Now} No new mail!");
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace BinanceBotLib
 
                         case OrderSide.Sell:
                             decimal coins = _client.GetBalance(coinPair.Pair1);
-                            trade.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
+                            trade.CoinQuantity = coins / Bot.Settings.HydraFactor;
                             tradesList.Add(trade);
                             PlaceSellOrder(trade, forReal: false);
                             break;

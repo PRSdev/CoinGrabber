@@ -135,7 +135,7 @@ namespace ExchangeClientLib
             StringBuilder sb = new StringBuilder();
             sb.Append($"ID={ID}; Side=Sell; Quantity={CoinQuantity}; Coin={CoinPair.Pair1}; Price={MarketPrice};");
             if (BuyPriceAfterFees > 0)
-                sb.Append($"Profit={Profit}");
+                sb.Append($" Profit={Profit}");
 
             return sb.ToString();
         }

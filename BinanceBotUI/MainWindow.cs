@@ -59,7 +59,7 @@ namespace BinanceBotUI
         private void UpdateUI()
         {
             cboCoinPairDefaultNew.SelectedIndex = CoinPairHelper.GetCoinPairIndex();
-            cboCoinPairDefaultNew.Enabled = !Bot.Settings.RandomNewCoinPair;
+            cboCoinPairDefaultNew.Enabled = !Bot.Settings.RandomNewCoinPair && Bot.Settings.BotMode != BotMode.TradingViewSignal;
 
             lvStatistics.Items.Clear();
             NameValueCollection nvc = Statistics.GetReport();
@@ -78,28 +78,16 @@ namespace BinanceBotUI
 
         private void Trade()
         {
-            try
-            {
-                btnStartStop.Text = "Stop";
+            btnStartStop.Text = "Stop";
 
-                Bot.Init();
+            Bot.Init();
 
-                Bot.Strategy.Started += Strategy_Started;
-                Bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
-                Bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
-                Bot.Strategy.Completed += Strategy_Completed;
+            Bot.Strategy.Started += Strategy_Started;
+            Bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
+            Bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
+            Bot.Strategy.Completed += Strategy_Completed;
 
-                Bot.Start();
-            }
-            catch (Exception ex)
-            {
-#if RELEASE
-                Bot.WriteLog(ex.Message);
-#endif
-#if DEBUG
-                throw ex;
-#endif
-            }
+            Bot.Start();
         }
 
         private void btnStartStop_Click(object sender, EventArgs e)
