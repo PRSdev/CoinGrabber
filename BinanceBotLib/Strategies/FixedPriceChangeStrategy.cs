@@ -56,7 +56,7 @@ namespace BinanceBotLib
             foreach (TradingData trade in tradesList)
             {
                 trade.MarketPrice = _client.GetPrice(trade.CoinPair);
-                trade.PriceChangePercentage = (trade.MarketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100;
+                trade.SetPriceChangePercentage(trade.MarketPrice);
                 Console.WriteLine(trade.ToStringPriceCheck());
                 OnTradeListItemHandled(trade);
                 // sell if positive price change

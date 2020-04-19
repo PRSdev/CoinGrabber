@@ -51,7 +51,7 @@ namespace ExchangeClientLib
         {
             get
             {
-                return _quantityToTrade;
+                return Math.Round(_quantityToTrade, CoinPair.Precision);
             }
             set
             {
@@ -68,11 +68,7 @@ namespace ExchangeClientLib
         {
             get
             {
-                return _priceChangePerc;
-            }
-            set
-            {
-                _priceChangePerc = Math.Round(value, 2);
+                return Math.Round(_priceChangePerc, 2);
             }
         }
 
@@ -131,6 +127,14 @@ namespace ExchangeClientLib
         public TradingData(CoinPair coinPair)
         {
             CoinPair = coinPair;
+        }
+
+        public void SetPriceChangePercentage(decimal marketPrice)
+        {
+            if (SellPriceAfterFees > 0)
+                _priceChangePerc = (marketPrice - SellPriceAfterFees) / SellPriceAfterFees * 100;
+            else if (BuyPriceAfterFees > 0)
+                _priceChangePerc = (marketPrice - BuyPriceAfterFees) / BuyPriceAfterFees * 100;
         }
 
         public string ToStringPriceCheck()

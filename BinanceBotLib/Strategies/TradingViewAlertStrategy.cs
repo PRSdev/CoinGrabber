@@ -34,10 +34,7 @@ namespace BinanceBotLib
                     if (trade.MarketPrice > 0)
                     {
                         // Update PriceChangePercentage
-                        if (trade.SellPriceAfterFees > 0)
-                            trade.PriceChangePercentage = (trade.MarketPrice - trade.SellPriceAfterFees) / trade.SellPriceAfterFees * 100;
-                        else if (trade.BuyPriceAfterFees > 0)
-                            trade.PriceChangePercentage = (trade.MarketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100;
+                        trade.SetPriceChangePercentage(trade.MarketPrice);
 
                         decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - Bot.Settings.StopLossPerc / 100);
                         if (trade.MarketPrice < stopLossPrice)
@@ -109,7 +106,11 @@ namespace BinanceBotLib
                 {
                     foreach (TradingData trade in tradesList)
                     {
-                        PlacePartialSellOrder(trade);
+                        if (_signal == OrderSide.Sell)
+                        {
+                            PlaceSellOrder(trade, Bot.Settings.ProductionMode);
+                            // PlacePartialSellOrder(trade, forReal: Bot.Settings.ProductionMode);
+                        }
                     }
 
                     if (_signal == OrderSide.Buy)
@@ -120,12 +121,12 @@ namespace BinanceBotLib
             }
         }
 
-        private void PlacePartialSellOrder(TradingData trade)
+        private void PlacePartialSellOrder(TradingData trade, bool forReal)
         {
-            if (_signal == OrderSide.Sell && trade.CoinQuantity > trade.CoinOriginalQuantity * Bot.Settings.SellMaxQuantityPerc / 100)
+            if (trade.CoinQuantity > trade.CoinOriginalQuantity * Bot.Settings.SellMaxQuantityPerc / 100)
             {
                 trade.CoinQuantityToTrade = trade.CoinQuantity * Bot.Settings.SellQuantityPerc / 100;
-                PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
+                PlaceSellOrder(trade, forReal);
                 Thread.Sleep(250);
             }
         }
