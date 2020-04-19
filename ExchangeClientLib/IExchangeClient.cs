@@ -14,14 +14,14 @@ namespace ExchangeClientLib
 
         decimal GetTradeFee(CoinPair coinPair);
 
-        WebCallResult<BinancePlacedOrder> PlaceBuyOrder(TradingData trade);
+        bool PlaceBuyOrder(TradingData trade);
 
-        WebCallResult<BinancePlacedOrder> PlaceSellOrder(TradingData trade);
+        bool PlaceSellOrder(TradingData trade);
 
-        WebCallResult<BinancePlacedOrder> PlaceTestBuyOrder(TradingData trade);
+        bool PlaceTestBuyOrder(TradingData trade);
 
-        WebCallResult<BinancePlacedOrder> PlaceTestSellOrder(TradingData trade);
+        bool PlaceTestSellOrder(TradingData trade);
 
-        WebCallResult<BinancePlacedOrder> PlaceStopLoss(TradingData trade, decimal stopLossPerc);
+        bool PlaceStopLoss(TradingData trade, decimal stopLossPerc);
     }
 }

@@ -159,19 +159,14 @@ namespace BinanceBotLib
                 trade.CoinQuantity = myInvestment / trade.MarketPrice;
 
             var buyOrder = forReal ? _client.PlaceBuyOrder(trade) : _client.PlaceTestBuyOrder(trade);
-            if (buyOrder.Success)
+            if (buyOrder)
             {
                 trade.BuyPriceAfterFees = capitalCost / trade.CoinQuantity;
-                trade.BuyOrderID = buyOrder.Data.OrderId;
                 trade.ID = tradesList.Count;
                 trade.LastAction = Binance.Net.Objects.OrderSide.Buy;
                 tradesList.Add(trade);
                 Bot.WriteLog(trade.ToStringBought());
                 OnOrderSucceeded(trade);
-            }
-            else
-            {
-                Bot.WriteLog(buyOrder.Error.Message.ToString());
             }
         }
     }

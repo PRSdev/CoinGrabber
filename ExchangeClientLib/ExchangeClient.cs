@@ -40,27 +40,27 @@ namespace ExchangeClientLib
             throw new NotImplementedException();
         }
 
-        public virtual WebCallResult<BinancePlacedOrder> PlaceBuyOrder(TradingData trade)
+        public virtual bool PlaceBuyOrder(TradingData trade)
         {
             throw new NotImplementedException();
         }
 
-        public virtual WebCallResult<BinancePlacedOrder> PlaceSellOrder(TradingData trade)
+        public virtual bool PlaceSellOrder(TradingData trade)
         {
             throw new NotImplementedException();
         }
 
-        public virtual WebCallResult<BinancePlacedOrder> PlaceTestBuyOrder(TradingData trade)
+        public virtual bool PlaceTestBuyOrder(TradingData trade)
         {
             throw new NotImplementedException();
         }
 
-        public virtual WebCallResult<BinancePlacedOrder> PlaceTestSellOrder(TradingData trade)
+        public virtual bool PlaceTestSellOrder(TradingData trade)
         {
             throw new NotImplementedException();
         }
 
-        public virtual WebCallResult<BinancePlacedOrder> PlaceStopLoss(TradingData trade, decimal stopLossPerc)
+        public virtual bool PlaceStopLoss(TradingData trade, decimal stopLossPerc)
         {
             throw new NotImplementedException();
         }

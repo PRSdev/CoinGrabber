@@ -49,7 +49,7 @@ namespace ExchangeClientLib
             }
         }
 
-        public override WebCallResult<BinancePlacedOrder> PlaceBuyOrder(TradingData trade)
+        public override bool PlaceBuyOrder(TradingData trade)
         {
             using (var client = new BinanceClient())
             {
@@ -61,11 +61,16 @@ namespace ExchangeClientLib
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
-                return buyOrder;
+                if (buyOrder.Success)
+                    trade.BuyOrderID = buyOrder.Data.OrderId;
+                else
+                    Console.WriteLine(buyOrder.Error.Message.ToString());
+
+                return buyOrder.Success;
             }
         }
 
-        public override WebCallResult<BinancePlacedOrder> PlaceSellOrder(TradingData trade)
+        public override bool PlaceSellOrder(TradingData trade)
         {
             using (var client = new BinanceClient())
             {
@@ -77,11 +82,16 @@ namespace ExchangeClientLib
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
-                return sellOrder;
+                if (sellOrder.Success)
+                    trade.BuyOrderID = sellOrder.Data.OrderId;
+                else
+                    Console.WriteLine(sellOrder.Error.Message.ToString());
+
+                return sellOrder.Success;
             }
         }
 
-        public override WebCallResult<BinancePlacedOrder> PlaceTestBuyOrder(TradingData trade)
+        public override bool PlaceTestBuyOrder(TradingData trade)
         {
             using (var client = new BinanceClient())
             {
@@ -93,11 +103,16 @@ namespace ExchangeClientLib
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
-                return buyOrder;
+                if (buyOrder.Success)
+                    trade.BuyOrderID = buyOrder.Data.OrderId;
+                else
+                    Console.WriteLine(buyOrder.Error.Message.ToString());
+
+                return buyOrder.Success;
             }
         }
 
-        public override WebCallResult<BinancePlacedOrder> PlaceTestSellOrder(TradingData trade)
+        public override bool PlaceTestSellOrder(TradingData trade)
         {
             using (var client = new BinanceClient())
             {
@@ -109,11 +124,16 @@ namespace ExchangeClientLib
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
-                return sellOrder;
+                if (sellOrder.Success)
+                    trade.BuyOrderID = sellOrder.Data.OrderId;
+                else
+                    Console.WriteLine(sellOrder.Error.Message.ToString());
+
+                return sellOrder.Success;
             }
         }
 
-        public override WebCallResult<BinancePlacedOrder> PlaceStopLoss(TradingData trade, decimal percStopLoss)
+        public override bool PlaceStopLoss(TradingData trade, decimal percStopLoss)
         {
             using (var client = new BinanceClient())
             {
@@ -126,7 +146,12 @@ namespace ExchangeClientLib
                 timeInForce: TimeInForce.GoodTillCancel,
                 stopPrice: Math.Round(trade.BuyPriceAfterFees * (1 - percStopLoss / 100), 2));
 
-                return sellOrder;
+                if (sellOrder.Success)
+                    trade.BuyOrderID = sellOrder.Data.OrderId;
+                else
+                    Console.WriteLine(sellOrder.Error.Message.ToString());
+
+                return sellOrder.Success;
             }
         }
     }

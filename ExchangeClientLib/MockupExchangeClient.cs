@@ -13,12 +13,14 @@ namespace ExchangeClientLib
         private List<HistoricalData> _prices;
         private int _currentIteration;
 
-        public MockupExchangeClient(string apiKey, string secretKey) : base(apiKey, secretKey)
+        public MockupExchangeClient(string apiKey, string secretKey) : base(apiKey = "apiKey", secretKey = "secretKey")
         {
             _prices = File.ReadAllLines("BacktestData.csv")
                                         .Skip(1)
                                         .Select(v => HistoricalData.FromCsv(v))
                                         .ToList();
+
+            Portfolio.UpdateCoinBalance("USDT", 20000m);
         }
 
         public override decimal GetBalance(string coinName)
@@ -33,12 +35,33 @@ namespace ExchangeClientLib
 
         public override decimal GetTradeFee(CoinPair coinPair)
         {
-            return 0.22m;
+            return 0.001m;
         }
 
-        public override WebCallResult<BinancePlacedOrder> PlaceBuyOrder(TradingData trade)
+        public override bool PlaceBuyOrder(TradingData trade)
         {
-            return null;
+            return PlaceTestBuyOrder(trade);
+        }
+
+        public override bool PlaceSellOrder(TradingData trade)
+        {
+            return PlaceTestBuyOrder(trade);
+        }
+
+        public override bool PlaceTestBuyOrder(TradingData trade)
+        {
+            Portfolio.UpdateCoinBalance(trade.CoinPair.Pair1, Portfolio.GetBalance(trade.CoinPair.Pair1) + trade.CoinQuantityToTrade);
+            Portfolio.UpdateCoinBalance(trade.CoinPair.Pair2, Portfolio.GetBalance(trade.CoinPair.Pair2) - trade.CoinQuantityToTrade * trade.MarketPrice * (1 + GetTradeFee(trade.CoinPair)));
+            trade.BuyOrderID = 0;
+            return true;
+        }
+
+        public override bool PlaceTestSellOrder(TradingData trade)
+        {
+            Portfolio.UpdateCoinBalance(trade.CoinPair.Pair1, Portfolio.GetBalance(trade.CoinPair.Pair1) - trade.CoinQuantityToTrade);
+            Portfolio.UpdateCoinBalance(trade.CoinPair.Pair2, Portfolio.GetBalance(trade.CoinPair.Pair2) + trade.CoinQuantityToTrade * trade.MarketPrice * (1 + GetTradeFee(trade.CoinPair)));
+            trade.SellOrderID = 0;
+            return true;
         }
     }
 
@@ -49,7 +72,6 @@ namespace ExchangeClientLib
         public decimal High { get; private set; }
         public decimal Low { get; private set; }
         public decimal Close { get; private set; }
-        public decimal Volume { get; private set; }
 
         public static HistoricalData FromCsv(string csvLine)
         {
@@ -62,7 +84,6 @@ namespace ExchangeClientLib
             data.High = Convert.ToDecimal(values[2]);
             data.Low = Convert.ToDecimal(values[3]);
             data.Close = Convert.ToDecimal(values[4]);
-            data.Volume = Convert.ToDecimal(values[5]);
 
             return data;
         }

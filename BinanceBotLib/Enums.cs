@@ -22,7 +22,7 @@ namespace BinanceBotLib
         [Description("Binance")]
         BinanceExchange,
 
-        [Description("Simulated Exchange")]
-        SimulatedExchange
+        [Description("Mockup Exchange")]
+        MockupExchange
     }
 }
