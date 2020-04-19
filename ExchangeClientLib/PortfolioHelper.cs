@@ -26,5 +26,10 @@ namespace ExchangeClientLib
                 coin.Balance = Math.Round(balance, 4);
             }
         }
+
+        public decimal GetBalance(string coinName)
+        {
+            return Coins.Find(x => x.Name == coinName).Balance;
+        }
     }
 }
