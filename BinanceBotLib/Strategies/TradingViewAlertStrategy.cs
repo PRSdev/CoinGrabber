@@ -34,10 +34,10 @@ namespace BinanceBotLib
                     if (trade.MarketPrice > 0)
                     {
                         // Update PriceChangePercentage
-                        if (trade.BuyPriceAfterFees > 0)
+                        if (trade.SellPriceAfterFees > 0)
+                            trade.PriceChangePercentage = (trade.MarketPrice - trade.SellPriceAfterFees) / trade.SellPriceAfterFees * 100;
+                        else if (trade.BuyPriceAfterFees > 0)
                             trade.PriceChangePercentage = (trade.MarketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100;
-                        else if (trade.SellPriceAfterFees > 0)
-                            trade.PriceChangePercentage = (trade.SellPriceAfterFees - trade.MarketPrice) / trade.SellPriceAfterFees * 100;
 
                         decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - Bot.Settings.StopLossPerc / 100);
                         if (trade.MarketPrice < stopLossPrice)
