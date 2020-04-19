@@ -18,8 +18,13 @@ namespace BinanceBotLib
         [Category("1 General"), Description("Binance Secret Key.")]
         public string SecretKey { get; set; }
 
+        [Category("1 General"), Description("Orders will be actually placed during the production mode.")]
+        public bool ProductionMode { get; set; } = false;
+
         [Category("1 General"), Browsable(false), Description("Total Profit.")]
         public decimal TotalProfit { get; set; }
+        [Category("1 General"), Browsable(false), Description("Total Profit for Simulation.")]
+        public decimal TotalProfitSimulation { get; set; }
 
         [Category("1 General"), Browsable(false)]
         public BotMode BotMode { get; set; } = BotMode.FixedPriceChange;

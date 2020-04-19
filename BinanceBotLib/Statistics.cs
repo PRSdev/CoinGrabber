@@ -26,7 +26,8 @@ namespace BinanceBotLib
 
         public static string GetTotalProfit()
         {
-            return Math.Round(Bot.Settings.TotalProfit, 2).ToString();
+            decimal profit = Bot.Settings.ProductionMode ? Bot.Settings.TotalProfit : Bot.Settings.TotalProfitSimulation;
+            return Math.Round(profit, 2).ToString();
         }
 
         public static string GetProfitPerDay()
@@ -41,10 +42,10 @@ namespace BinanceBotLib
 
             foreach (TradingData trade in Bot.Settings.TradingDataList)
             {
-                cost += trade.CapitalCost;
+                cost += trade.CoinOriginalQuantity * trade.BuyPriceAfterFees;
             }
 
-            return cost.ToString();
+            return Math.Round(cost, 2).ToString();
         }
 
         public static NameValueCollection GetReport()

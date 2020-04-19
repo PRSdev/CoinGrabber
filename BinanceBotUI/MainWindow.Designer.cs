@@ -45,6 +45,7 @@ namespace BinanceBotUI
             this.chID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chQuantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCoinPair = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chOrderSide = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCost = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chMarketPrice = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -52,12 +53,11 @@ namespace BinanceBotUI
             this.chkStartWithWindows = new System.Windows.Forms.CheckBox();
             this.tlpMain = new System.Windows.Forms.TableLayoutPanel();
             this.flpTopRight = new System.Windows.Forms.FlowLayoutPanel();
+            this.btnLog = new System.Windows.Forms.Button();
             this.flpTopLeft = new System.Windows.Forms.FlowLayoutPanel();
             this.lvStatistics = new ShareX.HelpersLib.MyListView();
             this.chStatistic = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chStatisticValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnLog = new System.Windows.Forms.Button();
-            this.chOrderSide = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gbBotMode.SuspendLayout();
             this.gbCoinPair.SuspendLayout();
             this.tlpMain.SuspendLayout();
@@ -179,6 +179,11 @@ namespace BinanceBotUI
             this.chCoinPair.Text = "Coin Pair";
             this.chCoinPair.Width = 80;
             // 
+            // chOrderSide
+            // 
+            this.chOrderSide.Text = "Side";
+            this.chOrderSide.Width = 53;
+            // 
             // chPrice
             // 
             this.chPrice.Text = "Price ($)";
@@ -247,6 +252,16 @@ namespace BinanceBotUI
             this.flpTopRight.Size = new System.Drawing.Size(411, 206);
             this.flpTopRight.TabIndex = 7;
             // 
+            // btnLog
+            // 
+            this.btnLog.Location = new System.Drawing.Point(3, 94);
+            this.btnLog.Name = "btnLog";
+            this.btnLog.Size = new System.Drawing.Size(118, 31);
+            this.btnLog.TabIndex = 8;
+            this.btnLog.Text = "Log...";
+            this.btnLog.UseVisualStyleBackColor = true;
+            this.btnLog.Click += new System.EventHandler(this.btnLog_Click);
+            // 
             // flpTopLeft
             // 
             this.flpTopLeft.Controls.Add(this.gbBotMode);
@@ -289,21 +304,6 @@ namespace BinanceBotUI
             this.chStatisticValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.chStatisticValue.Width = 94;
             // 
-            // btnLog
-            // 
-            this.btnLog.Location = new System.Drawing.Point(3, 94);
-            this.btnLog.Name = "btnLog";
-            this.btnLog.Size = new System.Drawing.Size(118, 31);
-            this.btnLog.TabIndex = 8;
-            this.btnLog.Text = "Log...";
-            this.btnLog.UseVisualStyleBackColor = true;
-            this.btnLog.Click += new System.EventHandler(this.btnLog_Click);
-            // 
-            // chOrderSide
-            // 
-            this.chOrderSide.Text = "Side";
-            this.chOrderSide.Width = 53;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -314,7 +314,7 @@ namespace BinanceBotUI
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "BinanceBotUI";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainWindow_FormClosed);
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.Shown += new System.EventHandler(this.MainWindow_Shown);

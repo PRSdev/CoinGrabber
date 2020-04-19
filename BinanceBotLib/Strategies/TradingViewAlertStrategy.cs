@@ -42,13 +42,13 @@ namespace BinanceBotLib
                         decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - Bot.Settings.StopLossPerc / 100);
                         if (trade.MarketPrice < stopLossPrice)
                         {
-                            PlaceSellOrder(trade, forReal: false);
+                            PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
                         }
                     }
                 }
 
                 // cleanup
-                tradesList.RemoveAll(td => td.BuyOrderID > -1 && td.SellOrderID > -1);
+                tradesList.RemoveAll(td => td.BuyOrderID > -1 && td.SellOrderID > -1 && td.CoinQuantity == 0);
             }
 
             // Check for new email every second
@@ -94,14 +94,14 @@ namespace BinanceBotLib
                     switch (_signal)
                     {
                         case OrderSide.Buy:
-                            PlaceBuyOrder(trade, tradesList, forReal: false);
+                            PlaceBuyOrder(trade, tradesList, forReal: Bot.Settings.ProductionMode);
                             break;
 
                         case OrderSide.Sell:
                             decimal coins = _client.GetBalance(coinPair.Pair1);
                             trade.CoinQuantity = coins / Bot.Settings.HydraFactor;
                             tradesList.Add(trade);
-                            PlaceSellOrder(trade, forReal: false);
+                            PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
                             break;
                     }
                 }
@@ -109,42 +109,50 @@ namespace BinanceBotLib
                 {
                     foreach (TradingData trade in tradesList)
                     {
-                        if (_signal == OrderSide.Sell && trade.CoinQuantity > trade.CoinOriginalQuantity * Bot.Settings.SellMaxQuantityPerc / 100)
-                        {
-                            trade.CoinQuantity = trade.CoinQuantity * Bot.Settings.SellQuantityPerc / 100;
-                            PlaceSellOrder(trade, forReal: false);
-                            Thread.Sleep(250);
-                        }
+                        PlacePartialSellOrder(trade);
                     }
 
                     if (_signal == OrderSide.Buy)
                     {
-                        PlaceBuyOrder(new TradingData(coinPair), tradesList);
+                        PlaceBuyOrder(new TradingData(coinPair), tradesList, forReal: Bot.Settings.ProductionMode);
                     }
                 }
+            }
+        }
+
+        private void PlacePartialSellOrder(TradingData trade)
+        {
+            if (_signal == OrderSide.Sell && trade.CoinQuantity > trade.CoinOriginalQuantity * Bot.Settings.SellMaxQuantityPerc / 100)
+            {
+                trade.CoinQuantityToTrade = trade.CoinQuantity * Bot.Settings.SellQuantityPerc / 100;
+                PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
+                Thread.Sleep(250);
             }
         }
 
         protected override void PlaceSellOrder(TradingData trade, bool forReal)
         {
             trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair), 2);
-            trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
-            base.PlaceSellOrder(trade, forReal);
+
+            // By the time signal is called there is a chance of marketPrice dropping below buyPrice
+            if (trade.MarketPrice > trade.BuyPriceAfterFees)
+            {
+                base.PlaceSellOrder(trade, forReal);
+            }
         }
 
-        protected override void PlaceBuyOrder(TradingData trade, List<TradingData> tradesList, bool forReal = true)
+        protected override void PlaceBuyOrder(TradingData trade, List<TradingData> tradesList, bool forReal)
         {
             decimal fiatValue = _client.GetBalance(trade.CoinPair.Pair2);
 
-            if (trade.CapitalCost == 0)
-                trade.CapitalCost = fiatValue / Bot.Settings.HydraFactor;
+            decimal capitalCost = fiatValue / Bot.Settings.HydraFactor;
 
             trade.MarketPrice = _client.GetPrice(trade.CoinPair);
 
             Console.WriteLine();
 
             decimal fees = _client.GetTradeFee(trade.CoinPair);
-            decimal myInvestment = trade.CapitalCost / (1 + fees);
+            decimal myInvestment = capitalCost / (1 + fees);
 
             if (trade.CoinQuantity == 0)
                 trade.CoinQuantity = myInvestment / trade.MarketPrice;
@@ -152,7 +160,7 @@ namespace BinanceBotLib
             var buyOrder = forReal ? _client.PlaceBuyOrder(trade) : _client.PlaceTestBuyOrder(trade);
             if (buyOrder.Success)
             {
-                trade.BuyPriceAfterFees = trade.CapitalCost / trade.CoinQuantity;
+                trade.BuyPriceAfterFees = capitalCost / trade.CoinQuantity;
                 trade.BuyOrderID = buyOrder.Data.OrderId;
                 trade.ID = tradesList.Count;
                 trade.LastAction = Binance.Net.Objects.OrderSide.Buy;

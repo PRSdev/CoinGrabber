@@ -28,32 +28,35 @@ namespace ExchangeClientLib
 
         public CoinPair CoinPair { get; set; }
 
-        private decimal _capitalCost;
-        public decimal CapitalCost
-        {
-            get
-            {
-                return _capitalCost;
-            }
-            set
-            {
-                _capitalCost = Math.Round(value, 2);
-            }
-        }
-
-        private decimal _quantity;
+        private decimal _quantityRemaining;
         public decimal CoinQuantity
         {
             get
             {
-                return Math.Round(_quantity, CoinPair.Precision);
+                return Math.Round(_quantityRemaining, CoinPair.Precision);
             }
             set
             {
-                _quantity = value;
+                _quantityToTrade = value;
+                _quantityRemaining = value;
 
                 if (CoinOriginalQuantity == 0)
-                    CoinOriginalQuantity = _quantity;
+                    CoinOriginalQuantity = _quantityRemaining;
+            }
+        }
+
+        private decimal _quantityToTrade;
+        [JsonIgnore]
+        public decimal CoinQuantityToTrade
+        {
+            get
+            {
+                return _quantityToTrade;
+            }
+            set
+            {
+                _quantityToTrade = value;
+                _quantityRemaining = _quantityRemaining - _quantityToTrade;
             }
         }
 
@@ -107,7 +110,17 @@ namespace ExchangeClientLib
         {
             get
             {
-                return SellPriceAfterFees == 0 ? 0 : (SellPriceAfterFees - BuyPriceAfterFees) * CoinQuantity;
+                return SellPriceAfterFees == 0 ? 0 : (SellPriceAfterFees - BuyPriceAfterFees) * CoinQuantityToTrade;
+            }
+        }
+
+        [JsonIgnore]
+        public decimal Cost
+        {
+            get
+            {
+                decimal cost = LastAction == OrderSide.Buy ? BuyPriceAfterFees * CoinQuantity : SellPriceAfterFees * CoinQuantity;
+                return Math.Round(cost, 2);
             }
         }
 
@@ -127,13 +140,13 @@ namespace ExchangeClientLib
 
         public string ToStringBought()
         {
-            return $"ID={ID}; Side=Buy; Quantity={CoinQuantity}; Coin={CoinPair.Pair1}; Cost={CapitalCost}; Price={MarketPrice}";
+            return $"ID={ID}; Side=Buy; Quantity={CoinQuantityToTrade}; Coin={CoinPair.Pair1}; Cost={Cost}; Price={MarketPrice}";
         }
 
         public string ToStringSold()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"ID={ID}; Side=Sell; Quantity={CoinQuantity}; Coin={CoinPair.Pair1}; Price={MarketPrice};");
+            sb.Append($"ID={ID}; Side=Sell; Quantity={CoinQuantityToTrade}; Coin={CoinPair.Pair1}; Price={MarketPrice};");
             if (BuyPriceAfterFees > 0)
                 sb.Append($" Profit={Profit}");
 
@@ -158,7 +171,7 @@ namespace ExchangeClientLib
             else
                 lvi.SubItems.Add(SellPriceAfterFees.ToString());
 
-            lvi.SubItems.Add(CapitalCost.ToString());
+            lvi.SubItems.Add(Cost.ToString());
             lvi.SubItems.Add(MarketPrice.ToString());
             lvi.SubItems.Add(PriceChangePercentage.ToString());
             lvi.ForeColor = PriceChangePercentage > 0m ? Color.Green : Color.Red;

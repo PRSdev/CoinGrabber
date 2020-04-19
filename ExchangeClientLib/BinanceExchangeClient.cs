@@ -57,7 +57,7 @@ namespace ExchangeClientLib
                 trade.CoinPair.ToString(),
                 OrderSide.Buy,
                 OrderType.Limit,
-                quantity: Math.Round(trade.CoinQuantity, trade.CoinPair.Precision),
+                quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
@@ -73,7 +73,7 @@ namespace ExchangeClientLib
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
                 OrderType.Limit,
-                quantity: Math.Round(trade.CoinQuantity, trade.CoinPair.Precision),
+                quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
@@ -89,7 +89,7 @@ namespace ExchangeClientLib
                 trade.CoinPair.ToString(),
                 OrderSide.Buy,
                 OrderType.Limit,
-                quantity: Math.Round(trade.CoinQuantity, trade.CoinPair.Precision),
+                quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
@@ -105,7 +105,7 @@ namespace ExchangeClientLib
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
                 OrderType.Limit,
-                quantity: Math.Round(trade.CoinQuantity, trade.CoinPair.Precision),
+                quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
@@ -121,7 +121,7 @@ namespace ExchangeClientLib
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
                 OrderType.StopLoss,
-                quantity: Math.Round(trade.CoinQuantity, trade.CoinPair.Precision),
+                quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.MarketPrice, 2),
                 timeInForce: TimeInForce.GoodTillCancel,
                 stopPrice: Math.Round(trade.BuyPriceAfterFees * (1 - percStopLoss / 100), 2));

@@ -38,7 +38,7 @@ namespace BinanceBotLib
                 if (fiatValue > coinsValue)
                 {
                     // buy
-                    PlaceBuyOrder(GetNewTradingData(), Bot.Settings.TradingDataList);
+                    PlaceBuyOrder(GetNewTradingData(), Bot.Settings.TradingDataList, Bot.Settings.ProductionMode);
                 }
                 else
                 {
@@ -46,40 +46,35 @@ namespace BinanceBotLib
                     TradingData trade0 = GetNewTradingData();
                     trade0.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
                     tradesList.Add(trade0); // Add because this is the seed
-                    PlaceSellOrder(trade0, forReal: true);
+                    PlaceSellOrder(trade0, forReal: Bot.Settings.ProductionMode);
                 }
             }
-            else
+
+            // monitor market price for price changes
+            Console.WriteLine();
+
+            foreach (TradingData trade in tradesList)
             {
-                // monitor market price for price changes
-                Console.WriteLine();
-
-                OnStarted();
-                foreach (TradingData trade in tradesList)
+                trade.MarketPrice = _client.GetPrice(trade.CoinPair);
+                trade.PriceChangePercentage = (trade.MarketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100;
+                Console.WriteLine(trade.ToStringPriceCheck());
+                OnTradeListItemHandled(trade);
+                // sell if positive price change
+                if (trade.PriceChangePercentage > Strategy.PriceChangePercentage)
                 {
-                    trade.MarketPrice = _client.GetPrice(trade.CoinPair);
-                    trade.PriceChangePercentage = (trade.MarketPrice - trade.BuyPriceAfterFees) / trade.BuyPriceAfterFees * 100;
-                    Console.WriteLine(trade.ToStringPriceCheck());
-                    OnTradeListItemHandled(trade);
-                    // sell if positive price change
-                    if (trade.PriceChangePercentage > Strategy.PriceChangePercentage)
-                    {
-                        PlaceSellOrder(trade, forReal: true);
-                    }
-                    Thread.Sleep(200);
+                    PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
                 }
-
-                TradingData lastTrade = tradesList.Last<TradingData>();
-                Statistics.PriceChanges.Add((double)Math.Abs(lastTrade.PriceChangePercentage));
-                Console.WriteLine($"User={Bot.Settings.PriceChangePercentage}% Bot={Statistics.GetPriceChangePercAuto()}% Interation={Statistics.PriceChanges.Count.ToString()}");
-                if (lastTrade.PriceChangePercentage < Strategy.PriceChangePercentage * -1)
-                {
-                    // buy more if negative price change
-                    PlaceBuyOrder(GetNewTradingData(), Bot.Settings.TradingDataList);
-                }
+                Thread.Sleep(250);
             }
 
-            OnCompleted();
+            TradingData lastTrade = tradesList.Last<TradingData>();
+            Statistics.PriceChanges.Add((double)Math.Abs(lastTrade.PriceChangePercentage));
+            Console.WriteLine($"User={Bot.Settings.PriceChangePercentage}% Bot={Statistics.GetPriceChangePercAuto()}% Interation={Statistics.PriceChanges.Count.ToString()}");
+            if (lastTrade.PriceChangePercentage < Strategy.PriceChangePercentage * -1)
+            {
+                // buy more if negative price change
+                PlaceBuyOrder(GetNewTradingData(), Bot.Settings.TradingDataList, Bot.Settings.ProductionMode);
+            }
         }
 
         public TradingData GetNewTradingData()
@@ -93,9 +88,11 @@ namespace BinanceBotLib
 
             if (trade.MarketPrice > trade.BuyPriceAfterFees)
             {
-                trade.CapitalCost = trade.CoinQuantity * trade.MarketPrice;
+                trade.CoinQuantityToTrade = trade.CoinQuantity; // trading the full amount
 
-                if (trade.CapitalCost > Bot.Settings.InvestmentMin)
+                decimal dmReceived = trade.CoinQuantityToTrade * trade.MarketPrice;
+
+                if (dmReceived > Bot.Settings.InvestmentMin)
                 {
                     base.PlaceSellOrder(trade, forReal);
                 }

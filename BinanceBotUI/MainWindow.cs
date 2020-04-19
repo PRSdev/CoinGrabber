@@ -27,8 +27,6 @@ namespace BinanceBotUI
         {
             InitializeComponent();
 
-            this.Text = $"{Application.ProductName} {Application.ProductVersion}";
-
             Bot.LoadSettings();
 
             foreach (BotMode botMode in Helpers.GetEnums<BotMode>())
@@ -58,6 +56,10 @@ namespace BinanceBotUI
 
         private void UpdateUI()
         {
+            Text = $"{Application.ProductName} {Application.ProductVersion}";
+            if (!Bot.Settings.ProductionMode)
+                Text += " - Simulation Mode";
+
             cboCoinPairDefaultNew.SelectedIndex = CoinPairHelper.GetCoinPairIndex();
             cboCoinPairDefaultNew.Enabled = !Bot.Settings.RandomNewCoinPair && Bot.Settings.BotMode != BotMode.TradingViewSignal;
 
@@ -162,7 +164,14 @@ namespace BinanceBotUI
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             BinanceBotLib.NativeMethods.AllowSleep();
+#if DEBUG
+            if (Bot.Settings.ProductionMode)
+                Bot.SaveSettings();
+#endif
+
+#if RELEASE
             Bot.SaveSettings();
+#endif
         }
 
         private void chkStartWithWindows_CheckedChanged(object sender, EventArgs e)

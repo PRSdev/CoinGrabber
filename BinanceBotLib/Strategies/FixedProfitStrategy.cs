@@ -110,7 +110,6 @@ namespace BinanceBotLib
                     Console.WriteLine($"Price change = {priceChange}%");
                     Bot.Settings.LastBuyOrderID = buyOrder.Data.OrderId;
                     Bot.WriteLog("Order ID: " + buyOrder.Data.OrderId);
-                    Bot.SaveSettings();
                     Console.WriteLine();
                 }
             }
@@ -152,7 +151,6 @@ namespace BinanceBotLib
                         Bot.Settings.LastSellOrderID = sellOrder.Data.OrderId;
                         Bot.WriteLog("Order ID: " + sellOrder.Data.OrderId);
                         Bot.Settings.TotalProfit += Bot.Settings.DailyProfitTarget;
-                        Bot.SaveSettings();
                         Console.WriteLine();
                     }
                 }
