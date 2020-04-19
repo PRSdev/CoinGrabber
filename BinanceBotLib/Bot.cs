@@ -23,7 +23,7 @@ namespace BinanceBotLib
         {
             get
             {
-                return Path.Combine(PersonalFolder, "Settings.json");
+                return Path.Combine(PersonalFolder, "MockupExchange-Settings.json");
             }
         }
 
@@ -32,7 +32,7 @@ namespace BinanceBotLib
             get
             {
                 string logsFolder = Path.Combine(PersonalFolder, "Logs");
-                string filename = string.Format("BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
+                string filename = string.Format("MockupExchange-BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
                 return Path.Combine(logsFolder, filename);
             }
         }
@@ -61,21 +61,23 @@ namespace BinanceBotLib
 
         private static bool _init = false;
 
-        private static readonly ExchangeType _exchangeType = ExchangeType.BinanceExchange;
+        private static readonly ExchangeType _exchangeType = ExchangeType.MockupExchange;
         private static System.Timers.Timer _marketTimer = new System.Timers.Timer();
         public static Strategy Strategy { get; private set; }
 
         public static void Init()
         {
+            double timerInterval = _exchangeType == ExchangeType.BinanceExchange ? MathHelpers.Random(60, 120) * 1000 : 1000;
+
             switch (Bot.Settings.BotMode)
             {
                 case BotMode.FixedProfit:
-                    _marketTimer.Interval = MathHelpers.Random(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
+                    _marketTimer.Interval = timerInterval; // Randomly every 1-2 minutes (60-120)
                     Strategy = new FixedProfitStrategy(_exchangeType);
                     break;
 
                 case BotMode.FixedPriceChange:
-                    _marketTimer.Interval = MathHelpers.Random(60, 120) * 1000; // Randomly every 1-2 minutes (60-120)
+                    _marketTimer.Interval = timerInterval; // Randomly every 1-2 minutes (60-120)
                     Strategy = new FixedPriceChangeStrategy(_exchangeType);
                     break;
 
@@ -111,7 +113,7 @@ namespace BinanceBotLib
 
         private static void MarketTimer_Tick(object sender, ElapsedEventArgs e)
         {
-            if (string.IsNullOrEmpty(Bot.Settings.APIKey))
+            if (_exchangeType != ExchangeType.MockupExchange && string.IsNullOrEmpty(Bot.Settings.APIKey))
                 throw new Exception("Settings reset!");
 
 #if DEBUG
