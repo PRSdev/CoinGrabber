@@ -115,7 +115,8 @@ namespace ExchangeClientLib
         {
             get
             {
-                decimal cost = LastAction == OrderSide.Buy ? BuyPriceAfterFees * CoinQuantity : SellPriceAfterFees * CoinQuantity;
+                decimal quantity = CoinQuantity == 0 ? CoinQuantityToTrade : CoinQuantity;
+                decimal cost = LastAction == OrderSide.Buy ? BuyPriceAfterFees * quantity : SellPriceAfterFees * quantity;
                 return Math.Round(cost, 2);
             }
         }
@@ -166,7 +167,12 @@ namespace ExchangeClientLib
         {
             ListViewItem lvi = new ListViewItem();
             lvi.Text = ID.ToString();
-            lvi.SubItems.Add(CoinQuantity.ToString());
+
+            if (CoinQuantity == 0)
+                lvi.SubItems.Add(CoinOriginalQuantity.ToString());
+            else
+                lvi.SubItems.Add(CoinQuantity.ToString());
+
             lvi.SubItems.Add(CoinPair.ToString());
             lvi.SubItems.Add(LastAction.ToString());
 
