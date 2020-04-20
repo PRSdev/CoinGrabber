@@ -11,7 +11,7 @@ namespace BinanceBotLib
     {
         private OrderSide _signal;
 
-        public TradingViewAlertStrategy(ExchangeType exchange) : base(exchange)
+        public TradingViewAlertStrategy(ExchangeType exchange, Settings settings) : base(exchange, settings)
         {
         }
 
@@ -96,7 +96,7 @@ namespace BinanceBotLib
 
                         case OrderSide.Sell:
                             decimal coins = _client.GetBalance(coinPair.Pair1);
-                            trade.CoinQuantity = coins / Bot.Settings.HydraFactor;
+                            trade.CoinQuantity = coins / _settings.HydraFactor;
                             tradesList.Add(trade);
                             PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
                             break;
@@ -146,7 +146,7 @@ namespace BinanceBotLib
         {
             decimal fiatValue = _client.GetBalance(trade.CoinPair.Pair2);
 
-            decimal capitalCost = fiatValue / Bot.Settings.HydraFactor;
+            decimal capitalCost = fiatValue / _settings.HydraFactor;
 
             trade.MarketPrice = _client.GetPrice(trade.CoinPair);
 

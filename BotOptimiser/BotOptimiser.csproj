@@ -50,9 +50,17 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj">
+      <Project>{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}</Project>
+      <Name>ShareX.HelpersLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BinanceBotLib\BinanceBotLib.csproj">
       <Project>{878309be-5294-4f2c-a04c-d0528b42fd8b}</Project>
       <Name>BinanceBotLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExchangeClientLib\ExchangeClientLib.csproj">
+      <Project>{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}</Project>
+      <Name>ExchangeClientLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

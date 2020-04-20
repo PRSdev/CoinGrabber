@@ -1,4 +1,6 @@
 ﻿using BinanceBotLib;
+using ExchangeClientLib;
+using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +13,33 @@ namespace BotOptimiser
     {
         private static void Main(string[] args)
         {
-            decimal[] marketPrices = { 7000m, 7100m, 7200m };
+            Logger logger = new Logger("BacktestDataLogger.log");
 
-            for (decimal hydraFactor = 1.0m; hydraFactor <= 5.0m; hydraFactor++)
+            for (int hydraFactor = 10; hydraFactor <= 20; hydraFactor++)
             {
                 for (decimal priceChangePerc = 1.0m; priceChangePerc <= 4.0m; priceChangePerc++)
                 {
-                    foreach (decimal marketPrice in marketPrices)
+                    try
                     {
-                        Bot.SwingTrade(hydraFactor, priceChangePerc, marketPrice);
-                    }
+                        Settings settings = new Settings()
+                        {
+                            CoinPair = new CoinPair("BTC", "USDT", 6),
+                            HydraFactor = hydraFactor,
+                            PriceChangePercentage = priceChangePerc,
+                            BotMode = BotMode.FixedPriceChange
+                        };
 
-                    Console.WriteLine($"HydraFactor = {hydraFactor} PriceChangePerc = {priceChangePerc} Total Price = {Bot.Settings.TotalProfit.ToString()}");
+                        Bot.Start(settings);
+                    }
+                    catch (Exception ex)
+                    {
+                        Bot.Stop();
+                        logger.WriteLine($"HydraFactor = {hydraFactor} PriceChangePerc = {priceChangePerc} Total Price = {Statistics.GetPortfolioValue()}");
+                    }
                 }
             }
+
+            Console.ReadLine();
         }
     }
 }

@@ -7,9 +7,11 @@ namespace BinanceBotConsole
     internal class Program
 
     {
+        private static Settings Settings { get; set; }
+
         private static void Main(string[] args)
         {
-            Bot.LoadSettings();
+            Settings = Bot.LoadSettings();
 
             // Error handling
             if (string.IsNullOrEmpty(Bot.Settings.APIKey))
@@ -47,7 +49,7 @@ namespace BinanceBotConsole
                     break;
             }
 
-            Bot.Start();
+            Bot.Start(Program.Settings);
             Console.WriteLine($"{Bot.Settings.BotMode.GetDescription()} Bot started...");
 
             Console.ReadLine();

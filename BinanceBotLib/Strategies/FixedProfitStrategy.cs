@@ -9,7 +9,7 @@ namespace BinanceBotLib
 {
     public class FixedProfitStrategy : Strategy
     {
-        public FixedProfitStrategy(ExchangeType exchange) : base(exchange)
+        public FixedProfitStrategy(ExchangeType exchange, Settings settings) : base(exchange, settings)
         {
         }
 

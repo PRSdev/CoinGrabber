@@ -23,7 +23,7 @@ namespace BinanceBotLib
         {
             get
             {
-                return Path.Combine(PersonalFolder, "MockupExchange-Settings.json");
+                return Path.Combine(PersonalFolder, "TradingView-Settings.json");
             }
         }
 
@@ -32,15 +32,16 @@ namespace BinanceBotLib
             get
             {
                 string logsFolder = Path.Combine(PersonalFolder, "Logs");
-                string filename = string.Format("MockupExchange-BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
+                string filename = string.Format("TradingView-BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
                 return Path.Combine(logsFolder, filename);
             }
         }
         private static Logger logger = new Logger(Bot.LogFilePath);
 
-        public static void LoadSettings()
+        public static Settings LoadSettings()
         {
             Settings = Settings.Load(SettingsFilePath);
+            return Settings;
         }
 
         public static void SaveSettings()
@@ -61,29 +62,31 @@ namespace BinanceBotLib
 
         private static bool _init = false;
 
-        private static readonly ExchangeType _exchangeType = ExchangeType.MockupExchange;
+        public static readonly ExchangeType _exchangeType = ExchangeType.MockupExchange;
         private static System.Timers.Timer _marketTimer = new System.Timers.Timer();
         public static Strategy Strategy { get; private set; }
 
-        public static void Init()
+        public static void Init(Settings settings)
         {
-            double timerInterval = _exchangeType == ExchangeType.BinanceExchange ? MathHelpers.Random(60, 120) * 1000 : 1000;
+            Settings = settings;
 
-            switch (Bot.Settings.BotMode)
+            double timerInterval = _exchangeType == ExchangeType.BinanceExchange ? MathHelpers.Random(60, 120) * 1000 : 100;
+
+            switch (settings.BotMode)
             {
                 case BotMode.FixedProfit:
                     _marketTimer.Interval = timerInterval; // Randomly every 1-2 minutes (60-120)
-                    Strategy = new FixedProfitStrategy(_exchangeType);
+                    Strategy = new FixedProfitStrategy(_exchangeType, settings);
                     break;
 
                 case BotMode.FixedPriceChange:
                     _marketTimer.Interval = timerInterval; // Randomly every 1-2 minutes (60-120)
-                    Strategy = new FixedPriceChangeStrategy(_exchangeType);
+                    Strategy = new FixedPriceChangeStrategy(_exchangeType, settings);
                     break;
 
                 case BotMode.TradingViewSignal:
                     _marketTimer.Interval = 5000; // Every 5 seconds
-                    Strategy = new TradingViewAlertStrategy(_exchangeType);
+                    Strategy = new TradingViewAlertStrategy(_exchangeType, settings);
                     break;
 
                 default:
@@ -95,9 +98,9 @@ namespace BinanceBotLib
             _init = true;
         }
 
-        public static void Start()
+        public static void Start(Settings settings)
         {
-            if (!_init) Init();
+            if (!_init) Init(settings);
 
 #if DEBUG
             Strategy.Activate();
@@ -117,7 +120,16 @@ namespace BinanceBotLib
                 throw new Exception("Settings reset!");
 
 #if DEBUG
-            Strategy.Activate();
+            try
+            {
+                Strategy.Activate();
+            }
+            catch (Exception ex)
+            {
+                Stop();
+                Logger logger = new Logger("BacktestDataLogger.log");
+                logger.WriteLine($"HydraFactor = {Settings.HydraFactor} PriceChangePerc = {Settings.PriceChangePercentage} Total Price = {Statistics.GetPortfolioValue()}");
+            }
 #endif
 
 #if RELEASE

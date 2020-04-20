@@ -9,44 +9,44 @@ namespace BinanceBotLib
 {
     public class FixedPriceChangeStrategy : Strategy
     {
-        public FixedPriceChangeStrategy(ExchangeType exchangeType) : base(exchangeType)
+        public FixedPriceChangeStrategy(ExchangeType exchangeType, Settings settings) : base(exchangeType, settings)
         {
         }
 
         public override void Trade()
         {
-            Trade(Bot.Settings.TradingDataList);
+            Trade(_settings.TradingDataList);
         }
 
         public override void Trade(List<TradingData> tradesList)
         {
             // Check USDT and BTC balances
-            decimal coins = _client.GetBalance(Bot.Settings.CoinPair.Pair1);
-            decimal fiatValue = _client.GetBalance(Bot.Settings.CoinPair.Pair2);
+            decimal coins = _client.GetBalance(_settings.CoinPair.Pair1);
+            decimal fiatValue = _client.GetBalance(_settings.CoinPair.Pair2);
 
             // Check if user has more USDT or more BTC
-            decimal coinsValue = coins * _client.GetPrice(Bot.Settings.CoinPair);
+            decimal coinsValue = coins * _client.GetPrice(_settings.CoinPair);
 
             // cleanup
             tradesList.RemoveAll(trade => trade.BuyOrderID > -1 && trade.SellOrderID > -1);
 
             // If no buy or sell orders for the required coin pair, then place an order
-            TradingData tdSearch = tradesList.Find(x => x.CoinPair.Pair1 == Bot.Settings.CoinPair.Pair1);
+            TradingData tdSearch = tradesList.Find(x => x.CoinPair.Pair1 == _settings.CoinPair.Pair1);
             if (tdSearch == null)
             {
                 // buy or sell?
                 if (fiatValue > coinsValue)
                 {
                     // buy
-                    PlaceBuyOrder(GetNewTradingData(), Bot.Settings.TradingDataList, Bot.Settings.ProductionMode);
+                    PlaceBuyOrder(GetNewTradingData(), _settings.TradingDataList, _settings.ProductionMode);
                 }
                 else
                 {
                     // sell
                     TradingData trade0 = GetNewTradingData();
-                    trade0.CoinQuantity = Math.Round(coins / Bot.Settings.HydraFactor, 5);
+                    trade0.CoinQuantity = Math.Round(coins / _settings.HydraFactor, 5);
                     tradesList.Add(trade0); // Add because this is the seed
-                    PlaceSellOrder(trade0, forReal: Bot.Settings.ProductionMode);
+                    PlaceSellOrder(trade0, forReal: _settings.ProductionMode);
                 }
             }
 
@@ -60,20 +60,20 @@ namespace BinanceBotLib
                 Console.WriteLine(trade.ToStringPriceCheck());
                 OnTradeListItemHandled(trade);
                 // sell if positive price change
-                if (trade.PriceChangePercentage > Strategy.PriceChangePercentage)
+                if (trade.PriceChangePercentage > PriceChangePercentage)
                 {
-                    PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
+                    PlaceSellOrder(trade, forReal: _settings.ProductionMode);
                 }
                 Sleep();
             }
 
             TradingData lastTrade = tradesList.Last<TradingData>();
             Statistics.PriceChanges.Add((double)Math.Abs(lastTrade.PriceChangePercentage));
-            Console.WriteLine($"User={Bot.Settings.PriceChangePercentage}% Bot={Statistics.GetPriceChangePercAuto()}% Interation={Statistics.PriceChanges.Count.ToString()}");
-            if (lastTrade.PriceChangePercentage < Strategy.PriceChangePercentage * -1)
+            Console.WriteLine($"User={_settings.PriceChangePercentage}% Bot={Statistics.GetPriceChangePercAuto()}% Interation={Statistics.PriceChanges.Count.ToString()}");
+            if (lastTrade.PriceChangePercentage < PriceChangePercentage * -1)
             {
                 // buy more if negative price change
-                PlaceBuyOrder(GetNewTradingData(), Bot.Settings.TradingDataList, Bot.Settings.ProductionMode);
+                PlaceBuyOrder(GetNewTradingData(), _settings.TradingDataList, _settings.ProductionMode);
             }
         }
 
@@ -84,7 +84,7 @@ namespace BinanceBotLib
 
         protected override void PlaceSellOrder(TradingData trade, bool forReal)
         {
-            trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(Bot.Settings.SellAbovePerc) / 100), 2);
+            trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(_settings.SellAbovePerc) / 100), 2);
 
             if (trade.MarketPrice > trade.BuyPriceAfterFees)
             {
@@ -92,7 +92,7 @@ namespace BinanceBotLib
 
                 decimal dmReceived = trade.CoinQuantityToTrade * trade.MarketPrice;
 
-                if (dmReceived > Bot.Settings.InvestmentMin)
+                if (dmReceived > _settings.InvestmentMin)
                 {
                     base.PlaceSellOrder(trade, forReal);
                 }

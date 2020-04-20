@@ -13,17 +13,20 @@ namespace BinanceBotLib
         public event ProgressEventHandler Started, Completed;
         public event TradingEventHandler TradeListItemHandled, OrderSucceeded;
 
-        protected static ExchangeClient _client = null;
+        protected ExchangeClient _client = null;
+        protected Settings _settings = null;
 
-        public Strategy(ExchangeType exchangeType)
+        public Strategy(ExchangeType exchangeType, Settings settings)
         {
+            _settings = settings;
+
             switch (exchangeType)
             {
                 case ExchangeType.BinanceExchange:
-                    _client = new BinanceExchangeClient(Bot.Settings.APIKey, Bot.Settings.SecretKey);
+                    _client = new BinanceExchangeClient(_settings.APIKey, _settings.SecretKey);
                     break;
                 case ExchangeType.MockupExchange:
-                    _client = new MockupExchangeClient(Bot.Settings.APIKey, Bot.Settings.SecretKey);
+                    _client = new MockupExchangeClient(_settings.APIKey, _settings.SecretKey);
                     break;
             }
         }
@@ -45,11 +48,11 @@ namespace BinanceBotLib
             throw new Exception("Strategy is not implemented!");
         }
 
-        protected static decimal PriceChangePercentage
+        protected decimal PriceChangePercentage
         {
             get
             {
-                return Bot.Settings.AutoAdjustPriceChangePercentage && Statistics.PriceChanges.Count > 1000 ? Statistics.GetPriceChangePercAuto() : Math.Abs(Bot.Settings.PriceChangePercentage);
+                return _settings.AutoAdjustPriceChangePercentage && Statistics.PriceChanges.Count > 1000 ? Statistics.GetPriceChangePercAuto() : Math.Abs(_settings.PriceChangePercentage);
             }
         }
 
@@ -69,7 +72,7 @@ namespace BinanceBotLib
         {
             OrderSucceeded?.Invoke(data);
 #if DEBUG
-            if (Bot.Settings.ProductionMode)
+            if (_settings.ProductionMode)
                 Bot.SaveSettings();
 #endif
 
@@ -94,11 +97,11 @@ namespace BinanceBotLib
         {
             decimal fiatValue = _client.GetBalance(trade.CoinPair.Pair2);
 
-            decimal capitalCost = fiatValue / Bot.Settings.HydraFactor;
+            decimal capitalCost = fiatValue / _settings.HydraFactor;
 
-            if (capitalCost > Bot.Settings.InvestmentMin)
+            if (capitalCost > _settings.InvestmentMin)
             {
-                trade.MarketPrice = _client.GetPrice(trade.CoinPair) * (1 - Math.Abs(Bot.Settings.BuyBelowPerc) / 100);
+                trade.MarketPrice = _client.GetPrice(trade.CoinPair) * (1 - Math.Abs(_settings.BuyBelowPerc) / 100);
 
                 Console.WriteLine();
 
@@ -138,9 +141,9 @@ namespace BinanceBotLib
                 if (trade.BuyPriceAfterFees > 0)
                 {
                     if (forReal)
-                        Bot.Settings.TotalProfit += trade.Profit;
+                        _settings.TotalProfit += trade.Profit;
                     else
-                        Bot.Settings.TotalProfitSimulation += trade.Profit;
+                        _settings.TotalProfitSimulation += trade.Profit;
                 }
                 OnOrderSucceeded(trade);
             }
