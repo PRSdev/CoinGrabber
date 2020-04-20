@@ -6,26 +6,33 @@ using System.Text;
 
 namespace BinanceBotLib
 {
-    public static class CoinPairHelper
+    public class CoinPairHelper
     {
-        public static CoinPair GetCoinPair()
+        private Settings _settings;
+
+        public CoinPairHelper(Settings settings)
+        {
+            _settings = settings;
+        }
+
+        public CoinPair GetCoinPair()
         {
             return ExchangeClient.CoinPairsList[GetCoinPairIndex()];
         }
 
-        public static int GetCoinPairIndex()
+        public int GetCoinPairIndex()
         {
-            if (Bot.Settings.RandomNewCoinPair)
+            if (_settings.RandomNewCoinPair)
             {
                 return MathHelpers.CryptoRandom(0, ExchangeClient.CoinPairsList.Count - 1);
             }
             else
             {
-                return ExchangeClient.CoinPairsList.FindIndex(x => x.ToString() == Bot.Settings.CoinPair.ToString());
+                return ExchangeClient.CoinPairsList.FindIndex(x => x.ToString() == _settings.CoinPair.ToString());
             }
         }
 
-        public static CoinPair GetCoinPair(string signal)
+        public CoinPair GetCoinPair(string signal)
         {
             foreach (CoinPair cp in ExchangeClient.CoinPairsList)
             {

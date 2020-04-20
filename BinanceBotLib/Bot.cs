@@ -13,12 +13,13 @@ using System.Timers;
 
 namespace BinanceBotLib
 {
-    public static class Bot
+    public class Bot
     {
         #region IO
 
         public static readonly string PersonalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BinanceBot");
-        public static Settings Settings { get; private set; }
+        public Settings Settings { get; private set; }
+
         public static string SettingsFilePath
         {
             get
@@ -40,15 +41,14 @@ namespace BinanceBotLib
 
         public static Settings LoadSettings()
         {
-            Settings = Settings.Load(SettingsFilePath);
-            return Settings;
+            return Settings.Load(SettingsFilePath);
         }
 
-        public static void SaveSettings()
+        public static void SaveSettings(Settings settings)
         {
-            if (Settings != null)
+            if (settings != null)
             {
-                Settings.Save(SettingsFilePath);
+                settings.Save(SettingsFilePath);
             }
         }
 
@@ -60,13 +60,13 @@ namespace BinanceBotLib
 
         #endregion IO
 
-        private static bool _init = false;
+        private bool _init = false;
 
         public static readonly ExchangeType _exchangeType = ExchangeType.MockupExchange;
-        private static System.Timers.Timer _marketTimer = new System.Timers.Timer();
-        public static Strategy Strategy { get; private set; }
+        private System.Timers.Timer _marketTimer = new System.Timers.Timer();
+        public Strategy Strategy { get; private set; }
 
-        public static void Init(Settings settings)
+        public Bot(Settings settings)
         {
             Settings = settings;
 
@@ -98,10 +98,8 @@ namespace BinanceBotLib
             _init = true;
         }
 
-        public static void Start(Settings settings)
+        public void Start()
         {
-            if (!_init) Init(settings);
-
 #if DEBUG
             Strategy.Activate();
 #endif
@@ -109,14 +107,14 @@ namespace BinanceBotLib
             _marketTimer.Start();
         }
 
-        public static void Stop()
+        public void Stop()
         {
             _marketTimer.Stop();
         }
 
-        private static void MarketTimer_Tick(object sender, ElapsedEventArgs e)
+        private void MarketTimer_Tick(object sender, ElapsedEventArgs e)
         {
-            if (_exchangeType != ExchangeType.MockupExchange && string.IsNullOrEmpty(Bot.Settings.APIKey))
+            if (_exchangeType != ExchangeType.MockupExchange && string.IsNullOrEmpty(Settings.APIKey))
                 throw new Exception("Settings reset!");
 
 #if DEBUG
@@ -124,12 +122,17 @@ namespace BinanceBotLib
             {
                 Strategy.Activate();
             }
-            catch (Exception ex)
+            catch (ArgumentOutOfRangeException ex) // Mockup Exchange Client
             {
-                Stop();
-                Logger logger = new Logger("BacktestDataLogger.log");
-                logger.WriteLine($"HydraFactor = {Settings.HydraFactor} PriceChangePerc = {Settings.PriceChangePercentage} Total Price = {Statistics.GetPortfolioValue()}");
+                if (_exchangeType == ExchangeType.MockupExchange)
+                {
+                    Console.WriteLine(ex.Message);
+                    Logger logger = new Logger("BacktestDataLogger.log");
+                    logger.WriteLine($"HydraFactor = {Settings.HydraFactor} PriceChangePerc = {Settings.PriceChangePercentage} Portfolio Value = {Strategy.Statistics.GetPortfolioValue()}");
+                    Stop();
+                }
             }
+
 #endif
 
 #if RELEASE

@@ -79,7 +79,8 @@ namespace BinanceBotLib
 
         public TradingData GetNewTradingData()
         {
-            return new TradingData() { CoinPair = CoinPairHelper.GetCoinPair() };
+            CoinPairHelper cph = new CoinPairHelper(_settings);
+            return new TradingData() { CoinPair = cph.GetCoinPair() };
         }
 
         protected override void PlaceSellOrder(TradingData trade, bool forReal)

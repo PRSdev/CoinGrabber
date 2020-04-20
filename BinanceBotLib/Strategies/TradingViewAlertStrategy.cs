@@ -17,7 +17,7 @@ namespace BinanceBotLib
 
         public override void Trade()
         {
-            Trade(Bot.Settings.TradingViewTradesList);
+            Trade(_settings.TradingViewTradesList);
         }
 
         public override void Trade(List<TradingData> tradesList)
@@ -36,10 +36,10 @@ namespace BinanceBotLib
                         // Update PriceChangePercentage
                         trade.SetPriceChangePercentage(trade.MarketPrice);
 
-                        decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - Bot.Settings.StopLossPerc / 100);
+                        decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - _settings.StopLossPerc / 100);
                         if (trade.MarketPrice < stopLossPrice)
                         {
-                            PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
+                            PlaceSellOrder(trade, forReal: _settings.ProductionMode);
                         }
                     }
                 }
@@ -49,7 +49,7 @@ namespace BinanceBotLib
             }
 
             // Check for new email every second
-            EmailHelper agent = new EmailHelper(Bot.Settings.GmailAddress, Bot.Settings.GmailPassword);
+            EmailHelper agent = new EmailHelper(_settings);
 
             // Check for new email
             if (!agent.NewMail)
@@ -61,13 +61,13 @@ namespace BinanceBotLib
             // buy or sell signal
             if (!string.IsNullOrEmpty(agent.Subject))
             {
-                if (!agent.Subject.Contains(Bot.Settings.SecretWord))
+                if (!agent.Subject.Contains(_settings.SecretWord))
                 {
                     return; // SPAM!
                 }
 
                 // Match coin pair
-                CoinPair coinPair = CoinPairHelper.GetCoinPair(agent.Subject);
+                CoinPair coinPair = new CoinPairHelper(_settings).GetCoinPair(agent.Subject);
                 if (coinPair == null)
                 {
                     throw new Exception("CoinPair not supported!");
@@ -91,14 +91,14 @@ namespace BinanceBotLib
                     switch (_signal)
                     {
                         case OrderSide.Buy:
-                            PlaceBuyOrder(trade, tradesList, forReal: Bot.Settings.ProductionMode);
+                            PlaceBuyOrder(trade, tradesList, forReal: _settings.ProductionMode);
                             break;
 
                         case OrderSide.Sell:
                             decimal coins = _client.GetBalance(coinPair.Pair1);
                             trade.CoinQuantity = coins / _settings.HydraFactor;
                             tradesList.Add(trade);
-                            PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
+                            PlaceSellOrder(trade, forReal: _settings.ProductionMode);
                             break;
                     }
                 }
@@ -108,14 +108,14 @@ namespace BinanceBotLib
                     {
                         if (_signal == OrderSide.Sell)
                         {
-                            PlaceSellOrder(trade, Bot.Settings.ProductionMode);
-                            // PlacePartialSellOrder(trade, forReal: Bot.Settings.ProductionMode);
+                            PlaceSellOrder(trade, _settings.ProductionMode);
+                            // PlacePartialSellOrder(trade, forReal: _settings.ProductionMode);
                         }
                     }
 
                     if (_signal == OrderSide.Buy)
                     {
-                        PlaceBuyOrder(new TradingData(coinPair), tradesList, forReal: Bot.Settings.ProductionMode);
+                        PlaceBuyOrder(new TradingData(coinPair), tradesList, forReal: _settings.ProductionMode);
                     }
                 }
             }
@@ -123,9 +123,9 @@ namespace BinanceBotLib
 
         private void PlacePartialSellOrder(TradingData trade, bool forReal)
         {
-            if (trade.CoinQuantity > trade.CoinOriginalQuantity * Bot.Settings.SellMaxQuantityPerc / 100)
+            if (trade.CoinQuantity > trade.CoinOriginalQuantity * _settings.SellMaxQuantityPerc / 100)
             {
-                trade.CoinQuantityToTrade = trade.CoinQuantity * Bot.Settings.SellQuantityPerc / 100;
+                trade.CoinQuantityToTrade = trade.CoinQuantity * _settings.SellQuantityPerc / 100;
                 PlaceSellOrder(trade, forReal);
                 Sleep();
             }

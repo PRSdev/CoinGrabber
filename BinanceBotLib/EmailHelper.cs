@@ -7,17 +7,20 @@ namespace BinanceBotLib
 {
     public class EmailHelper
     {
+        private Settings _settings;
+
         public string Subject { get; private set; }
         public DateTime ModifiedDate { get; private set; }
 
         public bool NewMail { get; private set; }
 
-        public EmailHelper(string email, string password)
+        public EmailHelper(Settings settings)
         {
+            _settings = settings;
             try
             {
                 System.Net.WebClient objClient = new System.Net.WebClient();
-                objClient.Credentials = new System.Net.NetworkCredential(email, password);
+                objClient.Credentials = new System.Net.NetworkCredential(_settings.GmailAddress, _settings.GmailPassword);
 
                 string response; response = Encoding.UTF8.GetString(objClient.DownloadData(@"https://mail.google.com/mail/feed/atom"));
 
@@ -49,9 +52,9 @@ namespace BinanceBotLib
                     DateTime.TryParse(modified, out dateTime);
                     ModifiedDate = dateTime;
 
-                    NewMail = ModifiedDate > Bot.Settings.LastEmailDateTime;
+                    NewMail = ModifiedDate > _settings.LastEmailDateTime;
                     if (NewMail)
-                        Bot.Settings.LastEmailDateTime = ModifiedDate;
+                        _settings.LastEmailDateTime = ModifiedDate;
                     return;
                 }
             }

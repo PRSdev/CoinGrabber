@@ -15,10 +15,12 @@ namespace BinanceBotLib
 
         protected ExchangeClient _client = null;
         protected Settings _settings = null;
+        public Statistics Statistics { get; private set; }
 
         public Strategy(ExchangeType exchangeType, Settings settings)
         {
             _settings = settings;
+            Statistics = new Statistics(settings);
 
             switch (exchangeType)
             {
@@ -73,7 +75,7 @@ namespace BinanceBotLib
             OrderSucceeded?.Invoke(data);
 #if DEBUG
             if (_settings.ProductionMode)
-                Bot.SaveSettings();
+                Bot.SaveSettings(_settings);
 #endif
 
 #if RELEASE

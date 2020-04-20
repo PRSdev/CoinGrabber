@@ -22,18 +22,18 @@ namespace BinanceBotUI
         private bool IsBotRunning = false;
 
         private RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        private Bot _bot = null;
 
         public MainWindow()
         {
             InitializeComponent();
-
-            Bot.LoadSettings();
+            _bot = new Bot(Program.Settings);
 
             foreach (BotMode botMode in Helpers.GetEnums<BotMode>())
             {
                 cboBotMode.Items.Add(botMode.GetDescription());
             }
-            cboBotMode.SelectedIndex = (int)Bot.Settings.BotMode;
+            cboBotMode.SelectedIndex = (int)Program.Settings.BotMode;
 
             foreach (CoinPair cp in ExchangeClient.CoinPairsList)
             {
@@ -57,14 +57,14 @@ namespace BinanceBotUI
         private void UpdateUI()
         {
             Text = $"{Application.ProductName} {Application.ProductVersion}";
-            if (!Bot.Settings.ProductionMode)
+            if (!Program.Settings.ProductionMode)
                 Text += " - Simulation Mode";
 
-            cboCoinPairDefaultNew.SelectedIndex = CoinPairHelper.GetCoinPairIndex();
-            cboCoinPairDefaultNew.Enabled = !Bot.Settings.RandomNewCoinPair && Bot.Settings.BotMode != BotMode.TradingViewSignal;
+            cboCoinPairDefaultNew.SelectedIndex = new CoinPairHelper(Program.Settings).GetCoinPairIndex();
+            cboCoinPairDefaultNew.Enabled = !Program.Settings.RandomNewCoinPair && Program.Settings.BotMode != BotMode.TradingViewSignal;
 
             lvStatistics.Items.Clear();
-            NameValueCollection nvc = Statistics.GetReport();
+            NameValueCollection nvc = _bot.Strategy.Statistics.GetReport();
             for (int i = 0; i < nvc.Count; i++)
             {
                 AddStatistic(nvc.GetKey(i), nvc.Get(i));
@@ -82,14 +82,12 @@ namespace BinanceBotUI
         {
             btnStartStop.Text = "Stop";
 
-            Bot.Init(Program.Settings);
+            _bot.Strategy.Started += Strategy_Started;
+            _bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
+            _bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
+            _bot.Strategy.Completed += Strategy_Completed;
 
-            Bot.Strategy.Started += Strategy_Started;
-            Bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
-            Bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
-            Bot.Strategy.Completed += Strategy_Completed;
-
-            Bot.Start(Program.Settings);
+            _bot.Start(Program.Settings);
         }
 
         private void btnStartStop_Click(object sender, EventArgs e)
@@ -103,7 +101,7 @@ namespace BinanceBotUI
             }
             else
             {
-                Bot.Stop();
+                _bot.Stop();
                 btnStartStop.Text = "Start";
             }
         }
@@ -153,18 +151,18 @@ namespace BinanceBotUI
 
         private void cboNewDefaultCoinPair_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Bot.Settings.CoinPair = cboCoinPairDefaultNew.SelectedItem as CoinPair;
+            _bot.Settings.CoinPair = cboCoinPairDefaultNew.SelectedItem as CoinPair;
         }
 
         private void cboBotMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Bot.Settings.BotMode = (BotMode)cboBotMode.SelectedIndex;
+            _bot.Settings.BotMode = (BotMode)cboBotMode.SelectedIndex;
         }
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             BinanceBotLib.NativeMethods.AllowSleep();
-            Bot.SaveSettings();
+            Bot.SaveSettings(Program.Settings);
         }
 
         private void chkStartWithWindows_CheckedChanged(object sender, EventArgs e)

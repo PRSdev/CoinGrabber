@@ -7,11 +7,17 @@ using System.Text;
 
 namespace BinanceBotLib
 {
-    public static class Statistics
+    public class Statistics
     {
-        public static List<double> PriceChanges { get; set; } = new List<double>();
+        private Settings _settings;
+        public List<double> PriceChanges { get; set; } = new List<double>();
 
-        public static decimal GetPriceChangePercAuto()
+        public Statistics(Settings settings)
+        {
+            _settings = settings;
+        }
+
+        public decimal GetPriceChangePercAuto()
         {
             // max 3 days
             int intMax = 3 * 24 * 60;
@@ -24,23 +30,23 @@ namespace BinanceBotLib
             return Math.Max(0.5m, (decimal)(avg + sd)); // Math.Abs(PriceChanges.GroupBy(i => i).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).First());
         }
 
-        public static string GetTotalProfit()
+        public string GetTotalProfit()
         {
-            decimal profit = Bot.Settings.ProductionMode ? Bot.Settings.TotalProfit : Bot.Settings.TotalProfitSimulation;
+            decimal profit = _settings.ProductionMode ? _settings.TotalProfit : _settings.TotalProfitSimulation;
             return Math.Round(profit, 2).ToString();
         }
 
-        public static string GetProfitPerDay()
+        public string GetProfitPerDay()
         {
-            double totalDays = (DateTime.Now - Bot.Settings.StartDate).TotalDays;
-            return Math.Round(Bot.Settings.TotalProfit / (decimal)totalDays, 2).ToString();
+            double totalDays = (DateTime.Now - _settings.StartDate).TotalDays;
+            return Math.Round(_settings.TotalProfit / (decimal)totalDays, 2).ToString();
         }
 
-        public static string GetTotalInvestment()
+        public string GetTotalInvestment()
         {
             decimal cost = 0m;
 
-            foreach (TradingData trade in Bot.Settings.TradingDataList)
+            foreach (TradingData trade in _settings.TradingDataList)
             {
                 cost += trade.CoinOriginalQuantity * trade.BuyPriceAfterFees;
             }
@@ -48,7 +54,7 @@ namespace BinanceBotLib
             return Math.Round(cost, 2).ToString();
         }
 
-        public static string GetPortfolioValue()
+        public string GetPortfolioValue()
         {
             decimal fiatValue = 0;
             foreach (CoinData coin in ExchangeClient.Portfolio.Coins)
@@ -64,7 +70,7 @@ namespace BinanceBotLib
             return Math.Round(fiatValue, 2).ToString();
         }
 
-        public static NameValueCollection GetReport()
+        public NameValueCollection GetReport()
         {
             NameValueCollection nvc = new NameValueCollection();
             nvc.Add("Total profit made to-date ($)", GetTotalProfit());

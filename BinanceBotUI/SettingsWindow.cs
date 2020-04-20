@@ -18,7 +18,7 @@ namespace BinanceBotUI
             InitializeComponent();
 
             this.Text = $"{Application.ProductName} Settings";
-            pgSettings.SelectedObject = Bot.Settings;
+            pgSettings.SelectedObject = Program.Settings;
         }
     }
 }
