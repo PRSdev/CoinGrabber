@@ -127,7 +127,7 @@ namespace BinanceBotLib
             {
                 trade.CoinQuantityToTrade = trade.CoinQuantity * Bot.Settings.SellQuantityPerc / 100;
                 PlaceSellOrder(trade, forReal);
-                Thread.Sleep(250);
+                Sleep();
             }
         }
 
@@ -136,10 +136,10 @@ namespace BinanceBotLib
             trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair), 2);
 
             // By the time signal is called there is a chance of marketPrice dropping below buyPrice
-            if (trade.MarketPrice > trade.BuyPriceAfterFees)
-            {
-                base.PlaceSellOrder(trade, forReal);
-            }
+            // if (trade.MarketPrice > trade.BuyPriceAfterFees)
+            // {
+            base.PlaceSellOrder(trade, forReal);
+            //  }
         }
 
         protected override void PlaceBuyOrder(TradingData trade, List<TradingData> tradesList, bool forReal)

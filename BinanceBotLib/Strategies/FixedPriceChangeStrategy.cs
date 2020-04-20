@@ -64,7 +64,7 @@ namespace BinanceBotLib
                 {
                     PlaceSellOrder(trade, forReal: Bot.Settings.ProductionMode);
                 }
-                Thread.Sleep(250);
+                Sleep();
             }
 
             TradingData lastTrade = tradesList.Last<TradingData>();

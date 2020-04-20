@@ -18,6 +18,7 @@ namespace ExchangeClientLib
             _prices = File.ReadAllLines("BacktestData.csv")
                                         .Skip(1)
                                         .Select(v => HistoricalData.FromCsv(v))
+                                        .Reverse()
                                         .ToList();
 
             Portfolio.UpdateCoinBalance("USDT", 20000m);
@@ -30,7 +31,9 @@ namespace ExchangeClientLib
 
         public override decimal GetPrice(CoinPair coinPair)
         {
-            return _prices[_currentIteration++].Open;
+            decimal marketPrice = _prices[_currentIteration++].Open;
+            Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
+            return marketPrice;
         }
 
         public override decimal GetTradeFee(CoinPair coinPair)
@@ -67,7 +70,7 @@ namespace ExchangeClientLib
 
     internal class HistoricalData
     {
-        public DateTime Date { get; private set; }
+        public string Date { get; private set; }
         public decimal Open { get; private set; }
         public decimal High { get; private set; }
         public decimal Low { get; private set; }
@@ -79,11 +82,11 @@ namespace ExchangeClientLib
 
             HistoricalData data = new HistoricalData();
 
-            data.Date = Convert.ToDateTime(values[0]);
-            data.Open = Convert.ToDecimal(values[1]);
-            data.High = Convert.ToDecimal(values[2]);
-            data.Low = Convert.ToDecimal(values[3]);
-            data.Close = Convert.ToDecimal(values[4]);
+            data.Date = values[0];
+            data.Open = Convert.ToDecimal(values[2]);
+            data.High = Convert.ToDecimal(values[3]);
+            data.Low = Convert.ToDecimal(values[4]);
+            data.Close = Convert.ToDecimal(values[5]);
 
             return data;
         }

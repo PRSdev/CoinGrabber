@@ -27,6 +27,15 @@ namespace ExchangeClientLib
             }
         }
 
+        public void UpdateCoinMarketPrice(string coinName, decimal marketPrice)
+        {
+            CoinData coin = Coins.Find(x => x.Name == coinName);
+            if (coin != null)
+            {
+                coin.MarketPrice = Math.Round(marketPrice, 2);
+            }
+        }
+
         public decimal GetBalance(string coinName)
         {
             return Coins.Find(x => x.Name == coinName).Balance;

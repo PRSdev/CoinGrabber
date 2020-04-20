@@ -48,13 +48,29 @@ namespace BinanceBotLib
             return Math.Round(cost, 2).ToString();
         }
 
+        public static string GetPortfolioValue()
+        {
+            decimal fiatValue = 0;
+            foreach (CoinData coin in ExchangeClient.Portfolio.Coins)
+            {
+                if (coin.Name == "USDT")
+                    fiatValue += coin.Balance;
+                else if (coin.Balance > 0)
+                {
+                    fiatValue += coin.Value;
+                }
+            }
+
+            return Math.Round(fiatValue, 2).ToString();
+        }
+
         public static NameValueCollection GetReport()
         {
             NameValueCollection nvc = new NameValueCollection();
             nvc.Add("Total profit made to-date ($)", GetTotalProfit());
             nvc.Add("Profit per day ($/day)", GetProfitPerDay());
             nvc.Add("Total current investment ($)", GetTotalInvestment());
-
+            nvc.Add("Portfolio value ($)", GetPortfolioValue());
             foreach (CoinData coin in ExchangeClient.Portfolio.Coins)
             {
                 if (coin.Balance > 0)

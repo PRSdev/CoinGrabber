@@ -53,6 +53,8 @@ namespace BinanceBotLib
             }
         }
 
+        #region Events
+
         protected void OnStarted()
         {
             Started?.Invoke();
@@ -80,6 +82,8 @@ namespace BinanceBotLib
         {
             Completed?.Invoke();
         }
+
+        #endregion Events
 
         public virtual void PlaceBuyOrder()
         {
@@ -145,6 +149,14 @@ namespace BinanceBotLib
         public virtual void PlaceSellOrder()
         {
             throw new NotImplementedException();
+        }
+
+        protected void Sleep()
+        {
+            if (Bot._exchangeType != ExchangeType.MockupExchange)
+            {
+                System.Threading.Thread.Sleep(250);
+            }
         }
     }
 }

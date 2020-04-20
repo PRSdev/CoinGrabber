@@ -37,7 +37,9 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                return Math.Round(client.GetPrice(coinPair.ToString()).Data.Price, 2);
+                decimal marketPrice = Math.Round(client.GetPrice(coinPair.ToString()).Data.Price, 2);
+                Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
+                return marketPrice;
             }
         }
 
