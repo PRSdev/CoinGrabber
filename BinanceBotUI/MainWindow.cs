@@ -24,35 +24,41 @@ namespace BinanceBotUI
         private RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         private Bot _bot = null;
 
-        public MainWindow()
+        #region Bot events
+
+        private void Strategy_Completed()
         {
-            InitializeComponent();
-            _bot = new Bot(Program.Settings);
-
-            foreach (BotMode botMode in Helpers.GetEnums<BotMode>())
+            this.InvokeSafe(() =>
             {
-                cboBotMode.Items.Add(botMode.GetDescription());
-            }
-            cboBotMode.SelectedIndex = (int)Program.Settings.BotMode;
-
-            foreach (CoinPair cp in ExchangeClient.CoinPairsList)
-            {
-                cboCoinPairDefaultNew.Items.Add(cp);
-            }
-
-            chkStartWithWindows.Checked = rkApp.GetValue(Application.ProductName) != null && rkApp.GetValue(Application.ProductName).Equals(Application.ExecutablePath);
-            if (chkStartWithWindows.Checked)
-            {
-                Trade();
-                ShowInTaskbar = false;
-                WindowState = FormWindowState.Minimized;
-            }
+                UpdateUI();
+            });
         }
 
-        private void MainWindow_Load(object sender, EventArgs e)
+        private void Strategy_Started()
         {
-            UpdateUI();
+            this.InvokeSafe(() =>
+            {
+                lvStatus.Items.Clear();
+            });
         }
+
+        private void Strategy_PriceChecked(TradingData trade)
+        {
+            this.InvokeSafe(() =>
+            {
+                lvStatus.Items.Add(trade.ToListViewItem());
+            });
+        }
+
+        private void Strategy_OrderSuccess(TradingData trade)
+        {
+            this.InvokeSafe(() =>
+            {
+                niTray.ShowBalloonTip(5000, Application.ProductName, trade.ToString(), ToolTipIcon.Info);
+            });
+        }
+
+        #endregion Bot events
 
         private void UpdateUI()
         {
@@ -90,6 +96,36 @@ namespace BinanceBotUI
             _bot.Start();
         }
 
+        public MainWindow()
+        {
+            InitializeComponent();
+            _bot = new Bot(Program.Settings);
+
+            foreach (BotMode botMode in Helpers.GetEnums<BotMode>())
+            {
+                cboBotMode.Items.Add(botMode.GetDescription());
+            }
+            cboBotMode.SelectedIndex = (int)Program.Settings.BotMode;
+
+            foreach (CoinPair cp in ExchangeClient.CoinPairsList)
+            {
+                cboCoinPairDefaultNew.Items.Add(cp);
+            }
+
+            chkStartWithWindows.Checked = rkApp.GetValue(Application.ProductName) != null && rkApp.GetValue(Application.ProductName).Equals(Application.ExecutablePath);
+            if (chkStartWithWindows.Checked)
+            {
+                Trade();
+                ShowInTaskbar = false;
+                WindowState = FormWindowState.Minimized;
+            }
+        }
+
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+            UpdateUI();
+        }
+
         private void btnStartStop_Click(object sender, EventArgs e)
         {
             IsBotRunning = !IsBotRunning;
@@ -105,42 +141,6 @@ namespace BinanceBotUI
                 btnStartStop.Text = "Start";
             }
         }
-
-        #region Bot events
-
-        private void Strategy_Completed()
-        {
-            this.InvokeSafe(() =>
-            {
-                UpdateUI();
-            });
-        }
-
-        private void Strategy_Started()
-        {
-            this.InvokeSafe(() =>
-            {
-                lvStatus.Items.Clear();
-            });
-        }
-
-        private void Strategy_PriceChecked(TradingData trade)
-        {
-            this.InvokeSafe(() =>
-            {
-                lvStatus.Items.Add(trade.ToListViewItem());
-            });
-        }
-
-        private void Strategy_OrderSuccess(TradingData trade)
-        {
-            this.InvokeSafe(() =>
-            {
-                niTray.ShowBalloonTip(5000, Application.ProductName, trade.ToString(), ToolTipIcon.Info);
-            });
-        }
-
-        #endregion Bot events
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
