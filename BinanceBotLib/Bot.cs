@@ -52,15 +52,24 @@ namespace BinanceBotLib
             }
         }
 
+        public static void WriteConsole(string message)
+        {
+            if (_exchangeType != ExchangeType.MockupExchange)
+            {
+                Console.WriteLine(message);
+            }
+        }
+
         public static void WriteLog(string message)
         {
-            Console.WriteLine(message);
-            logger.WriteLine(message);
+            if (_exchangeType != ExchangeType.MockupExchange)
+            {
+                Console.WriteLine(message);
+                logger.WriteLine(message);
+            }
         }
 
         #endregion IO
-
-        private bool _init = false;
 
         public static readonly ExchangeType _exchangeType = ExchangeType.MockupExchange;
         private System.Timers.Timer _marketTimer = new System.Timers.Timer();
@@ -94,8 +103,6 @@ namespace BinanceBotLib
                     Console.ReadLine();
                     return;
             }
-
-            _init = true;
         }
 
         public void Start()
@@ -128,7 +135,7 @@ namespace BinanceBotLib
                 {
                     Console.WriteLine(ex.Message);
                     Logger logger = new Logger("BacktestDataLogger.log");
-                    logger.WriteLine($"HydraFactor = {Settings.HydraFactor} PriceChangePerc = {Settings.PriceChangePercentage} Portfolio Value = {Strategy.Statistics.GetPortfolioValue()}");
+                    logger.WriteLine($"{Settings.HydraFactor},{Settings.PriceChangePercentage},{Strategy.Statistics.GetPortfolioValue()}");
                     Stop();
                 }
             }

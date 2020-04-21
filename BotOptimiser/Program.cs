@@ -22,7 +22,8 @@ namespace BotOptimiser
                         CoinPair = new CoinPair("BTC", "USDT", 6),
                         HydraFactor = hydraFactor,
                         PriceChangePercentage = priceChangePerc,
-                        BotMode = BotMode.FixedPriceChange
+                        BotMode = BotMode.FixedPriceChange,
+                        InvestmentMax = 0
                     };
 
                     Bot myBot = new Bot(settings);

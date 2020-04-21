@@ -57,10 +57,10 @@ namespace BinanceBotLib
             {
                 trade.MarketPrice = _client.GetPrice(trade.CoinPair);
                 trade.SetPriceChangePercentage(trade.MarketPrice);
-                Console.WriteLine(trade.ToStringPriceCheck());
+                Bot.WriteConsole(trade.ToStringPriceCheck());
                 OnTradeListItemHandled(trade);
                 // sell if positive price change
-                if (trade.PriceChangePercentage > PriceChangePercentage)
+                if (trade.PriceChangePercentage > Math.Abs(_settings.PriceChangePercentage))
                 {
                     PlaceSellOrder(trade, forReal: _settings.ProductionMode);
                 }
@@ -68,9 +68,8 @@ namespace BinanceBotLib
             }
 
             TradingData lastTrade = tradesList.Last<TradingData>();
-            Statistics.PriceChanges.Add((double)Math.Abs(lastTrade.PriceChangePercentage));
-            Console.WriteLine($"User={_settings.PriceChangePercentage}% Bot={Statistics.GetPriceChangePercAuto()}% Interation={Statistics.PriceChanges.Count.ToString()}");
-            if (lastTrade.PriceChangePercentage < PriceChangePercentage * -1)
+
+            if (lastTrade.PriceChangePercentage < Math.Abs(_settings.PriceChangePercentage) * -1)
             {
                 // buy more if negative price change
                 PlaceBuyOrder(GetNewTradingData(), _settings.TradingDataList, _settings.ProductionMode);
