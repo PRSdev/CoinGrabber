@@ -10,24 +10,12 @@ namespace BinanceBotLib
     public class Statistics
     {
         private Settings _settings;
-        public List<double> PriceChanges { get; set; } = new List<double>();
+        private PortfolioHelper _portfolio;
 
-        public Statistics(Settings settings)
+        public Statistics(Settings settings, PortfolioHelper portfolio)
         {
             _settings = settings;
-        }
-
-        public decimal GetPriceChangePercAuto()
-        {
-            // max 3 days
-            int intMax = 3 * 24 * 60;
-            int intExtra = PriceChanges.Count - intMax;
-            if (PriceChanges.Count > intMax) PriceChanges.RemoveRange(intExtra, PriceChanges.Count - intExtra);
-
-            double avg = Math.Abs(PriceChanges.Average());
-            double sd = Math.Abs(Math.Sqrt(PriceChanges.Average(v => Math.Pow(v - avg, 2))));
-
-            return Math.Max(0.5m, (decimal)(avg + sd)); // Math.Abs(PriceChanges.GroupBy(i => i).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).First());
+            _portfolio = portfolio;
         }
 
         public string GetTotalProfit()
@@ -57,7 +45,7 @@ namespace BinanceBotLib
         public string GetPortfolioValue()
         {
             decimal fiatValue = 0;
-            foreach (CoinData coin in ExchangeClient.Portfolio.Coins)
+            foreach (CoinData coin in _portfolio.Coins)
             {
                 if (coin.Name == "USDT")
                     fiatValue += coin.Balance;
@@ -77,7 +65,7 @@ namespace BinanceBotLib
             nvc.Add("Profit per day ($/day)", GetProfitPerDay());
             nvc.Add("Total current investment ($)", GetTotalInvestment());
             nvc.Add("Portfolio value ($)", GetPortfolioValue());
-            foreach (CoinData coin in ExchangeClient.Portfolio.Coins)
+            foreach (CoinData coin in _portfolio.Coins)
             {
                 if (coin.Balance > 0)
                     nvc.Add($"{coin.Name} balance", coin.Balance.ToString());

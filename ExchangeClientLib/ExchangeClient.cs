@@ -15,7 +15,7 @@ namespace ExchangeClientLib
             new CoinPair("BCH", "USDT", 5)
         };
 
-        public static PortfolioHelper Portfolio { get; protected set; } = new PortfolioHelper();
+        public PortfolioHelper Portfolio { get; protected set; } = new PortfolioHelper();
 
         public ExchangeClient(string apiKey, string secretKey)
         {

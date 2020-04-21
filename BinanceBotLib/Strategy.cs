@@ -20,7 +20,6 @@ namespace BinanceBotLib
         public Strategy(ExchangeType exchangeType, Settings settings)
         {
             _settings = settings;
-            Statistics = new Statistics(settings);
 
             switch (exchangeType)
             {
@@ -31,6 +30,8 @@ namespace BinanceBotLib
                     _client = new MockupExchangeClient(_settings.APIKey, _settings.SecretKey);
                     break;
             }
+
+            Statistics = new Statistics(settings, _client.Portfolio);
         }
 
         public void Activate()
@@ -48,14 +49,6 @@ namespace BinanceBotLib
         public virtual void Trade(List<TradingData> trades)
         {
             throw new Exception("Strategy is not implemented!");
-        }
-
-        protected decimal PriceChangePercentage
-        {
-            get
-            {
-                return _settings.AutoAdjustPriceChangePercentage && Statistics.PriceChanges.Count > 1000 ? Statistics.GetPriceChangePercAuto() : Math.Abs(_settings.PriceChangePercentage);
-            }
         }
 
         #region Events
