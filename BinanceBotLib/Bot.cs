@@ -52,7 +52,7 @@ namespace BinanceBotLib
             }
         }
 
-        public static void WriteConsole(string message)
+        public static void WriteConsole(string message = "")
         {
             if (_exchangeType != ExchangeType.MockupExchange)
             {
@@ -129,13 +129,14 @@ namespace BinanceBotLib
             {
                 Strategy.Activate();
             }
-            catch (ArgumentOutOfRangeException ex) // Mockup Exchange Client
+            catch (ArgumentOutOfRangeException) // Mockup Exchange Client
             {
                 if (_exchangeType == ExchangeType.MockupExchange)
                 {
-                    Console.WriteLine(ex.Message);
                     Logger logger = new Logger("BacktestDataLogger.log");
-                    logger.WriteLine($"{Settings.HydraFactor},{Settings.PriceChangePercentage},{Strategy.Statistics.GetPortfolioValue()}");
+                    string result = $"{Settings.HydraFactor},{Settings.PriceChangePercentage},{Strategy.Statistics.GetPortfolioValue()}";
+                    Console.WriteLine(result);
+                    logger.WriteLine(result);
                     Stop();
                 }
             }

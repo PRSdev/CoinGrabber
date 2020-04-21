@@ -52,7 +52,7 @@ namespace BinanceBotLib
             // Check for new email
             if (!agent.NewMail)
             {
-                Console.WriteLine($"{DateTime.Now} No new mail!");
+                Bot.WriteConsole($"{DateTime.Now} No new mail!");
                 return;
             }
 
@@ -148,7 +148,7 @@ namespace BinanceBotLib
 
             trade.MarketPrice = _client.GetPrice(trade.CoinPair);
 
-            Console.WriteLine();
+            Bot.WriteConsole();
 
             decimal fees = _client.GetTradeFee(trade.CoinPair);
             decimal myInvestment = capitalCost / (1 + fees);

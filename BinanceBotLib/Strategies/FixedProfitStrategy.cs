@@ -32,10 +32,10 @@ namespace BinanceBotLib
                             PlaceBuyOrder();
                             break;
                         case OrderStatus.New:
-                            Console.WriteLine($"Waiting {DateTime.UtcNow - queryBuyOrder.Data.Time} for the {_settings.BuyPrice} buy order to fill...");
+                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - queryBuyOrder.Data.Time} for the {_settings.BuyPrice} buy order to fill...");
                             break;
                         default:
-                            Console.WriteLine("Unhandled buy order outcome. Reload application...");
+                            Bot.WriteConsole("Unhandled buy order outcome. Reload application...");
                             break;
                     }
                 }
@@ -51,21 +51,21 @@ namespace BinanceBotLib
                             PlaceSellOrder();
                             break;
                         case OrderStatus.New:
-                            Console.WriteLine($"Waiting {DateTime.UtcNow - querySellOrder.Data.Time} for the {_settings.SellPrice} sell order to fill...");
+                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - querySellOrder.Data.Time} for the {_settings.SellPrice} sell order to fill...");
                             break;
                         default:
-                            Console.WriteLine("Unhandled sell order outcome. Reload application...");
+                            Bot.WriteConsole("Unhandled sell order outcome. Reload application...");
                             break;
                     }
                 }
                 else if (queryBuyOrder.Data == null)
                 {
-                    Console.WriteLine("Could not find any previous buy orders.");
+                    Bot.WriteConsole("Could not find any previous buy orders.");
                     PlaceBuyOrder();
                 }
                 else if (querySellOrder.Data == null)
                 {
-                    Console.WriteLine("Could not find any previous sell orders.");
+                    Bot.WriteConsole("Could not find any previous sell orders.");
                     PlaceSellOrder();
                 }
             }
@@ -107,10 +107,10 @@ namespace BinanceBotLib
                     Bot.WriteLog("Target sell price = " + _settings.SellPrice);
 
                     decimal priceChange = Math.Round(priceDiff / _settings.BuyPrice * 100, 2);
-                    Console.WriteLine($"Price change = {priceChange}%");
+                    Bot.WriteConsole($"Price change = {priceChange}%");
                     _settings.LastBuyOrderID = buyOrder.Data.OrderId;
                     Bot.WriteLog("Order ID: " + buyOrder.Data.OrderId);
-                    Console.WriteLine();
+                    Bot.WriteConsole();
                 }
             }
         }
@@ -151,7 +151,7 @@ namespace BinanceBotLib
                         _settings.LastSellOrderID = sellOrder.Data.OrderId;
                         Bot.WriteLog("Order ID: " + sellOrder.Data.OrderId);
                         _settings.TotalProfit += _settings.DailyProfitTarget;
-                        Console.WriteLine();
+                        Bot.WriteConsole();
                     }
                 }
             }

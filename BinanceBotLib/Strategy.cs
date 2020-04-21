@@ -98,7 +98,7 @@ namespace BinanceBotLib
             {
                 trade.MarketPrice = _client.GetPrice(trade.CoinPair) * (1 - Math.Abs(_settings.BuyBelowPerc) / 100);
 
-                Console.WriteLine();
+                Bot.WriteConsole();
 
                 decimal fees = _client.GetTradeFee(trade.CoinPair);
                 decimal myInvestment = capitalCost / (1 + fees);
@@ -117,7 +117,7 @@ namespace BinanceBotLib
             }
             else
             {
-                Console.WriteLine($"Capital cost is too low to buy more.");
+                Bot.WriteConsole($"Capital cost is too low to buy more.");
             }
         }
 
