@@ -87,7 +87,7 @@ namespace BinanceBotUI
             _bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
             _bot.Strategy.Completed += Strategy_Completed;
 
-            _bot.Start(Program.Settings);
+            _bot.Start();
         }
 
         private void btnStartStop_Click(object sender, EventArgs e)

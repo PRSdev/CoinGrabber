@@ -14,13 +14,13 @@ namespace BinanceBotConsole
             Settings = Bot.LoadSettings();
 
             // Error handling
-            if (string.IsNullOrEmpty(Bot.Settings.APIKey))
+            if (string.IsNullOrEmpty(Settings.APIKey))
             {
                 Console.Write("Enter Binance API Key: ");
-                Bot.Settings.APIKey = Console.ReadLine();
+                Settings.APIKey = Console.ReadLine();
 
                 Console.Write("Enter Binance Secret Key: ");
-                Bot.Settings.SecretKey = Console.ReadLine();
+                Settings.SecretKey = Console.ReadLine();
             }
 
             // Choose Bot mode
@@ -32,15 +32,15 @@ namespace BinanceBotConsole
 
             int intMode;
             int.TryParse(Console.ReadLine(), out intMode);
-            Bot.Settings.BotMode = (BotMode)intMode;
+            Settings.BotMode = (BotMode)intMode;
 
-            Bot.SaveSettings();
+            Bot.SaveSettings(Settings);
 
             // Error handling - Bot mode specific
-            switch (Bot.Settings.BotMode)
+            switch (Settings.BotMode)
             {
                 case BotMode.FixedProfit:
-                    if (Bot.Settings.DailyProfitTarget <= 0)
+                    if (Settings.DailyProfitTarget <= 0)
                     {
                         Console.WriteLine("Daily Profit Target must be greater than zero!");
                         Console.ReadLine();
@@ -49,8 +49,9 @@ namespace BinanceBotConsole
                     break;
             }
 
-            Bot.Start(Program.Settings);
-            Console.WriteLine($"{Bot.Settings.BotMode.GetDescription()} Bot started...");
+            Bot myBot = new Bot(Program.Settings);
+            myBot.Start();
+            Console.WriteLine($"{Settings.BotMode.GetDescription()} Bot started...");
 
             Console.ReadLine();
         }

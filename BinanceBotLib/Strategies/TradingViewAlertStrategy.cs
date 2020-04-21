@@ -22,8 +22,6 @@ namespace BinanceBotLib
 
         public override void Trade(List<TradingData> tradesList)
         {
-            OnStarted();
-
             if (tradesList.Count > 0)
             {
                 // Check for stop losses
