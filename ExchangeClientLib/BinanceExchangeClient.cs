@@ -85,7 +85,7 @@ namespace ExchangeClientLib
                 timeInForce: TimeInForce.GoodTillCancel);
 
                 if (sellOrder.Success)
-                    trade.BuyOrderID = sellOrder.Data.OrderId;
+                    trade.SellOrderID = sellOrder.Data.OrderId;
                 else
                     Console.WriteLine(sellOrder.Error.Message.ToString());
 
