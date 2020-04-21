@@ -13,9 +13,9 @@ namespace BotOptimiser
     {
         private static void Main(string[] args)
         {
-            for (int hydraFactor = 10; hydraFactor <= 20; hydraFactor++)
+            for (int hydraFactor = 19; hydraFactor <= 20; hydraFactor++)
             {
-                for (decimal priceChangePerc = 1.0m; priceChangePerc <= 4.0m; priceChangePerc++)
+                for (decimal priceChangePerc = 3.0m; priceChangePerc <= 4.0m; priceChangePerc = priceChangePerc + 0.1m)
                 {
                     Settings settings = new Settings()
                     {
