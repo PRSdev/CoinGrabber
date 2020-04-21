@@ -37,7 +37,7 @@ namespace BinanceBotLib
                         decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - _settings.StopLossPerc / 100);
                         if (trade.MarketPrice < stopLossPrice)
                         {
-                            PlaceSellOrder(trade, forReal: _settings.ProductionMode);
+                            PlaceCompleteSellOrder(trade, forReal: _settings.ProductionMode);
                         }
                     }
                 }
@@ -117,6 +117,14 @@ namespace BinanceBotLib
                     }
                 }
             }
+        }
+
+        protected void PlaceCompleteSellOrder(TradingData trade, bool forReal)
+        {
+            trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair), 2);
+            trade.CoinQuantityToTrade = trade.CoinQuantity;
+
+            base.PlaceSellOrder(trade, forReal);
         }
 
         private void PlacePartialSellOrder(TradingData trade, bool forReal)

@@ -71,7 +71,7 @@ namespace BinanceBotLib
 
         #endregion IO
 
-        public static readonly ExchangeType _exchangeType = ExchangeType.MockupExchange;
+        public static readonly ExchangeType _exchangeType = ExchangeType.BinanceExchange;
         private System.Timers.Timer _marketTimer = new System.Timers.Timer();
         public Strategy Strategy { get; private set; }
 

@@ -127,7 +127,7 @@ namespace ExchangeClientLib
                 timeInForce: TimeInForce.GoodTillCancel);
 
                 if (sellOrder.Success)
-                    trade.BuyOrderID = sellOrder.Data.OrderId;
+                    trade.SellOrderID = sellOrder.Data.OrderId;
                 else
                     Console.WriteLine(sellOrder.Error.Message.ToString());
 
@@ -149,7 +149,7 @@ namespace ExchangeClientLib
                 stopPrice: Math.Round(trade.BuyPriceAfterFees * (1 - percStopLoss / 100), 2));
 
                 if (sellOrder.Success)
-                    trade.BuyOrderID = sellOrder.Data.OrderId;
+                    trade.SellOrderID = sellOrder.Data.OrderId;
                 else
                     Console.WriteLine(sellOrder.Error.Message.ToString());
 
