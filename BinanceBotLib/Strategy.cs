@@ -96,23 +96,24 @@ namespace BinanceBotLib
 
             if (capitalCost > _settings.InvestmentMin)
             {
-                trade.MarketPrice = _client.GetPrice(trade.CoinPair) * (1 - Math.Abs(_settings.BuyBelowPerc) / 100);
-
-                Bot.WriteConsole();
-
-                decimal fees = _client.GetTradeFee(trade.CoinPair);
-                decimal myInvestment = capitalCost / (1 + fees);
-                trade.CoinQuantity = myInvestment / trade.MarketPrice;
-
-                var buyOrder = forReal ? _client.PlaceBuyOrder(trade) : _client.PlaceTestBuyOrder(trade);
-                if (buyOrder)
+                if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair) * (1 - Math.Abs(_settings.BuyBelowPerc) / 100)))
                 {
-                    trade.BuyPriceAfterFees = capitalCost / trade.CoinQuantity;
-                    trade.ID = tradesList.Count;
-                    trade.LastAction = Binance.Net.Objects.OrderSide.Buy;
-                    tradesList.Add(trade);
-                    Bot.WriteLog(trade.ToStringBought());
-                    OnOrderSucceeded(trade);
+                    Bot.WriteConsole();
+
+                    decimal fees = _client.GetTradeFee(trade.CoinPair);
+                    decimal myInvestment = capitalCost / (1 + fees);
+                    trade.CoinQuantity = myInvestment / trade.MarketPrice;
+
+                    var buyOrder = forReal ? _client.PlaceBuyOrder(trade) : _client.PlaceTestBuyOrder(trade);
+                    if (buyOrder)
+                    {
+                        trade.BuyPriceAfterFees = capitalCost / trade.CoinQuantity;
+                        trade.ID = tradesList.Count;
+                        trade.LastAction = Binance.Net.Objects.OrderSide.Buy;
+                        tradesList.Add(trade);
+                        Bot.WriteLog(trade.ToStringBought());
+                        OnOrderSucceeded(trade);
+                    }
                 }
             }
             else

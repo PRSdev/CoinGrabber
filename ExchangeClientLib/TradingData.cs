@@ -20,7 +20,7 @@ namespace ExchangeClientLib
             {
                 return Math.Round(_marketPrice, 2);
             }
-            set
+            private set
             {
                 _marketPrice = value;
             }
@@ -128,6 +128,16 @@ namespace ExchangeClientLib
         public TradingData(CoinPair coinPair)
         {
             CoinPair = coinPair;
+        }
+
+        public bool UpdateMarketPrice(decimal marketPrice)
+        {
+            if (marketPrice > 0)
+            {
+                MarketPrice = marketPrice;
+            }
+
+            return marketPrice > 0;
         }
 
         public void SetPriceChangePercentage(decimal marketPrice)

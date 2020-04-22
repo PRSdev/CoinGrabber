@@ -55,16 +55,18 @@ namespace BinanceBotLib
 
             foreach (TradingData trade in tradesList)
             {
-                trade.MarketPrice = _client.GetPrice(trade.CoinPair);
-                trade.SetPriceChangePercentage(trade.MarketPrice);
-                Bot.WriteConsole(trade.ToStringPriceCheck());
-                OnTradeListItemHandled(trade);
-                // sell if positive price change
-                if (trade.PriceChangePercentage > Math.Abs(_settings.PriceChangePercentage))
+                if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair)))
                 {
-                    PlaceSellOrder(trade, forReal: _settings.ProductionMode);
+                    trade.SetPriceChangePercentage(trade.MarketPrice);
+                    Bot.WriteConsole(trade.ToStringPriceCheck());
+                    OnTradeListItemHandled(trade);
+                    // sell if positive price change
+                    if (trade.PriceChangePercentage > Math.Abs(_settings.PriceChangePercentage))
+                    {
+                        PlaceSellOrder(trade, forReal: _settings.ProductionMode);
+                    }
+                    Sleep();
                 }
-                Sleep();
             }
 
             TradingData lastTrade = tradesList.Last<TradingData>();
@@ -84,17 +86,18 @@ namespace BinanceBotLib
 
         protected override void PlaceSellOrder(TradingData trade, bool forReal)
         {
-            trade.MarketPrice = Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(_settings.SellAbovePerc) / 100), 2);
-
-            if (trade.MarketPrice > trade.BuyPriceAfterFees)
+            if (trade.UpdateMarketPrice(Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(_settings.SellAbovePerc) / 100), 2)))
             {
-                trade.CoinQuantityToTrade = trade.CoinQuantity; // trading the full amount
-
-                decimal dmReceived = trade.CoinQuantityToTrade * trade.MarketPrice;
-
-                if (dmReceived > _settings.InvestmentMin)
+                if (trade.MarketPrice > trade.BuyPriceAfterFees)
                 {
-                    base.PlaceSellOrder(trade, forReal);
+                    trade.CoinQuantityToTrade = trade.CoinQuantity; // trading the full amount
+
+                    decimal dmReceived = trade.CoinQuantityToTrade * trade.MarketPrice;
+
+                    if (dmReceived > _settings.InvestmentMin)
+                    {
+                        base.PlaceSellOrder(trade, forReal);
+                    }
                 }
             }
         }

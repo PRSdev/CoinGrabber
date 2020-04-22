@@ -27,9 +27,16 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                decimal balance = client.GetAccountInfo().Data.Balances.Single(s => s.Asset == coinName).Free;
-                Portfolio.UpdateCoinBalance(coinName, balance);
-                return balance;
+                try
+                {
+                    decimal balance = client.GetAccountInfo().Data.Balances.Single(s => s.Asset == coinName).Free;
+                    Portfolio.UpdateCoinBalance(coinName, balance);
+                    return balance;
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
             }
         }
 
@@ -37,9 +44,16 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                decimal marketPrice = Math.Round(client.GetPrice(coinPair.ToString()).Data.Price, 2);
-                Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
-                return marketPrice;
+                try
+                {
+                    decimal marketPrice = Math.Round(client.GetPrice(coinPair.ToString()).Data.Price, 2);
+                    Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
+                    return marketPrice;
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
             }
         }
 

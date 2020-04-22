@@ -13,9 +13,27 @@ namespace BotOptimiser
     {
         private static void Main(string[] args)
         {
-            for (int hydraFactor = 19; hydraFactor <= 20; hydraFactor++)
+            decimal fiatValue = 20000m;
+            int hydraFactorMin = 10;
+            int hydraFactorMax = 20;
+            decimal priceChangePercMin = 1;
+            decimal priceChangePercMax = 4;
+            decimal priceChangePercIncr = 1;
+
+            // BotOptimiser 20000 10 20 1.0 4.0
+            if (args.Length == 6)
             {
-                for (decimal priceChangePerc = 3.0m; priceChangePerc <= 4.0m; priceChangePerc = priceChangePerc + 0.1m)
+                decimal.TryParse(args[0], out fiatValue);
+                int.TryParse(args[1], out hydraFactorMin);
+                int.TryParse(args[2], out hydraFactorMax);
+                decimal.TryParse(args[3], out priceChangePercMin);
+                decimal.TryParse(args[4], out priceChangePercMax);
+                decimal.TryParse(args[5], out priceChangePercIncr);
+            }
+
+            for (int hydraFactor = hydraFactorMin; hydraFactor <= hydraFactorMax; hydraFactor++)
+            {
+                for (decimal priceChangePerc = 3.0m; priceChangePerc <= 4.0m; priceChangePerc = priceChangePerc + priceChangePercIncr)
                 {
                     Settings settings = new Settings()
                     {
