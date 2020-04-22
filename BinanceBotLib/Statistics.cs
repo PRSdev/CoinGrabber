@@ -72,5 +72,17 @@ namespace BinanceBotLib
             }
             return nvc;
         }
+
+        public string GetCoinsBalanceCsv()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (CoinData coin in _portfolio.Coins)
+            {
+                if (coin.Balance > 0)
+                    sb.Append($",{coin.Name},{coin.Balance.ToString()}");
+            }
+
+            return sb.ToString();
+        }
     }
 }

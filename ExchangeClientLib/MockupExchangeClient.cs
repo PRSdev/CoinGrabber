@@ -20,6 +20,8 @@ namespace ExchangeClientLib
                                         .Select(v => HistoricalData.FromCsv(v))
                                         .Reverse()
                                         .ToList();
+
+            Portfolio.UpdateCoinBalance("USDT", 3000m);
         }
 
         public override decimal GetBalance(string coinName)

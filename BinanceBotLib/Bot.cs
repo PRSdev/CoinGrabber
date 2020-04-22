@@ -71,7 +71,7 @@ namespace BinanceBotLib
 
         #endregion IO
 
-        public static readonly ExchangeType _exchangeType = ExchangeType.BinanceExchange;
+        public static readonly ExchangeType _exchangeType = ExchangeType.MockupExchange;
         private System.Timers.Timer _marketTimer = new System.Timers.Timer();
         public Strategy Strategy { get; private set; }
 
@@ -134,7 +134,7 @@ namespace BinanceBotLib
                 if (_exchangeType == ExchangeType.MockupExchange)
                 {
                     Logger logger = new Logger("BacktestDataLogger.log");
-                    string result = $"{Settings.HydraFactor},{Settings.PriceChangePercentage},{Strategy.Statistics.GetPortfolioValue()}";
+                    string result = $"{Settings.HydraFactor},{Settings.PriceChangePercentage},{Strategy.Statistics.GetPortfolioValue()}{Strategy.Statistics.GetCoinsBalanceCsv()}";
                     Console.WriteLine(result);
                     logger.WriteLine(result);
                     Stop();
