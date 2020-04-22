@@ -53,7 +53,7 @@ namespace BinanceBotLib
         [Category("3 Fixed Price Change"), Browsable(false)]
         public CoinPair CoinPair { get; set; } = ExchangeClient.CoinPairsList[0];
 
-        [Category("3 Fixed Price Change"), Description("Let the bot decide which coin to buy.")]
+        [Category("3 Fixed Price Change"), Description("Let the bot decide which coin to buy (BNB, BTC or BCH).")]
         public bool RandomNewCoinPair { get; set; } = false;
 
         [Category("3 Fixed Price Change"), DefaultValue(100), Description("Minimum capital investment in USDT")]
@@ -62,8 +62,11 @@ namespace BinanceBotLib
         [Category("3 Fixed Price Change"), Description("The subdivision number for your coin balance e.g. if you have 600 USDT as balance, HydraFactor of 3 will make Bot only invest 200 USDT.")]
         public int HydraFactor { get; set; } = 10;
 
-        [Category("3 Fixed Price Change"), Description("When current price is below or above this percentage, buy or sell order triggers.")]
-        public decimal PriceChangePercentage { get; set; } = 1m;
+        [Category("3 Fixed Price Change"), Description("When current price is below this percentage, new buy orders trigger.")]
+        public decimal PriceChangePercentageDown { get; set; } = 1m;
+
+        [Category("3 Fixed Price Change"), Description("When current price is above this percentage, new sell orders trigger.")]
+        public decimal PriceChangePercentageUp { get; set; } = 2m;
 
         [Category("3 Fixed Price Change"), Description("Buy below this % from market price")]
         public decimal BuyBelowPerc { get; set; } = 0m;

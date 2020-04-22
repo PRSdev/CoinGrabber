@@ -151,12 +151,12 @@ namespace BinanceBotUI
 
         private void cboNewDefaultCoinPair_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _bot.Settings.CoinPair = cboCoinPairDefaultNew.SelectedItem as CoinPair;
+            Program.Settings.CoinPair = cboCoinPairDefaultNew.SelectedItem as CoinPair;
         }
 
         private void cboBotMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _bot.Settings.BotMode = (BotMode)cboBotMode.SelectedIndex;
+            Program.Settings.BotMode = (BotMode)cboBotMode.SelectedIndex;
         }
 
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)

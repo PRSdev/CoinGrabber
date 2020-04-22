@@ -33,19 +33,23 @@ namespace BotOptimiser
 
             for (int hydraFactor = hydraFactorMin; hydraFactor <= hydraFactorMax; hydraFactor++)
             {
-                for (decimal priceChangePerc = 3.0m; priceChangePerc <= 4.0m; priceChangePerc = priceChangePerc + priceChangePercIncr)
+                for (decimal priceChangePercDown = priceChangePercMin; priceChangePercDown <= priceChangePercMax; priceChangePercDown += priceChangePercIncr)
                 {
-                    Settings settings = new Settings()
+                    for (decimal priceChangePercUp = priceChangePercMin; priceChangePercUp <= priceChangePercMax; priceChangePercUp += priceChangePercIncr)
                     {
-                        CoinPair = new CoinPair("BTC", "USDT", 6),
-                        HydraFactor = hydraFactor,
-                        PriceChangePercentage = priceChangePerc,
-                        BotMode = BotMode.FixedPriceChange,
-                        InvestmentMax = 0
-                    };
+                        Settings settings = new Settings()
+                        {
+                            CoinPair = new CoinPair("BTC", "USDT", 6),
+                            HydraFactor = hydraFactor,
+                            PriceChangePercentageDown = priceChangePercDown,
+                            PriceChangePercentageUp = priceChangePercUp,
+                            BotMode = BotMode.FixedPriceChange,
+                            InvestmentMax = 0
+                        };
 
-                    Bot myBot = new Bot(settings);
-                    myBot.Start();
+                        Bot myBot = new Bot(settings);
+                        myBot.Start();
+                    }
                 }
             }
 
