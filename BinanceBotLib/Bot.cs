@@ -15,6 +15,10 @@ namespace BinanceBotLib
 {
     public class Bot
     {
+        public static readonly ExchangeType _exchangeType = ExchangeType.BinanceExchange;
+        private System.Timers.Timer _marketTimer = new System.Timers.Timer();
+        public Strategy Strategy { get; private set; }
+
         #region IO
 
         public static readonly string PersonalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BinanceBot");
@@ -24,7 +28,7 @@ namespace BinanceBotLib
         {
             get
             {
-                return Path.Combine(PersonalFolder, "Settings.json");
+                return Path.Combine(PersonalFolder, "TradingView-Settings.json");
             }
         }
 
@@ -33,7 +37,7 @@ namespace BinanceBotLib
             get
             {
                 string logsFolder = Path.Combine(PersonalFolder, "Logs");
-                string filename = string.Format("BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
+                string filename = string.Format("TradingView-BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
                 return Path.Combine(logsFolder, filename);
             }
         }
@@ -70,10 +74,6 @@ namespace BinanceBotLib
         }
 
         #endregion IO
-
-        public static readonly ExchangeType _exchangeType = ExchangeType.MockupExchange;
-        private System.Timers.Timer _marketTimer = new System.Timers.Timer();
-        public Strategy Strategy { get; private set; }
 
         public Bot(Settings settings)
         {
@@ -138,10 +138,8 @@ namespace BinanceBotLib
             {
                 if (_exchangeType == ExchangeType.MockupExchange)
                 {
-                    Logger logger = new Logger("BacktestDataLogger.log");
                     string result = $"{_settings.HydraFactor},{_settings.PriceChangePercentageDown},{_settings.PriceChangePercentageUp},{Strategy.Statistics.GetPortfolioValue()}{Strategy.Statistics.GetCoinsBalanceCsv()}";
                     Console.WriteLine(result);
-                    logger.WriteLine(result);
                     Stop();
                 }
             }

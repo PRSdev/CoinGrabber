@@ -21,7 +21,7 @@ namespace ExchangeClientLib
                                         .Reverse()
                                         .ToList();
 
-            Portfolio.UpdateCoinBalance("USDT", 3000m);
+            Portfolio.UpdateCoinBalance("USDT", 20000m);
         }
 
         public override decimal GetBalance(string coinName)
