@@ -124,6 +124,11 @@ namespace BinanceBotLib
 
         protected virtual void PlaceSellOrder(TradingData trade, bool forReal)
         {
+            if (trade.CoinQuantityToTrade == 0)
+            {
+                throw new Exception("CoinQuantityToTrade is not set!");
+            }
+
             decimal fees = _client.GetTradeFee(trade.CoinPair);
 
             decimal totalReceived = trade.CoinQuantityToTrade * trade.MarketPrice / (1 + fees);

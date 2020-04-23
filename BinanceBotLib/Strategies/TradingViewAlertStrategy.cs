@@ -99,14 +99,11 @@ namespace BinanceBotLib
                     {
                         if (_signal == OrderSide.Sell)
                         {
-                            PlaceSellOrder(trade, _settings.ProductionMode);
-                            // PlacePartialSellOrder(trade, forReal: _settings.ProductionMode);
+                            if (_settings.SellAllOnSellSignal)
+                                PlaceCompleteSellOrder(trade, _settings.ProductionMode);
+                            else
+                                PlacePartialSellOrder(trade, forReal: _settings.ProductionMode);
                         }
-                    }
-
-                    if (_signal == OrderSide.Buy)
-                    {
-                        PlaceBuyOrder(new TradingData(coinPair), tradesList, forReal: _settings.ProductionMode);
                     }
                 }
             }

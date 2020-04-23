@@ -63,10 +63,13 @@ namespace BinanceBotLib
         public int HydraFactor { get; set; } = 10;
 
         [Category("3 Fixed Price Change"), Description("When current price is below this percentage, new buy orders trigger.")]
-        public decimal PriceChangePercentageDown { get; set; } = 1m;
+        public decimal PriceChangePercentageDown { get; set; } = 4m;
 
         [Category("3 Fixed Price Change"), Description("When current price is above this percentage, new sell orders trigger.")]
         public decimal PriceChangePercentageUp { get; set; } = 2m;
+
+        [Category("3 Fixed Price Change"), Description("Use PriceChangePercentageDown % to buy new orders. If true, then new orders will be placed below market price by this %.")]
+        public bool UsePriceChangePercentageDownToBuyNew { get; set; } = false;
 
         [Category("3 Fixed Price Change"), Browsable(false)]
         public List<TradingData> TradingDataList { get; set; } = new List<TradingData>();
@@ -85,6 +88,9 @@ namespace BinanceBotLib
 
         [Category("4 Trading View"), Description("If set to 10, then the bot will sell if the market price goes 10% below buy price.")]
         public decimal StopLossPerc { get; set; } = 2m;
+
+        [Category("4 Trading View"), Description("Close trade fully on sell signal (without taking partial profits or losses).")]
+        public bool SellAllOnSellSignal { get; set; } = false;
 
         [Category("4 Trading View"), Description("If set to 25, then 25% of the quantity will be sold on the sell signal.")]
         public decimal SellQuantityPerc { get; set; } = 25m;
