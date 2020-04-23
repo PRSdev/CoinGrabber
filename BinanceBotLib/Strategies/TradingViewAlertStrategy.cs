@@ -67,7 +67,8 @@ namespace BinanceBotLib
                 CoinPair coinPair = new CoinPairHelper(_settings).GetCoinPair(agent.Subject);
                 if (coinPair == null)
                 {
-                    throw new Exception("CoinPair not supported!");
+                    Console.WriteLine("CoinPair not supported!");
+                    return;
                 }
 
                 if (agent.Subject.Contains("Buy"))
@@ -89,13 +90,6 @@ namespace BinanceBotLib
                     {
                         case OrderSide.Buy:
                             PlaceBuyOrder(trade, tradesList, forReal: _settings.ProductionMode);
-                            break;
-
-                        case OrderSide.Sell:
-                            decimal coins = _client.GetBalance(coinPair.Pair1);
-                            trade.CoinQuantity = coins / _settings.HydraFactor;
-                            tradesList.Add(trade);
-                            PlaceCompleteSellOrder(trade, forReal: _settings.ProductionMode);
                             break;
                     }
                 }
