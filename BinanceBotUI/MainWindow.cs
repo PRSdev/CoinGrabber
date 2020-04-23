@@ -88,12 +88,12 @@ namespace BinanceBotUI
         {
             btnStartStop.Text = "Stop";
 
+            _bot.Start(Program.Settings);
+
             _bot.Strategy.Started += Strategy_Started;
             _bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
             _bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
             _bot.Strategy.Completed += Strategy_Completed;
-
-            _bot.Start();
         }
 
         public MainWindow()

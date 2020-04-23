@@ -18,6 +18,7 @@ namespace BinanceBotLib
         public static readonly ExchangeType _exchangeType = ExchangeType.BinanceExchange;
         private System.Timers.Timer _marketTimer = new System.Timers.Timer();
         public Strategy Strategy { get; private set; }
+        private bool _init;
 
         #region IO
 
@@ -109,9 +110,11 @@ namespace BinanceBotLib
             }
         }
 
-        public void Start()
+        public void Start(Settings settings)
         {
+            _settings = settings; // Get the latest from UI or Console
             Init();
+
 #if DEBUG
             Strategy.Activate();
 #endif
