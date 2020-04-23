@@ -28,7 +28,7 @@ namespace BinanceBotLib
         {
             get
             {
-                return Path.Combine(PersonalFolder, "TradingView-Settings.json");
+                return Path.Combine(PersonalFolder, "Settings.json");
             }
         }
 
@@ -37,7 +37,7 @@ namespace BinanceBotLib
             get
             {
                 string logsFolder = Path.Combine(PersonalFolder, "Logs");
-                string filename = string.Format("TradingView-BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
+                string filename = string.Format("BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
                 return Path.Combine(logsFolder, filename);
             }
         }

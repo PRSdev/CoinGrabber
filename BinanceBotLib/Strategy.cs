@@ -96,7 +96,7 @@ namespace BinanceBotLib
 
             if (capitalCost > _settings.InvestmentMin)
             {
-                if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair) * (1 - Math.Abs(_settings.BuyBelowPerc) / 100)))
+                if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair)))
                 {
                     Bot.WriteConsole();
 
@@ -142,6 +142,7 @@ namespace BinanceBotLib
                         _settings.TotalProfitSimulation += trade.Profit;
                 }
                 OnOrderSucceeded(trade);
+                Sleep();
             }
         }
 

@@ -86,7 +86,7 @@ namespace BinanceBotLib
 
         protected override void PlaceSellOrder(TradingData trade, bool forReal)
         {
-            if (trade.UpdateMarketPrice(Math.Round(_client.GetPrice(trade.CoinPair) * (1 + Math.Abs(_settings.SellAbovePerc) / 100), 2)))
+            if (trade.UpdateMarketPrice(Math.Round(_client.GetPrice(trade.CoinPair), 2)))
             {
                 if (trade.MarketPrice > trade.BuyPriceAfterFees)
                 {

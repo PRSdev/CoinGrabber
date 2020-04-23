@@ -95,7 +95,7 @@ namespace BinanceBotLib
                             decimal coins = _client.GetBalance(coinPair.Pair1);
                             trade.CoinQuantity = coins / _settings.HydraFactor;
                             tradesList.Add(trade);
-                            PlaceSellOrder(trade, forReal: _settings.ProductionMode);
+                            PlaceCompleteSellOrder(trade, forReal: _settings.ProductionMode);
                             break;
                     }
                 }
@@ -132,15 +132,6 @@ namespace BinanceBotLib
             if (trade.CoinQuantity > trade.CoinOriginalQuantity * _settings.SellMaxQuantityPerc / 100)
             {
                 trade.CoinQuantityToTrade = trade.CoinQuantity * _settings.SellQuantityPerc / 100;
-                PlaceSellOrder(trade, forReal);
-                Sleep();
-            }
-        }
-
-        protected override void PlaceSellOrder(TradingData trade, bool forReal)
-        {
-            if (trade.UpdateMarketPrice(Math.Round(_client.GetPrice(trade.CoinPair), 2)))
-            {
                 base.PlaceSellOrder(trade, forReal);
             }
         }

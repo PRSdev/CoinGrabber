@@ -68,12 +68,6 @@ namespace BinanceBotLib
         [Category("3 Fixed Price Change"), Description("When current price is above this percentage, new sell orders trigger.")]
         public decimal PriceChangePercentageUp { get; set; } = 2m;
 
-        [Category("3 Fixed Price Change"), Description("Buy below this % from market price")]
-        public decimal BuyBelowPerc { get; set; } = 0m;
-
-        [Category("3 Fixed Price Change"), Description("Sell above this % from market price")]
-        public decimal SellAbovePerc { get; set; } = 0m;
-
         [Category("3 Fixed Price Change"), Browsable(false)]
         public List<TradingData> TradingDataList { get; set; } = new List<TradingData>();
 
