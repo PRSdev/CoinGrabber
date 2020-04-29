@@ -84,7 +84,7 @@ namespace BinanceBotLib
 
         private void Init()
         {
-            double timerInterval = _exchangeType == ExchangeType.BinanceExchange ? MathHelpers.Random(60, 120) * 1000 : 1;
+            double timerInterval = _exchangeType == ExchangeType.BinanceExchange ? RandomFast.Next(60, 120) * 1000 : 1;
 
             switch (_settings.BotMode)
             {

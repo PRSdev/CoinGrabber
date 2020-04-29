@@ -24,7 +24,7 @@ namespace BinanceBotLib
         {
             if (_settings.RandomNewCoinPair)
             {
-                return MathHelpers.Random(0, ExchangeClient.CoinPairsList.Count - 1);
+                return RandomFast.Next(0, ExchangeClient.CoinPairsList.Count - 1);
             }
             else
             {
