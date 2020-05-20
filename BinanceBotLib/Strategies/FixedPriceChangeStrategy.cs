@@ -35,7 +35,7 @@ namespace BinanceBotLib
             if (tdSearch == null)
             {
                 // buy or sell?
-                if (fiatValue > coinsValue)
+                if (fiatValue > _settings.InvestmentMin)
                 {
                     // buy
                     PlaceBuyOrder(GetNewTradingData(), _settings.TradingDataList, _settings.ProductionMode);

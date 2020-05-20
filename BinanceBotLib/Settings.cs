@@ -71,6 +71,9 @@ namespace BinanceBotLib
         [Category("3 Fixed Price Change"), Description("Use PriceChangePercentageDown % to buy new orders. If true, then new orders will be placed below market price by this %.")]
         public bool UsePriceChangePercentageDownToBuyNew { get; set; } = false;
 
+        [Category("3 Fixed Price Change"), Description("Interval in minutes.")]
+        public int TimerInterval { get; set; } = 180;
+
         [Category("3 Fixed Price Change"), Browsable(false)]
         public List<TradingData> TradingDataList { get; set; } = new List<TradingData>();
 

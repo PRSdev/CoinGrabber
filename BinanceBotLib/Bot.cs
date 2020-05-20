@@ -84,17 +84,17 @@ namespace BinanceBotLib
 
         private void Init()
         {
-            double timerInterval = _exchangeType == ExchangeType.BinanceExchange ? RandomFast.Next(60, 120) * 1000 : 1;
+            double timerInterval = _exchangeType == ExchangeType.BinanceExchange ? RandomFast.Next(_settings.TimerInterval * 60, 2 * _settings.TimerInterval * 60) * 1000 : 1;
 
             switch (_settings.BotMode)
             {
                 case BotMode.FixedProfit:
-                    _marketTimer.Interval = timerInterval; // Randomly every 1-2 minutes (60-120)
+                    _marketTimer.Interval = timerInterval;
                     Strategy = new FixedProfitStrategy(_exchangeType, _settings);
                     break;
 
                 case BotMode.FixedPriceChange:
-                    _marketTimer.Interval = timerInterval; // Randomly every 1-2 minutes (60-120)
+                    _marketTimer.Interval = timerInterval;
                     Strategy = new FixedPriceChangeStrategy(_exchangeType, _settings);
                     break;
 
