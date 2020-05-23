@@ -302,7 +302,7 @@ namespace BinanceBotUI
             // 
             this.chStatisticValue.Text = "Value";
             this.chStatisticValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.chStatisticValue.Width = 94;
+            this.chStatisticValue.Width = 130;
             // 
             // MainWindow
             // 

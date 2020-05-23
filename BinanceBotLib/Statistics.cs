@@ -70,6 +70,7 @@ namespace BinanceBotLib
                 if (coin.Balance > 0)
                     nvc.Add($"{coin.Name} balance", coin.Balance.ToString());
             }
+            nvc.Add("Last activity", DateTime.Now.ToString("g"));
             return nvc;
         }
 
