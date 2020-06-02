@@ -50,7 +50,7 @@ namespace BinanceBotConsole
             }
 
             Bot myBot = new Bot(Program.Settings);
-            myBot.Start();
+            myBot.Start(Program.Settings);
             Console.WriteLine($"{Settings.BotMode.GetDescription()} Bot started...");
 
             Console.ReadLine();
