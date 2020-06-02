@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareX.HelpersLib", "..\ShareX\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj", "{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinanceBotLib", "BinanceBotLib\BinanceBotLib.csproj", "{878309BE-5294-4F2C-A04C-D0528B42FD8B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceBotConsole", "BinanceBotConsole\BinanceBotConsole.csproj", "{72940829-7A00-479B-B2D5-3113A2DF1531}"
@@ -15,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotOptimiser", "BotOptimise
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExchangeClientLib", "ExchangeClientLib\ExchangeClientLib.csproj", "{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareX.HelpersLib", "..\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj", "{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,16 +24,6 @@ Global
 		WindowsStoreDebug|Any CPU = WindowsStoreDebug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Steam|Any CPU.ActiveCfg = Steam|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Steam|Any CPU.Build.0 = Steam|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStore|Any CPU.ActiveCfg = WindowsStore|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStore|Any CPU.Build.0 = WindowsStore|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStoreDebug|Any CPU.ActiveCfg = WindowsStoreDebug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStoreDebug|Any CPU.Build.0 = WindowsStoreDebug|Any CPU
 		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -84,6 +74,16 @@ Global
 		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
 		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
 		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Steam|Any CPU.ActiveCfg = Steam|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Steam|Any CPU.Build.0 = Steam|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStore|Any CPU.ActiveCfg = WindowsStore|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStore|Any CPU.Build.0 = WindowsStore|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStoreDebug|Any CPU.ActiveCfg = WindowsStoreDebug|Any CPU
+		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStoreDebug|Any CPU.Build.0 = WindowsStoreDebug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

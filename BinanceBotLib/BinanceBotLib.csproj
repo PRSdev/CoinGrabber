@@ -9,13 +9,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\ShareX\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj" />
-		<ProjectReference Include="..\ExchangeClientLib\ExchangeClientLib.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="System.Windows.Forms">
-			<HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.2\System.Windows.Forms.dll</HintPath>
-		</Reference>
+	  <ProjectReference Include="..\..\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj" />
+	  <ProjectReference Include="..\ExchangeClientLib\ExchangeClientLib.csproj" />
 	</ItemGroup>
 </Project>
