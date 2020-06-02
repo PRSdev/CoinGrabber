@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>BinanceBotUI</RootNamespace>
     <AssemblyName>BinanceBotUI</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -154,6 +155,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="SettingsWindow.resx">
       <DependentUpon>SettingsWindow.cs</DependentUpon>
@@ -178,11 +180,11 @@
       <Name>ShareX.HelpersLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\BinanceBotLib\BinanceBotLib.csproj">
-      <Project>{878309be-5294-4f2c-a04c-d0528b42fd8b}</Project>
+      <Project>{2291f1c1-deb0-43b8-b52e-f16784a4f6d6}</Project>
       <Name>BinanceBotLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExchangeClientLib\ExchangeClientLib.csproj">
-      <Project>{165bbdf9-6783-4b1a-8ac6-dfdb56a39622}</Project>
+      <Project>{1745386a-69a5-40b0-81c6-8f7bb1edfa87}</Project>
       <Name>ExchangeClientLib</Name>
     </ProjectReference>
   </ItemGroup>

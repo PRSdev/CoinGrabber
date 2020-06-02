@@ -136,7 +136,7 @@
       <Name>ShareX.HelpersLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\BinanceBotLib\BinanceBotLib.csproj">
-      <Project>{878309be-5294-4f2c-a04c-d0528b42fd8b}</Project>
+      <Project>{2291f1c1-deb0-43b8-b52e-f16784a4f6d6}</Project>
       <Name>BinanceBotLib</Name>
     </ProjectReference>
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using Binance.Net.Objects;
+﻿using Binance.Net.Enums;
+using Binance.Net.Objects;
 using ExchangeClientLib;
 using System;
 using System.Collections.Generic;
@@ -148,7 +149,7 @@ namespace BinanceBotLib
                 {
                     trade.BuyPriceAfterFees = capitalCost / trade.CoinQuantity;
                     trade.ID = tradesList.Count;
-                    trade.LastAction = Binance.Net.Objects.OrderSide.Buy;
+                    trade.LastAction = OrderSide.Buy;
                     tradesList.Add(trade);
                     Bot.WriteLog(trade.ToStringBought());
                     OnOrderSucceeded(trade);

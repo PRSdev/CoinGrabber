@@ -1,5 +1,7 @@
 ﻿using Binance.Net;
+using Binance.Net.Enums;
 using Binance.Net.Objects;
+using Binance.Net.Objects.Spot;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;

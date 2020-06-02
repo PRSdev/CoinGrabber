@@ -1,4 +1,5 @@
 ﻿using Binance.Net;
+using Binance.Net.Enums;
 using Binance.Net.Objects;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace BinanceBotLib
                             PlaceBuyOrder();
                             break;
                         case OrderStatus.New:
-                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - queryBuyOrder.Data.Time} for the {_settings.BuyPrice} buy order to fill...");
+                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - queryBuyOrder.Data.CreateTime} for the {_settings.BuyPrice} buy order to fill...");
                             break;
                         default:
                             Bot.WriteConsole("Unhandled buy order outcome. Reload application...");
@@ -51,7 +52,7 @@ namespace BinanceBotLib
                             PlaceSellOrder();
                             break;
                         case OrderStatus.New:
-                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - querySellOrder.Data.Time} for the {_settings.SellPrice} sell order to fill...");
+                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - querySellOrder.Data.CreateTime} for the {_settings.SellPrice} sell order to fill...");
                             break;
                         default:
                             Bot.WriteConsole("Unhandled sell order outcome. Reload application...");

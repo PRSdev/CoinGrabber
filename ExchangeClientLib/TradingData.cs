@@ -1,8 +1,10 @@
-﻿using Binance.Net.Objects;
+﻿using Binance.Net.Enums;
+using Binance.Net.Objects;
 using Newtonsoft.Json;
 using System;
 using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
 
 namespace ExchangeClientLib
 {

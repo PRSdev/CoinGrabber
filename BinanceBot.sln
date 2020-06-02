@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinanceBotLib", "BinanceBotLib\BinanceBotLib.csproj", "{878309BE-5294-4F2C-A04C-D0528B42FD8B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceBotConsole", "BinanceBotConsole\BinanceBotConsole.csproj", "{72940829-7A00-479B-B2D5-3113A2DF1531}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceBotUI", "BinanceBotUI\BinanceBotUI.csproj", "{7460FBE4-10AB-4E89-BD3A-5C891A033A2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotOptimiser", "BotOptimiser\BotOptimiser.csproj", "{E14F5AD6-1962-4AD2-BC80-9152EE2B1E74}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExchangeClientLib", "ExchangeClientLib\ExchangeClientLib.csproj", "{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareX.HelpersLib", "..\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj", "{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceBotLib", "BinanceBotLib\BinanceBotLib.csproj", "{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExchangeClientLib", "ExchangeClientLib\ExchangeClientLib.csproj", "{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,16 +24,6 @@ Global
 		WindowsStoreDebug|Any CPU = WindowsStoreDebug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Steam|Any CPU.ActiveCfg = Debug|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.Steam|Any CPU.Build.0 = Debug|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.WindowsStore|Any CPU.ActiveCfg = Debug|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.WindowsStore|Any CPU.Build.0 = Debug|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{878309BE-5294-4F2C-A04C-D0528B42FD8B}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
 		{72940829-7A00-479B-B2D5-3113A2DF1531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72940829-7A00-479B-B2D5-3113A2DF1531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72940829-7A00-479B-B2D5-3113A2DF1531}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -64,16 +54,6 @@ Global
 		{E14F5AD6-1962-4AD2-BC80-9152EE2B1E74}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
 		{E14F5AD6-1962-4AD2-BC80-9152EE2B1E74}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E14F5AD6-1962-4AD2-BC80-9152EE2B1E74}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.Release|Any CPU.Build.0 = Release|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.Steam|Any CPU.ActiveCfg = Release|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.Steam|Any CPU.Build.0 = Release|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.WindowsStore|Any CPU.ActiveCfg = Release|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{165BBDF9-6783-4B1A-8AC6-DFDB56A39622}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -84,6 +64,26 @@ Global
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStore|Any CPU.Build.0 = WindowsStore|Any CPU
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStoreDebug|Any CPU.ActiveCfg = WindowsStoreDebug|Any CPU
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStoreDebug|Any CPU.Build.0 = WindowsStoreDebug|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Steam|Any CPU.ActiveCfg = Release|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Steam|Any CPU.Build.0 = Release|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.WindowsStore|Any CPU.ActiveCfg = Release|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Steam|Any CPU.ActiveCfg = Release|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Steam|Any CPU.Build.0 = Release|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStore|Any CPU.ActiveCfg = Release|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
