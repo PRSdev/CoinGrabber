@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinanceExchangeClient.cs" />
+    <Compile Include="BinanceFuturesExchangeClient.cs" />
     <Compile Include="CoinData.cs" />
     <Compile Include="CoinPair.cs" />
     <Compile Include="ExchangeClient.cs" />

@@ -15,7 +15,7 @@ namespace BinanceBotLib
 {
     public class Bot
     {
-        public static readonly ExchangeType _exchangeType = ExchangeType.BinanceExchange;
+        private static ExchangeType _exchangeType = ExchangeType.BinanceExchange;
         private System.Timers.Timer _marketTimer = new System.Timers.Timer();
         public Strategy Strategy { get; private set; }
 
@@ -81,6 +81,11 @@ namespace BinanceBotLib
             Init();
         }
 
+        public static ExchangeType GetExchangeType()
+        {
+            return _exchangeType;
+        }
+
         private void Init()
         {
             double timerInterval = _exchangeType == ExchangeType.BinanceExchange ? RandomFast.Next(_settings.TimerInterval * 60, 2 * _settings.TimerInterval * 60) * 1000 : 1;
@@ -100,6 +105,12 @@ namespace BinanceBotLib
                 case BotMode.TradingViewSignal:
                     _marketTimer.Interval = 5000; // Every 5 seconds
                     Strategy = new TradingViewAlertStrategy(_exchangeType, _settings);
+                    break;
+
+                case BotMode.Futures:
+                    _marketTimer.Interval = timerInterval;
+                    _exchangeType = ExchangeType.BinanceFuturesExchange;
+                    Strategy = new FuturesStrategy(_exchangeType, _settings);
                     break;
 
                 default:

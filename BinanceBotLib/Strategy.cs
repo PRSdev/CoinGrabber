@@ -27,6 +27,11 @@ namespace BinanceBotLib
                 case ExchangeType.BinanceExchange:
                     _client = new BinanceExchangeClient(_settings.APIKey, _settings.SecretKey);
                     break;
+
+                case ExchangeType.BinanceFuturesExchange:
+                    _client = new BinanceFuturesExchangeClient(_settings.APIKey, _settings.SecretKey);
+                    break;
+
                 case ExchangeType.MockupExchange:
                     _client = new MockupExchangeClient(_settings.APIKey, _settings.SecretKey);
                     break;
@@ -159,7 +164,7 @@ namespace BinanceBotLib
 
         protected void Sleep()
         {
-            if (Bot._exchangeType != ExchangeType.MockupExchange)
+            if (Bot.GetExchangeType() != ExchangeType.MockupExchange)
             {
                 System.Threading.Thread.Sleep(250);
             }

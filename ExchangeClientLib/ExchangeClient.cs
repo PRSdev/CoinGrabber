@@ -25,7 +25,7 @@ namespace ExchangeClientLib
             }
         }
 
-        public virtual decimal GetBalance(string coin)
+        public virtual decimal GetBalance(string coinName)
         {
             throw new NotImplementedException();
         }

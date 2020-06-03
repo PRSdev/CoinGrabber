@@ -14,13 +14,19 @@ namespace BinanceBotLib
         FixedPriceChange,
 
         [Description("TradingView Signal")]
-        TradingViewSignal
+        TradingViewSignal,
+
+        [Description("Futures")]
+        Futures
     }
 
     public enum ExchangeType
     {
         [Description("Binance")]
         BinanceExchange,
+
+        [Description("Binance Futures")]
+        BinanceFuturesExchange,
 
         [Description("Mockup Exchange")]
         MockupExchange
