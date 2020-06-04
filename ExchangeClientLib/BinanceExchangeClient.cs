@@ -76,7 +76,7 @@ namespace ExchangeClientLib
                 OrderSide.Buy,
                 OrderType.Limit,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
-                price: Math.Round(trade.MarketPrice, 2),
+                price: Math.Round(trade.Price, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
                 if (buyOrder.Success)
@@ -97,7 +97,7 @@ namespace ExchangeClientLib
                 OrderSide.Sell,
                 OrderType.Limit,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
-                price: Math.Round(trade.MarketPrice, 2),
+                price: Math.Round(trade.Price, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
                 if (sellOrder.Success)
@@ -118,7 +118,7 @@ namespace ExchangeClientLib
                 OrderSide.Buy,
                 OrderType.Limit,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
-                price: Math.Round(trade.MarketPrice, 2),
+                price: Math.Round(trade.Price, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
                 if (buyOrder.Success)
@@ -139,7 +139,7 @@ namespace ExchangeClientLib
                 OrderSide.Sell,
                 OrderType.Limit,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
-                price: Math.Round(trade.MarketPrice, 2),
+                price: Math.Round(trade.Price, 2),
                 timeInForce: TimeInForce.GoodTillCancel);
 
                 if (sellOrder.Success)
@@ -160,7 +160,7 @@ namespace ExchangeClientLib
                 OrderSide.Sell,
                 OrderType.StopLoss,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
-                price: Math.Round(trade.MarketPrice, 2),
+                price: Math.Round(trade.Price, 2),
                 timeInForce: TimeInForce.GoodTillCancel,
                 stopPrice: Math.Round(trade.BuyPriceAfterFees * (1 - percStopLoss / 100), 2));
 

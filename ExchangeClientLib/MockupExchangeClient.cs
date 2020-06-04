@@ -54,7 +54,7 @@ namespace ExchangeClientLib
         public override bool PlaceTestBuyOrder(TradingData trade)
         {
             Portfolio.UpdateCoinBalance(trade.CoinPair.Pair1, Portfolio.GetBalance(trade.CoinPair.Pair1) + trade.CoinQuantityToTrade);
-            Portfolio.UpdateCoinBalance(trade.CoinPair.Pair2, Portfolio.GetBalance(trade.CoinPair.Pair2) - trade.CoinQuantityToTrade * trade.MarketPrice * (1 + GetTradeFee(trade.CoinPair)));
+            Portfolio.UpdateCoinBalance(trade.CoinPair.Pair2, Portfolio.GetBalance(trade.CoinPair.Pair2) - trade.CoinQuantityToTrade * trade.Price * (1 + GetTradeFee(trade.CoinPair)));
             trade.BuyOrderID = 0;
             return true;
         }
@@ -62,7 +62,7 @@ namespace ExchangeClientLib
         public override bool PlaceTestSellOrder(TradingData trade)
         {
             Portfolio.UpdateCoinBalance(trade.CoinPair.Pair1, Portfolio.GetBalance(trade.CoinPair.Pair1) - trade.CoinQuantityToTrade);
-            Portfolio.UpdateCoinBalance(trade.CoinPair.Pair2, Portfolio.GetBalance(trade.CoinPair.Pair2) + trade.CoinQuantityToTrade * trade.MarketPrice * (1 + GetTradeFee(trade.CoinPair)));
+            Portfolio.UpdateCoinBalance(trade.CoinPair.Pair2, Portfolio.GetBalance(trade.CoinPair.Pair2) + trade.CoinQuantityToTrade * trade.Price * (1 + GetTradeFee(trade.CoinPair)));
             trade.SellOrderID = 0;
             return true;
         }

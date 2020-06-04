@@ -32,10 +32,10 @@ namespace BinanceBotLib
                     if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair)))
                     {
                         // Update PriceChangePercentage
-                        trade.SetPriceChangePercentage(trade.MarketPrice);
+                        trade.SetPriceChangePercentage(trade.Price);
 
                         decimal stopLossPrice = trade.BuyPriceAfterFees * (1 - _settings.StopLossPerc / 100);
-                        if (trade.MarketPrice < stopLossPrice)
+                        if (trade.Price < stopLossPrice)
                         {
                             PlaceCompleteSellOrder(trade, forReal: _settings.ProductionMode);
                         }
@@ -142,7 +142,7 @@ namespace BinanceBotLib
                 decimal myInvestment = capitalCost / (1 + fees);
 
                 if (trade.CoinQuantity == 0)
-                    trade.CoinQuantity = myInvestment / trade.MarketPrice;
+                    trade.CoinQuantity = myInvestment / trade.Price;
 
                 var buyOrder = forReal ? _client.PlaceBuyOrder(trade) : _client.PlaceTestBuyOrder(trade);
                 if (buyOrder)

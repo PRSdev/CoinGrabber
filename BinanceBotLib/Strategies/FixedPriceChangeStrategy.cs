@@ -57,7 +57,7 @@ namespace BinanceBotLib
             {
                 if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair)))
                 {
-                    trade.SetPriceChangePercentage(trade.MarketPrice);
+                    trade.SetPriceChangePercentage(trade.Price);
                     Bot.WriteConsole(trade.ToStringPriceCheck());
                     OnTradeListItemHandled(trade);
                     // sell if positive price change
@@ -78,21 +78,15 @@ namespace BinanceBotLib
             }
         }
 
-        public TradingData GetNewTradingData()
-        {
-            CoinPairHelper cph = new CoinPairHelper(_settings);
-            return new TradingData() { CoinPair = cph.GetCoinPair() };
-        }
-
         protected override void PlaceSellOrder(TradingData trade, bool forReal)
         {
             if (trade.UpdateMarketPrice(Math.Round(_client.GetPrice(trade.CoinPair), 2)))
             {
-                if (trade.MarketPrice > trade.BuyPriceAfterFees)
+                if (trade.Price > trade.BuyPriceAfterFees)
                 {
                     trade.CoinQuantityToTrade = trade.CoinQuantity; // trading the full amount
 
-                    decimal dmReceived = trade.CoinQuantityToTrade * trade.MarketPrice;
+                    decimal dmReceived = trade.CoinQuantityToTrade * trade.Price;
 
                     if (dmReceived > _settings.InvestmentMin)
                     {

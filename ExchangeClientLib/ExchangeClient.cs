@@ -1,4 +1,5 @@
 ﻿using Binance.Net.Objects;
+using Binance.Net.Objects.Spot.SpotData;
 using CryptoExchange.Net.Objects;
 using System;
 using System.Collections.Generic;

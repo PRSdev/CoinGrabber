@@ -100,5 +100,11 @@ namespace BinanceBotLib
 
         [Category("4 Trading View"), Browsable(false)]
         public List<TradingData> TradingViewTradesList { get; set; } = new List<TradingData>();
+
+        [Category("5 Futures"), Description("Short/Sell above this price")]
+        public decimal ShortAbove { get; set; } = 10000m;
+
+        [Category("5 Futures"), Description("Long/Buy below this price")]
+        public decimal LongBelow { get; set; } = 9500m;
     }
 }

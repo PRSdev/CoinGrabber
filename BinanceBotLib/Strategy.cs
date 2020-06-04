@@ -47,6 +47,12 @@ namespace BinanceBotLib
             OnCompleted();
         }
 
+        protected TradingData GetNewTradingData()
+        {
+            CoinPairHelper cph = new CoinPairHelper(_settings);
+            return new TradingData() { CoinPair = cph.GetCoinPair() };
+        }
+
         public virtual void Trade()
         {
             throw new NotImplementedException();
@@ -108,7 +114,7 @@ namespace BinanceBotLib
 
                     decimal fees = _client.GetTradeFee(trade.CoinPair);
                     decimal myInvestment = capitalCost / (1 + fees);
-                    trade.CoinQuantity = myInvestment / trade.MarketPrice;
+                    trade.CoinQuantity = myInvestment / trade.Price;
 
                     var buyOrder = forReal ? _client.PlaceBuyOrder(trade) : _client.PlaceTestBuyOrder(trade);
                     if (buyOrder)
@@ -137,7 +143,7 @@ namespace BinanceBotLib
 
             decimal fees = _client.GetTradeFee(trade.CoinPair);
 
-            decimal totalReceived = trade.CoinQuantityToTrade * trade.MarketPrice / (1 + fees);
+            decimal totalReceived = trade.CoinQuantityToTrade * trade.Price / (1 + fees);
 
             var sellOrder = forReal ? _client.PlaceSellOrder(trade) : _client.PlaceTestSellOrder(trade);
             if (sellOrder)

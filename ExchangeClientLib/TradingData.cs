@@ -14,7 +14,7 @@ namespace ExchangeClientLib
 
         private decimal _marketPrice;
         [JsonIgnore]
-        public decimal MarketPrice
+        public decimal Price
         {
             get
             {
@@ -60,7 +60,7 @@ namespace ExchangeClientLib
             }
         }
 
-        public decimal CoinOriginalQuantity { get; set; }
+        public decimal CoinOriginalQuantity { get; private set; }
 
         private decimal _priceChangePerc;
         [JsonIgnore]
@@ -134,7 +134,7 @@ namespace ExchangeClientLib
         {
             if (marketPrice > 0)
             {
-                MarketPrice = marketPrice;
+                Price = marketPrice;
             }
 
             return marketPrice > 0;
@@ -150,18 +150,18 @@ namespace ExchangeClientLib
 
         public string ToStringPriceCheck()
         {
-            return $"ID={ID} CoinPair={CoinPair.ToString()} BuyPriceAfterFees={BuyPriceAfterFees} MarketPrice={MarketPrice} Change={PriceChangePercentage}%";
+            return $"ID={ID} CoinPair={CoinPair.ToString()} BuyPriceAfterFees={BuyPriceAfterFees} MarketPrice={Price} Change={PriceChangePercentage}%";
         }
 
         public string ToStringBought()
         {
-            return $"ID={ID}; Side=Buy; Quantity={CoinQuantityToTrade}; Coin={CoinPair.Pair1}; Cost={Cost}; Price={MarketPrice}";
+            return $"ID={ID}; Side=Buy; Quantity={CoinQuantityToTrade}; Coin={CoinPair.Pair1}; Cost={Cost}; Price={Price}";
         }
 
         public string ToStringSold()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"ID={ID}; Side=Sell; Quantity={CoinQuantityToTrade}; Coin={CoinPair.Pair1}; Price={MarketPrice};");
+            sb.Append($"ID={ID}; Side=Sell; Quantity={CoinQuantityToTrade}; Coin={CoinPair.Pair1}; Price={Price};");
             if (BuyPriceAfterFees > 0)
                 sb.Append($" Profit={Profit}");
 
@@ -192,7 +192,7 @@ namespace ExchangeClientLib
                 lvi.SubItems.Add(SellPriceAfterFees.ToString());
 
             lvi.SubItems.Add(Cost.ToString());
-            lvi.SubItems.Add(MarketPrice.ToString());
+            lvi.SubItems.Add(Price.ToString());
             lvi.SubItems.Add(PriceChangePercentage.ToString());
             lvi.ForeColor = PriceChangePercentage > 0m ? Color.Green : Color.Red;
             return lvi;
