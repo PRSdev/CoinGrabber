@@ -140,12 +140,18 @@ namespace ExchangeClientLib
             return marketPrice > 0;
         }
 
-        public void SetPriceChangePercentage(decimal marketPrice)
+        public void SetPriceChangePercentage(decimal marketPrice, bool isFutures = false)
         {
             if (SellPriceAfterFees > 0)
+            {
                 _priceChangePerc = (marketPrice - SellPriceAfterFees) / SellPriceAfterFees * 100;
+                if (isFutures && LastAction == OrderSide.Sell && marketPrice > SellPriceAfterFees)
+                    _priceChangePerc = -_priceChangePerc;
+            }
             else if (BuyPriceAfterFees > 0)
+            {
                 _priceChangePerc = (marketPrice - BuyPriceAfterFees) / BuyPriceAfterFees * 100;
+            }
         }
 
         public string ToStringPriceCheck()

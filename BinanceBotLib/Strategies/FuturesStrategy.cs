@@ -43,30 +43,42 @@ namespace BinanceBotLib
                         _client.PlaceSellOrder(trade);
                     }
                 }
-                else if (pos.UnrealizedPnL > _settings.TargetUnrealizedPnL)
+                else
                 {
-                    trade.CoinQuantity = pos.Quantity;
-                    bool success;
-
                     if (pos.LiquidationPrice < pos.EntryPrice) // Long position
                     {
-                        success = _client.PlaceSellOrder(trade, closePosition: true);
+                        trade.LastAction = Binance.Net.Enums.OrderSide.Buy;
                     }
                     else
                     {
-                        success = _client.PlaceBuyOrder(trade, closePosition: true);
+                        trade.LastAction = Binance.Net.Enums.OrderSide.Sell;
                     }
 
-                    if (success)
+                    if (pos.UnrealizedPnL > _settings.TargetUnrealizedPnL)
                     {
-                        _settings.TotalProfit += pos.UnrealizedPnL;
+                        trade.CoinQuantity = pos.Quantity;
+                        bool success;
+
+                        if (pos.LiquidationPrice < pos.EntryPrice) // Long position
+                        {
+                            success = _client.PlaceSellOrder(trade, closePosition: true);
+                        }
+                        else
+                        {
+                            success = _client.PlaceBuyOrder(trade, closePosition: true);
+                        }
+
+                        if (success)
+                        {
+                            _settings.TotalProfit += pos.UnrealizedPnL;
+                        }
                     }
                 }
 
                 // Below is for statistics and keep UI up-to-date
                 trade.CoinQuantity = pos.Quantity;
                 trade.SellPriceAfterFees = trade.BuyPriceAfterFees = pos.EntryPrice;
-                trade.SetPriceChangePercentage(pos.MarkPrice);
+                trade.SetPriceChangePercentage(pos.MarkPrice, isFutures: true);
                 OnTradeListItemHandled(trade);
             }
         }
