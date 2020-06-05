@@ -142,9 +142,9 @@ namespace BinanceBotLib
             if (_exchangeType != ExchangeType.MockupExchange && string.IsNullOrEmpty(_settings.APIKey))
                 throw new Exception("Settings reset!");
 
-#if DEBUG
             try
             {
+                NativeMethods.PreventSleep();
                 Strategy.Activate();
             }
             catch (ArgumentOutOfRangeException) // Mockup Exchange Client
@@ -156,20 +156,10 @@ namespace BinanceBotLib
                     Stop();
                 }
             }
-
-#endif
-
-#if RELEASE
-            try
-            {
-                NativeMethods.PreventSleep();
-                Strategy.Activate();
-            }
             catch (Exception ex)
             {
                 Bot.WriteLog(ex.Message);
             }
-#endif
         }
     }
 }
