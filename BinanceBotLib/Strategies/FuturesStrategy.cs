@@ -24,12 +24,12 @@ namespace BinanceBotLib
 
                 var pos = tempClient.GetOpenPositions().Data.Single(s => s.Symbol == trade.CoinPair.ToString());
 
-                Console.WriteLine($"Unrealised PnL: {pos.UnrealizedPnL}");
+                Console.WriteLine($"Entry Price: {pos.EntryPrice} Unrealised PnL: {pos.UnrealizedPnL}");
 
                 if (pos.EntryPrice == 0)
                 {
                     // If zero orders then continue
-                    decimal investment = _client.GetBalance(trade.CoinPair.Pair2) / 110m; // 11 is to have the liquidation very low or high
+                    decimal investment = _client.GetBalance(trade.CoinPair.Pair2) / _settings.FuturesSafetyFactor; // 11 is to have the liquidation very low or high
                     trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
 
                     // Short above or Long below
@@ -44,7 +44,6 @@ namespace BinanceBotLib
                 }
                 else if (pos.UnrealizedPnL > _settings.TargetUnrealizedPnL)
                 {
-                   
                     trade.CoinQuantity = pos.Quantity;
 
                     if (pos.LiquidationPrice < pos.EntryPrice) // Long position
