@@ -145,7 +145,7 @@ namespace ExchangeClientLib
             if (SellPriceAfterFees > 0)
             {
                 _priceChangePerc = (marketPrice - SellPriceAfterFees) / SellPriceAfterFees * 100;
-                if (isFutures && LastAction == OrderSide.Sell && marketPrice > SellPriceAfterFees)
+                if (isFutures && LastAction == OrderSide.Sell)
                     _priceChangePerc = -_priceChangePerc;
             }
             else if (BuyPriceAfterFees > 0)

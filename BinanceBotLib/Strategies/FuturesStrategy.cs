@@ -59,7 +59,7 @@ namespace BinanceBotLib
                         trade.CoinQuantity = pos.Quantity;
                         bool success;
 
-                        if (pos.LiquidationPrice < pos.EntryPrice) // Long position
+                        if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy) // Long position
                         {
                             success = _client.PlaceSellOrder(trade, closePosition: true);
                         }
