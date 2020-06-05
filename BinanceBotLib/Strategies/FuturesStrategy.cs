@@ -23,10 +23,11 @@ namespace BinanceBotLib
                 trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair));
 
                 var pos = tempClient.GetOpenPositions().Data.Single(s => s.Symbol == trade.CoinPair.ToString());
+                var openOrders = tempClient.GetOpenOrders().Data;
 
                 Console.WriteLine($"Entry Price: {pos.EntryPrice} Unrealised PnL: {pos.UnrealizedPnL}");
 
-                if (pos.EntryPrice == 0)
+                if (pos.EntryPrice == 0 && openOrders.Count() == 0)
                 {
                     // If zero orders then continue
                     decimal investment = _client.GetBalance(trade.CoinPair.Pair2) / _settings.FuturesSafetyFactor; // 11 is to have the liquidation very low or high
@@ -45,14 +46,20 @@ namespace BinanceBotLib
                 else if (pos.UnrealizedPnL > _settings.TargetUnrealizedPnL)
                 {
                     trade.CoinQuantity = pos.Quantity;
+                    bool success;
 
                     if (pos.LiquidationPrice < pos.EntryPrice) // Long position
                     {
-                        _client.PlaceSellOrder(trade, closePosition: true);
+                        success = _client.PlaceSellOrder(trade, closePosition: true);
                     }
                     else
                     {
-                        _client.PlaceBuyOrder(trade, closePosition: true);
+                        success = _client.PlaceBuyOrder(trade, closePosition: true);
+                    }
+
+                    if (success)
+                    {
+                        _settings.TotalProfit += pos.UnrealizedPnL;
                     }
                 }
             }
