@@ -67,7 +67,7 @@ namespace ExchangeClientLib
             }
         }
 
-        public override bool PlaceBuyOrder(TradingData trade)
+        public override bool PlaceBuyOrder(TradingData trade, bool closePosition = false)
         {
             using (var client = new BinanceClient())
             {
@@ -88,7 +88,7 @@ namespace ExchangeClientLib
             }
         }
 
-        public override bool PlaceSellOrder(TradingData trade)
+        public override bool PlaceSellOrder(TradingData trade, bool closePosition = false)
         {
             using (var client = new BinanceClient())
             {

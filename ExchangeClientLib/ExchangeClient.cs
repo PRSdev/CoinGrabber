@@ -41,12 +41,12 @@ namespace ExchangeClientLib
             throw new NotImplementedException();
         }
 
-        public virtual bool PlaceBuyOrder(TradingData trade)
+        public virtual bool PlaceBuyOrder(TradingData trade, bool closePosition = false)
         {
             throw new NotImplementedException();
         }
 
-        public virtual bool PlaceSellOrder(TradingData trade)
+        public virtual bool PlaceSellOrder(TradingData trade, bool closePosition = false)
         {
             throw new NotImplementedException();
         }

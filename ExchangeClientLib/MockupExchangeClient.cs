@@ -41,12 +41,12 @@ namespace ExchangeClientLib
             return 0.001m;
         }
 
-        public override bool PlaceBuyOrder(TradingData trade)
+        public override bool PlaceBuyOrder(TradingData trade, bool closePosition = false)
         {
             return PlaceTestBuyOrder(trade);
         }
 
-        public override bool PlaceSellOrder(TradingData trade)
+        public override bool PlaceSellOrder(TradingData trade, bool closePosition = false)
         {
             return PlaceTestBuyOrder(trade);
         }

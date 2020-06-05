@@ -58,7 +58,7 @@ namespace ExchangeClientLib
             }
         }
 
-        public override bool PlaceBuyOrder(TradingData trade)
+        public override bool PlaceBuyOrder(TradingData trade, bool closePosition)
         {
             using (var client = new BinanceFuturesClient())
             {
@@ -66,7 +66,8 @@ namespace ExchangeClientLib
                    trade.CoinPair.ToString(),
                    OrderSide.Buy,
                    OrderType.Limit,
-                   quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
+                   quantity: Math.Round(trade.CoinQuantityToTrade, 3),
+                   reduceOnly: closePosition,
                    price: Math.Round(trade.Price, 2),
                    timeInForce: TimeInForce.GoodTillCancel);
 
@@ -79,7 +80,7 @@ namespace ExchangeClientLib
             }
         }
 
-        public override bool PlaceSellOrder(TradingData trade)
+        public override bool PlaceSellOrder(TradingData trade, bool closePosition = false)
         {
             using (var client = new BinanceFuturesClient())
             {
@@ -87,7 +88,8 @@ namespace ExchangeClientLib
                    trade.CoinPair.ToString(),
                    OrderSide.Sell,
                    OrderType.Limit,
-                   quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
+                   quantity: Math.Round(trade.CoinQuantityToTrade, 3),
+                   reduceOnly: closePosition,
                    price: Math.Round(trade.Price, 2),
                    timeInForce: TimeInForce.GoodTillCancel);
 

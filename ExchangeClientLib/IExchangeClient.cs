@@ -14,9 +14,9 @@ namespace ExchangeClientLib
 
         decimal GetTradeFee(CoinPair coinPair);
 
-        bool PlaceBuyOrder(TradingData trade);
+        bool PlaceBuyOrder(TradingData trade, bool closePosition = false);
 
-        bool PlaceSellOrder(TradingData trade);
+        bool PlaceSellOrder(TradingData trade, bool closePosition = false);
 
         bool PlaceTestBuyOrder(TradingData trade);
 

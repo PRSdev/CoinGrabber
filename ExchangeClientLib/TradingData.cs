@@ -37,8 +37,8 @@ namespace ExchangeClientLib
             }
             set
             {
-                _quantityToTrade = value;
-                _quantityRemaining = value;
+                _quantityToTrade = Math.Abs(value);
+                _quantityRemaining = _quantityToTrade;
 
                 if (CoinOriginalQuantity == 0)
                     CoinOriginalQuantity = _quantityRemaining;

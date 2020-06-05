@@ -1,4 +1,5 @@
 ﻿using Binance.Net;
+using Binance.Net.Objects.Futures.FuturesData;
 using ExchangeClientLib;
 using System;
 using System.Collections.Generic;
@@ -18,26 +19,42 @@ namespace BinanceBotLib
         {
             using (var tempClient = new BinanceFuturesClient())
             {
-                if (tempClient.GetOpenOrders().Data.Count() != 0)
-                {
-                    return;
-                }
-
-                TradingData trade = new TradingData(new CoinPair("BTC", "USDT", 5));
+                TradingData trade = new TradingData(new CoinPair("BTC", "USDT", 3));
                 trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair));
 
-                // If zero orders then continue
-                decimal investment = _client.GetBalance("USDT") / 11m; // 11 is to have the liquidation very low or high
-                trade.CoinQuantity = investment / trade.Price * 20m; // 20x leverage
+                var pos = tempClient.GetOpenPositions().Data.Single(s => s.Symbol == trade.CoinPair.ToString());
 
-                // Short above or Long below
-                if (trade.Price < _settings.LongBelow)
+                Console.WriteLine($"Unrealised PnL: {pos.UnrealizedPnL}");
+
+                if (pos.EntryPrice == 0)
                 {
-                    _client.PlaceBuyOrder(trade);
+                    // If zero orders then continue
+                    decimal investment = _client.GetBalance(trade.CoinPair.Pair2) / 110m; // 11 is to have the liquidation very low or high
+                    trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
+
+                    // Short above or Long below
+                    if (trade.Price < _settings.LongBelow)
+                    {
+                        _client.PlaceBuyOrder(trade);
+                    }
+                    else if (trade.Price > _settings.ShortAbove)
+                    {
+                        _client.PlaceSellOrder(trade);
+                    }
                 }
-                else if (trade.Price > _settings.ShortAbove)
+                else if (pos.UnrealizedPnL > _settings.TargetUnrealizedPnL)
                 {
-                    _client.PlaceSellOrder(trade);
+                   
+                    trade.CoinQuantity = pos.Quantity;
+
+                    if (pos.LiquidationPrice < pos.EntryPrice) // Long position
+                    {
+                        _client.PlaceSellOrder(trade, closePosition: true);
+                    }
+                    else
+                    {
+                        _client.PlaceBuyOrder(trade, closePosition: true);
+                    }
                 }
             }
         }

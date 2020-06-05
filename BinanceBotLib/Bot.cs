@@ -108,7 +108,7 @@ namespace BinanceBotLib
                     break;
 
                 case BotMode.Futures:
-                    _marketTimer.Interval = timerInterval;
+                    _marketTimer.Interval = 10000;
                     _exchangeType = ExchangeType.BinanceFuturesExchange;
                     Strategy = new FuturesStrategy(_exchangeType, _settings);
                     break;
