@@ -42,7 +42,7 @@ namespace BinanceBotUI
             });
         }
 
-        private void Strategy_PriceChecked(TradingData trade)
+        private void Strategy_Handled(TradingData trade)
         {
             this.InvokeSafe(() =>
             {
@@ -91,7 +91,7 @@ namespace BinanceBotUI
             _bot.Start(Program.Settings);
 
             _bot.Strategy.Started += Strategy_Started;
-            _bot.Strategy.TradeListItemHandled += Strategy_PriceChecked;
+            _bot.Strategy.TradeListItemHandled += Strategy_Handled;
             _bot.Strategy.OrderSucceeded += Strategy_OrderSuccess;
             _bot.Strategy.Completed += Strategy_Completed;
         }

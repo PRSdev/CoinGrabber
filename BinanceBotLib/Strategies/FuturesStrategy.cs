@@ -19,13 +19,13 @@ namespace BinanceBotLib
         {
             using (var tempClient = new BinanceFuturesClient())
             {
-                TradingData trade = new TradingData(new CoinPair("BTC", "USDT", 3));
-                trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair));
-
-                var pos = tempClient.GetOpenPositions().Data.Single(s => s.Symbol == trade.CoinPair.ToString());
                 var openOrders = tempClient.GetOpenOrders().Data;
 
-                Console.WriteLine($"Entry Price: {pos.EntryPrice} Unrealised PnL: {pos.UnrealizedPnL}");
+                TradingData trade = new TradingData(new CoinPair("BTC", "USDT", 3));
+                var pos = tempClient.GetOpenPositions().Data.Single(s => s.Symbol == trade.CoinPair.ToString());
+                trade.UpdateMarketPrice(pos.MarkPrice);
+
+                Console.WriteLine($"{DateTime.Now} Entry Price: {pos.EntryPrice} Unrealised PnL: {pos.UnrealizedPnL}");
 
                 if (pos.EntryPrice == 0 && openOrders.Count() == 0)
                 {
@@ -62,6 +62,12 @@ namespace BinanceBotLib
                         _settings.TotalProfit += pos.UnrealizedPnL;
                     }
                 }
+
+                // Below is for statistics and keep UI up-to-date
+                trade.CoinQuantity = pos.Quantity;
+                trade.SellPriceAfterFees = trade.BuyPriceAfterFees = pos.EntryPrice;
+                trade.SetPriceChangePercentage(pos.MarkPrice);
+                OnTradeListItemHandled(trade);
             }
         }
     }
