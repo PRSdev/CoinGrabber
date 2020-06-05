@@ -76,7 +76,7 @@ namespace BinanceBotLib
                 }
 
                 // Below is for statistics and keep UI up-to-date
-                trade.CoinQuantity = pos.Quantity;
+                trade.SetQuantity(pos.Quantity);
                 trade.SellPriceAfterFees = trade.BuyPriceAfterFees = pos.EntryPrice;
                 trade.SetPriceChangePercentage(pos.MarkPrice, isFutures: true);
                 OnTradeListItemHandled(trade);

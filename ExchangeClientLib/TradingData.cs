@@ -140,6 +140,12 @@ namespace ExchangeClientLib
             return marketPrice > 0;
         }
 
+        public void SetQuantity(decimal value)
+        {
+            CoinOriginalQuantity = value;
+            CoinQuantity = value;
+        }
+
         public void SetPriceChangePercentage(decimal marketPrice, bool isFutures = false)
         {
             if (SellPriceAfterFees > 0)
