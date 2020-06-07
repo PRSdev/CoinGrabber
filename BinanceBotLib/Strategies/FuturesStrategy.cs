@@ -29,12 +29,15 @@ namespace BinanceBotLib
 
                 var dataLast24hr = tempClient.Get24HPrice(trade.CoinPair.ToString()).Data;
 
+                decimal priceDiff = dataLast24hr.HighPrice - dataLast24hr.LowPrice;
                 if (_settings.IsAutoLongBelow)
-                    trade.PriceLongBelow = Math.Round(dataLast24hr.HighPrice - (dataLast24hr.HighPrice - dataLast24hr.LowPrice) * 0.618m, 2);
+                    trade.PriceLongOpen = Math.Round(dataLast24hr.HighPrice - priceDiff * 0.618m, 2);
                 else
-                    trade.PriceLongBelow = _settings.LongBelow;
+                    trade.PriceLongOpen = _settings.LongBelow;
 
-                Console.WriteLine(trade.PriceLongBelow);
+                trade.PriceShortOpen = Math.Round(priceDiff * 1.618m + pos.EntryPrice, 2);
+
+                Console.WriteLine($"PriceLongBelow: {trade.PriceLongOpen} PriceShortAbove: {trade.PriceShortOpen}");
 
                 if (pos.EntryPrice == 0 && openOrders.Count() == 0)
                 {
@@ -43,7 +46,7 @@ namespace BinanceBotLib
                     trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
 
                     // Short above or Long below
-                    if (trade.Price < trade.PriceLongBelow)
+                    if (trade.Price < trade.PriceLongOpen)
                     {
                         _client.PlaceBuyOrder(trade);
                     }
@@ -84,7 +87,7 @@ namespace BinanceBotLib
                     }
                 }
 
-                // Below is for statistics and keep UI up-to-date
+                // Below is for statistics and to keep UI up-to-date
                 trade.SetQuantity(pos.Quantity);
                 trade.SellPriceAfterFees = trade.BuyPriceAfterFees = pos.EntryPrice;
                 trade.SetPriceChangePercentage(pos.MarkPrice, isFutures: true);
