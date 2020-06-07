@@ -27,6 +27,15 @@ namespace BinanceBotLib
 
                 Console.WriteLine($"{DateTime.Now} Entry Price: {pos.EntryPrice} Unrealised PnL: {pos.UnrealizedPnL}");
 
+                var dataLast24hr = tempClient.Get24HPrice(trade.CoinPair.ToString()).Data;
+
+                if (_settings.IsAutoLongBelow)
+                    trade.PriceLongBelow = Math.Round(dataLast24hr.HighPrice - (dataLast24hr.HighPrice - dataLast24hr.LowPrice) * 0.618m, 2);
+                else
+                    trade.PriceLongBelow = _settings.LongBelow;
+
+                Console.WriteLine(trade.PriceLongBelow);
+
                 if (pos.EntryPrice == 0 && openOrders.Count() == 0)
                 {
                     // If zero orders then continue
@@ -34,7 +43,7 @@ namespace BinanceBotLib
                     trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
 
                     // Short above or Long below
-                    if (trade.Price < _settings.LongBelow)
+                    if (trade.Price < trade.PriceLongBelow)
                     {
                         _client.PlaceBuyOrder(trade);
                     }

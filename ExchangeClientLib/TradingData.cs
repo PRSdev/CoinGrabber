@@ -121,6 +121,9 @@ namespace ExchangeClientLib
             }
         }
 
+        [JsonIgnore]
+        public decimal PriceLongBelow { get; set; }
+
         public TradingData()
         {
         }

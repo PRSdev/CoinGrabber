@@ -104,6 +104,9 @@ namespace BinanceBotLib
         [Category("5 Futures"), Description("If FuturesSafetyFactor is 11 then balance divided by 11 will be used for investment")]
         public decimal FuturesSafetyFactor { get; set; } = 11m;
 
+        [Category("5 Futures"), Description("Automatically adjust LongBelow")]
+        public bool IsAutoLongBelow { get; set; } = false;
+
         [Category("5 Futures"), Description("Short/Sell above this price")]
         public decimal ShortAbove { get; set; } = 10000m;
 
