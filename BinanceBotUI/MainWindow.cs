@@ -46,7 +46,15 @@ namespace BinanceBotUI
         {
             this.InvokeSafe(() =>
             {
-                lvStatus.Items.Add(trade.ToListViewItem());
+                lvStatus.Items.Add(trade.ToListViewItem()); // this updates UI
+
+                lvStatistics.Items.Clear();
+                // Futures
+                if (trade.PriceLongBelow > 0) // this does not update UI
+                {
+                    AddStatistic("LongBelow", trade.PriceLongBelow.ToString());
+                    AddStatistic("ShortAbove", trade.PriceShortAbove.ToString());
+                }
             });
         }
 
@@ -69,18 +77,10 @@ namespace BinanceBotUI
             cboCoinPairDefaultNew.SelectedIndex = new CoinPairHelper(Program.Settings).GetCoinPairIndex();
             cboCoinPairDefaultNew.Enabled = !Program.Settings.RandomNewCoinPair && Program.Settings.BotMode != BotMode.TradingViewSignal;
 
-            lvStatistics.Items.Clear();
             NameValueCollection nvc = _bot.Strategy.Statistics.GetReport();
             for (int i = 0; i < nvc.Count; i++)
             {
                 AddStatistic(nvc.GetKey(i), nvc.Get(i));
-            }
-
-            // Futures
-            if (Program.Settings.FuturesTrade?.PriceLongBelow > 0)
-            {
-                AddStatistic("LongBelow", Program.Settings.FuturesTrade.PriceLongBelow.ToString());
-                AddStatistic("ShortAbove", Program.Settings.FuturesTrade.PriceShortAbove.ToString());
             }
         }
 

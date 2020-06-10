@@ -97,8 +97,6 @@ namespace BinanceBotLib
                 trade.SellPriceAfterFees = trade.BuyPriceAfterFees = pos.EntryPrice;
                 trade.SetPriceChangePercentage(pos.MarkPrice, isFutures: true);
                 OnTradeListItemHandled(trade);
-
-                _settings.FuturesTrade = trade;
             }
         }
     }
