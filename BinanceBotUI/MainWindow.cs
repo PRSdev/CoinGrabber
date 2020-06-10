@@ -75,6 +75,13 @@ namespace BinanceBotUI
             {
                 AddStatistic(nvc.GetKey(i), nvc.Get(i));
             }
+
+            // Futures
+            if (Program.Settings.FuturesTrade?.PriceLongBelow > 0)
+            {
+                AddStatistic("LongBelow", Program.Settings.FuturesTrade.PriceLongBelow.ToString());
+                AddStatistic("ShortAbove", Program.Settings.FuturesTrade.PriceShortAbove.ToString());
+            }
         }
 
         private void AddStatistic(string name, string value)
