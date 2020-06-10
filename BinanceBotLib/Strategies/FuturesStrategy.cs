@@ -1,11 +1,7 @@
 ﻿using Binance.Net;
-using Binance.Net.Objects.Futures.FuturesData;
 using ExchangeClientLib;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BinanceBotLib
 {
@@ -30,14 +26,17 @@ namespace BinanceBotLib
                 var dataLast24hr = tempClient.Get24HPrice(trade.CoinPair.ToString()).Data;
 
                 decimal priceDiff = dataLast24hr.HighPrice - dataLast24hr.LowPrice;
-                if (_settings.IsAutoLongBelow)
-                    trade.PriceLongOpen = Math.Round(dataLast24hr.HighPrice - priceDiff * 0.618m, 2);
+                if (_settings.IsAutoTrade)
+                {
+                    trade.PriceLongBelow = Math.Round(dataLast24hr.HighPrice - priceDiff * 0.618m, 2);
+                    decimal entryPrice = pos.EntryPrice == 0 ? _settings.LongBelow : pos.EntryPrice;
+                    trade.PriceShortAbove = Math.Round(priceDiff * 0.5m + entryPrice, 2);
+                }
                 else
-                    trade.PriceLongOpen = _settings.LongBelow;
-
-                trade.PriceShortOpen = Math.Round(priceDiff * 1.618m + pos.EntryPrice, 2);
-
-                Console.WriteLine($"PriceLongBelow: {trade.PriceLongOpen} PriceShortAbove: {trade.PriceShortOpen}");
+                {
+                    trade.PriceLongBelow = _settings.LongBelow;
+                    trade.PriceShortAbove = _settings.ShortAbove;
+                }
 
                 if (pos.EntryPrice == 0 && openOrders.Count() == 0)
                 {
@@ -46,17 +45,19 @@ namespace BinanceBotLib
                     trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
 
                     // Short above or Long below
-                    if (trade.Price < trade.PriceLongOpen)
+                    if (trade.Price < trade.PriceLongBelow)
                     {
                         _client.PlaceBuyOrder(trade);
                     }
-                    else if (trade.Price > _settings.ShortAbove)
+                    else if (trade.Price > trade.PriceShortAbove)
                     {
                         _client.PlaceSellOrder(trade);
                     }
                 }
-                else
+                else if (pos.EntryPrice > 0)
                 {
+                    Console.WriteLine($"PriceLongBelow: {trade.PriceLongBelow} PriceShortAbove: {trade.PriceShortAbove}");
+
                     if (pos.LiquidationPrice < pos.EntryPrice) // Long position
                     {
                         trade.LastAction = Binance.Net.Enums.OrderSide.Buy;
@@ -71,11 +72,11 @@ namespace BinanceBotLib
                         trade.CoinQuantity = pos.Quantity;
                         bool success;
 
-                        if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && pos.MarkPrice > _settings.ShortAbove) // i.e. Long position
+                        if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && pos.MarkPrice > trade.PriceShortAbove) // i.e. Long position
                         {
                             success = _client.PlaceSellOrder(trade, closePosition: true);
                         }
-                        else if (trade.LastAction == Binance.Net.Enums.OrderSide.Sell && pos.MarkPrice < _settings.LongBelow)
+                        else if (trade.LastAction == Binance.Net.Enums.OrderSide.Sell && pos.MarkPrice < trade.PriceLongBelow)
                         {
                             success = _client.PlaceBuyOrder(trade, closePosition: true);
                         }
