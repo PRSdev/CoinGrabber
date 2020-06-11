@@ -29,7 +29,7 @@ namespace BinanceBotLib
                 if (_settings.IsAutoTrade)
                 {
                     trade.PriceLongBelow = Math.Round(dataLast24hr.WeightedAveragePrice - priceDiff * 0.618m, 2);
-                    decimal entryPrice = pos.EntryPrice == 0 ? _settings.LongBelow : pos.EntryPrice;
+                    decimal entryPrice = pos.EntryPrice == 0 ? dataLast24hr.WeightedAveragePrice : pos.EntryPrice;
                     trade.PriceShortAbove = Math.Round(priceDiff * 0.618m + entryPrice, 2);
                 }
                 else
