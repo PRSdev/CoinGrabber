@@ -61,7 +61,7 @@ Source: BinanceBotUI\bin\Release\*.pdb; DestDir: {app}; Flags: ignoreversion
 [Icons]
 Name: "{group}\{#MyExeNameUI}"; Filename: "{app}\{#MyExeNameUI}.exe"
 Name: "{group}\{#MyExeNameCLI}"; Filename: "{app}\{#MyExeNameCLI}.exe"
-Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyExeNameUI}.exe"; Tasks: desktopicon
+Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyExeNameUI}.exe"; Tasks: desktopicon
 
 [Run]
 Filename: {app}\{#MyExeNameUI}.exe; Description: {cm:LaunchProgram,{#MyAppName} UI}; Flags: nowait postinstall skipifsilent

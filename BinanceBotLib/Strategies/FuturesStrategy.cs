@@ -25,12 +25,12 @@ namespace BinanceBotLib
 
                 var dataLast24hr = tempClient.Get24HPrice(trade.CoinPair.ToString()).Data;
 
-                decimal priceDiff = dataLast24hr.HighPrice - dataLast24hr.LowPrice;
+                decimal priceDiff = dataLast24hr.WeightedAveragePrice - dataLast24hr.LowPrice;
                 if (_settings.IsAutoTrade)
                 {
-                    trade.PriceLongBelow = Math.Round(dataLast24hr.HighPrice - priceDiff * 0.618m, 2);
+                    trade.PriceLongBelow = Math.Round(dataLast24hr.WeightedAveragePrice - priceDiff * 0.618m, 2);
                     decimal entryPrice = pos.EntryPrice == 0 ? _settings.LongBelow : pos.EntryPrice;
-                    trade.PriceShortAbove = Math.Round(priceDiff * 0.5m + entryPrice, 2);
+                    trade.PriceShortAbove = Math.Round(priceDiff * 0.618m + entryPrice, 2);
                 }
                 else
                 {
