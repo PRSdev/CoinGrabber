@@ -112,5 +112,8 @@ namespace BinanceBotLib
 
         [Category("5 Futures"), Description("Long/Buy below this price")]
         public decimal LongBelow { get; set; } = 9500m;
+
+        [Category("5 Futures"), Description("Target unrealized PnL to close position")]
+        public decimal TargetUnrealizedPnL { get; set; }
     }
 }

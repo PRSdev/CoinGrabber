@@ -70,13 +70,15 @@ namespace BinanceBotLib
                     if (pos.UnrealizedPnL > 0)
                     {
                         trade.CoinQuantity = pos.Quantity;
-                        bool success;
 
-                        if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && pos.MarkPrice > trade.PriceShortAbove) // i.e. Long position
+                        bool success;
+                        bool targetProfitMet = _settings.TargetUnrealizedPnL > 0 && pos.UnrealizedPnL > _settings.TargetUnrealizedPnL;
+
+                        if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && (targetProfitMet || pos.MarkPrice > trade.PriceShortAbove)) // i.e. Long position
                         {
                             success = _client.PlaceSellOrder(trade, closePosition: true);
                         }
-                        else if (trade.LastAction == Binance.Net.Enums.OrderSide.Sell && pos.MarkPrice < trade.PriceLongBelow)
+                        else if (trade.LastAction == Binance.Net.Enums.OrderSide.Sell && (targetProfitMet || pos.MarkPrice < trade.PriceLongBelow))
                         {
                             success = _client.PlaceBuyOrder(trade, closePosition: true);
                         }
