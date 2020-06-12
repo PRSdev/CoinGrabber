@@ -52,8 +52,9 @@ namespace BinanceBotUI
                 // Futures
                 if (trade.PriceLongBelow > 0) // this does not update UI
                 {
-                    AddStatistic("Long Below", trade.PriceLongBelow.ToString());
-                    AddStatistic("Short Above ", trade.PriceShortAbove.ToString());
+                    string orders = trade.ProfitTarget > 0 ? " for new orders" : "";
+                    AddStatistic($"Long Below{orders}", trade.PriceLongBelow.ToString());
+                    AddStatistic($"Short Above{orders}", trade.PriceShortAbove.ToString());
                 }
 
                 if (trade.ProfitTarget > 0)
