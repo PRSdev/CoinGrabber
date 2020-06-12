@@ -127,6 +127,9 @@ namespace ExchangeClientLib
         [JsonIgnore]
         public decimal PriceShortAbove { get; set; }
 
+        [JsonIgnore]
+        public decimal ProfitTarget { get; set; }
+
         public TradingData()
         {
         }

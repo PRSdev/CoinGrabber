@@ -26,7 +26,8 @@ namespace BinanceBotLib
                 var dataLast24hr = tempClient.Get24HPrice(trade.CoinPair.ToString()).Data;
 
                 decimal priceDiff = dataLast24hr.WeightedAveragePrice - dataLast24hr.LowPrice;
-                if (_settings.IsAutoTrade)
+
+                if (_settings.IsAutoAdjustShortAboveAndLongBelow)
                 {
                     trade.PriceLongBelow = Math.Round(dataLast24hr.WeightedAveragePrice - priceDiff * 0.618m, 2);
                     decimal entryPrice = pos.EntryPrice == 0 ? dataLast24hr.WeightedAveragePrice : pos.EntryPrice;
@@ -38,9 +39,18 @@ namespace BinanceBotLib
                     trade.PriceShortAbove = _settings.ShortAbove;
                 }
 
+                if (_settings.IsAutoAdjustTargetProfit)
+                {
+                    trade.ProfitTarget = Math.Round(Math.Abs(pos.Quantity) / pos.Leverage * pos.EntryPrice * 0.618m, 2);
+                }
+                else
+                {
+                    trade.ProfitTarget = _settings.FuturesProfitTarget;
+                }
+
+                // If zero positions
                 if (pos.EntryPrice == 0 && openOrders.Count() == 0)
                 {
-                    // If zero orders then continue
                     decimal investment = _client.GetBalance(trade.CoinPair.Pair2) / _settings.FuturesSafetyFactor; // 11 is to have the liquidation very low or high
                     trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
 
@@ -54,10 +64,10 @@ namespace BinanceBotLib
                         _client.PlaceSellOrder(trade);
                     }
                 }
+
+                // When there is an existing position
                 else if (pos.EntryPrice > 0)
                 {
-                    Console.WriteLine($"PriceLongBelow: {trade.PriceLongBelow} PriceShortAbove: {trade.PriceShortAbove}");
-
                     if (pos.LiquidationPrice < pos.EntryPrice) // Long position
                     {
                         trade.LastAction = Binance.Net.Enums.OrderSide.Buy;
@@ -72,7 +82,7 @@ namespace BinanceBotLib
                         trade.CoinQuantity = pos.Quantity;
 
                         bool success;
-                        bool targetProfitMet = _settings.TargetUnrealizedPnL > 0 && pos.UnrealizedPnL > _settings.TargetUnrealizedPnL;
+                        bool targetProfitMet = trade.ProfitTarget > 0 && pos.UnrealizedPnL > trade.ProfitTarget;
 
                         if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && (targetProfitMet || pos.MarkPrice > trade.PriceShortAbove)) // i.e. Long position
                         {

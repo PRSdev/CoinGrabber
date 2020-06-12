@@ -32,8 +32,6 @@ namespace BinanceBotUI
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Total Profit earned to-date");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Profit per day");
             this.niTray = new System.Windows.Forms.NotifyIcon(this.components);
             this.btnStartStop = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
@@ -282,10 +280,6 @@ namespace BinanceBotUI
             this.lvStatistics.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvStatistics.FullRowSelect = true;
             this.lvStatistics.HideSelection = false;
-            listViewItem1.StateImageIndex = 0;
-            this.lvStatistics.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2});
             this.lvStatistics.Location = new System.Drawing.Point(588, 213);
             this.lvStatistics.Name = "lvStatistics";
             this.lvStatistics.Size = new System.Drawing.Size(409, 205);

@@ -52,8 +52,13 @@ namespace BinanceBotUI
                 // Futures
                 if (trade.PriceLongBelow > 0) // this does not update UI
                 {
-                    AddStatistic("LongBelow", trade.PriceLongBelow.ToString());
-                    AddStatistic("ShortAbove", trade.PriceShortAbove.ToString());
+                    AddStatistic("Long Below", trade.PriceLongBelow.ToString());
+                    AddStatistic("Short Above ", trade.PriceShortAbove.ToString());
+                }
+
+                if (trade.ProfitTarget > 0)
+                {
+                    AddStatistic("Target Profit", trade.ProfitTarget.ToString());
                 }
             });
         }
@@ -153,6 +158,7 @@ namespace BinanceBotUI
         {
             SettingsWindow frm = new SettingsWindow();
             frm.ShowDialog();
+            lvStatistics.Items.Clear();
             UpdateUI();
         }
 
