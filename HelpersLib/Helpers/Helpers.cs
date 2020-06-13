@@ -25,7 +25,6 @@
 
 using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
-using ShareX.HelpersLib.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -33,7 +32,6 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Media;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
@@ -49,7 +47,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Windows.Forms;
 using System.Xml;
 
 namespace ShareX.HelpersLib
@@ -70,27 +67,6 @@ namespace ShareX.HelpersLib
         public static readonly string[] VideoFileExtensions = new string[] { "mp4", "webm", "mkv", "avi", "vob", "ogv", "ogg", "mov", "qt", "wmv", "m4p", "m4v", "mpg", "mp2", "mpeg", "mpe", "mpv", "m2v", "m4v", "flv", "f4v" };
 
         public static readonly Version OSVersion = Environment.OSVersion.Version;
-
-        private static Cursor[] cursorList;
-
-        public static Cursor[] CursorList
-        {
-            get
-            {
-                if (cursorList == null)
-                {
-                    cursorList = new Cursor[] {
-                        Cursors.AppStarting, Cursors.Arrow, Cursors.Cross, Cursors.Default, Cursors.Hand, Cursors.Help,
-                        Cursors.HSplit, Cursors.IBeam, Cursors.No, Cursors.NoMove2D, Cursors.NoMoveHoriz, Cursors.NoMoveVert,
-                        Cursors.PanEast, Cursors.PanNE, Cursors.PanNorth, Cursors.PanNW, Cursors.PanSE, Cursors.PanSouth,
-                        Cursors.PanSW, Cursors.PanWest, Cursors.SizeAll, Cursors.SizeNESW, Cursors.SizeNS, Cursors.SizeNWSE,
-                        Cursors.SizeWE, Cursors.UpArrow, Cursors.VSplit, Cursors.WaitCursor
-                    };
-                }
-
-                return cursorList;
-            }
-        }
 
         public static string GetFilenameExtension(string filePath, bool includeDot = false, bool checkSecondExtension = true)
         {
@@ -207,21 +183,6 @@ namespace ShareX.HelpersLib
         public static bool IsVideoFile(string filePath)
         {
             return CheckExtension(filePath, VideoFileExtensions);
-        }
-
-        public static EDataType FindDataType(string filePath)
-        {
-            if (IsImageFile(filePath))
-            {
-                return EDataType.Image;
-            }
-
-            if (IsTextFile(filePath))
-            {
-                return EDataType.Text;
-            }
-
-            return EDataType.File;
         }
 
         public static string AddZeroes(string input, int digits = 2)
@@ -365,16 +326,6 @@ namespace ShareX.HelpersLib
             return GetLocalizedEnumDescriptions<T>(resourceManager);
         }*/
 
-        public static string[] GetLocalizedEnumDescriptions<T>()
-        {
-            return GetLocalizedEnumDescriptions<T>(Resources.ResourceManager);
-        }
-
-        public static string[] GetLocalizedEnumDescriptions<T>(ResourceManager resourceManager)
-        {
-            return Enum.GetValues(typeof(T)).OfType<Enum>().Select(x => x.GetLocalizedDescription(resourceManager)).ToArray();
-        }
-
         public static int GetEnumLength<T>()
         {
             return Enum.GetValues(typeof(T)).Length;
@@ -461,7 +412,7 @@ namespace ShareX.HelpersLib
             }
             else
             {
-                MessageBox.Show(Resources.Helpers_OpenFile_File_not_exist_ + Environment.NewLine + filePath, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //  MessageBox.Show(Resources.Helpers_OpenFile_File_not_exist_ + Environment.NewLine + filePath, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             return false;
@@ -500,32 +451,7 @@ namespace ShareX.HelpersLib
             }
             else
             {
-                MessageBox.Show(Resources.Helpers_OpenFolder_Folder_not_exist_ + Environment.NewLine + folderPath, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            return false;
-        }
-
-        public static bool OpenFolderWithFile(string filePath)
-        {
-            if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-            {
-                try
-                {
-                    NativeMethods.OpenFolderAndSelectFile(filePath);
-
-                    DebugHelper.WriteLine("Folder opened with file: " + filePath);
-
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    DebugHelper.WriteException(e, $"OpenFolderWithFile({filePath}) failed.");
-                }
-            }
-            else
-            {
-                MessageBox.Show(Resources.Helpers_OpenFile_File_not_exist_ + Environment.NewLine + filePath, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //  MessageBox.Show(Resources.Helpers_OpenFolder_Folder_not_exist_ + Environment.NewLine + folderPath, "ShareX", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             return false;
@@ -558,7 +484,7 @@ namespace ShareX.HelpersLib
         /// </summary>
         public static int CompareApplicationVersion(string version)
         {
-            return CompareVersion(version, Application.ProductVersion);
+            return CompareVersion(version, Assembly.GetEntryAssembly().GetName().Version.ToString());
         }
 
         private static Version NormalizeVersion(string version)
@@ -609,12 +535,6 @@ namespace ShareX.HelpersLib
         public static bool IsWindows10OrGreater(int build = -1)
         {
             return OSVersion.Major >= 10 && OSVersion.Build >= build;
-        }
-
-        public static bool IsDefaultInstallDir()
-        {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-            return Application.ExecutablePath.StartsWith(path);
         }
 
         public static bool IsValidIPAddress(string ip)
@@ -672,165 +592,6 @@ namespace ShareX.HelpersLib
                 ms.Seek(0, SeekOrigin.Begin);
                 return binaryFormatter.Deserialize(ms);
             }
-        }
-
-        public static void PlaySoundAsync(Stream stream)
-        {
-            if (stream != null)
-            {
-                Task.Run(() =>
-                {
-                    using (stream)
-                    using (SoundPlayer soundPlayer = new SoundPlayer(stream))
-                    {
-                        soundPlayer.PlaySync();
-                    }
-                });
-            }
-        }
-
-        public static void PlaySoundAsync(string filepath)
-        {
-            if (!string.IsNullOrEmpty(filepath) && File.Exists(filepath))
-            {
-                Task.Run(() =>
-                {
-                    using (SoundPlayer soundPlayer = new SoundPlayer(filepath))
-                    {
-                        soundPlayer.PlaySync();
-                    }
-                });
-            }
-        }
-
-        public static bool BrowseFile(TextBox tb, string initialDirectory = "", bool detectSpecialFolders = false)
-        {
-            return BrowseFile("ShareX - " + Resources.Helpers_BrowseFile_Choose_file, tb, initialDirectory, detectSpecialFolders);
-        }
-
-        public static bool BrowseFile(string title, TextBox tb, string initialDirectory = "", bool detectSpecialFolders = false)
-        {
-            using (OpenFileDialog ofd = new OpenFileDialog())
-            {
-                ofd.Title = title;
-
-                try
-                {
-                    string path = tb.Text;
-
-                    if (detectSpecialFolders)
-                    {
-                        path = ExpandFolderVariables(path);
-                    }
-
-                    if (!string.IsNullOrEmpty(path))
-                    {
-                        path = Path.GetDirectoryName(path);
-
-                        if (Directory.Exists(path))
-                        {
-                            ofd.InitialDirectory = path;
-                        }
-                    }
-                }
-                finally
-                {
-                    if (string.IsNullOrEmpty(ofd.InitialDirectory) && !string.IsNullOrEmpty(initialDirectory))
-                    {
-                        ofd.InitialDirectory = initialDirectory;
-                    }
-                }
-
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    string fileName = ofd.FileName;
-
-                    if (detectSpecialFolders)
-                    {
-                        fileName = GetVariableFolderPath(fileName);
-                    }
-
-                    tb.Text = fileName;
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public static bool BrowseFolder(TextBox tb, string initialDirectory = "", bool detectSpecialFolders = false)
-        {
-            return BrowseFolder("ShareX - " + Resources.Helpers_BrowseFolder_Choose_folder, tb, initialDirectory, detectSpecialFolders);
-        }
-
-        public static bool BrowseFolder(string title, TextBox tb, string initialDirectory = "", bool detectSpecialFolders = false)
-        {
-            using (FolderSelectDialog fsd = new FolderSelectDialog())
-            {
-                fsd.Title = title;
-
-                string path = tb.Text;
-
-                if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
-                {
-                    fsd.InitialDirectory = path;
-                }
-                else if (!string.IsNullOrEmpty(initialDirectory))
-                {
-                    fsd.InitialDirectory = initialDirectory;
-                }
-
-                if (fsd.ShowDialog())
-                {
-                    tb.Text = detectSpecialFolders ? GetVariableFolderPath(fsd.FileName) : fsd.FileName;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public static string GetVariableFolderPath(string path)
-        {
-            if (!string.IsNullOrEmpty(path))
-            {
-                try
-                {
-                    foreach (Environment.SpecialFolder specialFolder in GetEnums<Environment.SpecialFolder>())
-                    {
-                        path = path.Replace(Environment.GetFolderPath(specialFolder), $"%{specialFolder}%", StringComparison.OrdinalIgnoreCase);
-                    }
-                }
-                catch (Exception e)
-                {
-                    DebugHelper.WriteException(e);
-                }
-            }
-
-            return path;
-        }
-
-        public static string ExpandFolderVariables(string path)
-        {
-            if (!string.IsNullOrEmpty(path))
-            {
-                try
-                {
-                    foreach (Environment.SpecialFolder specialFolder in GetEnums<Environment.SpecialFolder>())
-                    {
-                        path = path.Replace($"%{specialFolder}%", Environment.GetFolderPath(specialFolder), StringComparison.OrdinalIgnoreCase);
-                    }
-
-                    path = Environment.ExpandEnvironmentVariables(path);
-                }
-                catch (Exception e)
-                {
-                    DebugHelper.WriteException(e);
-                }
-            }
-
-            return path;
         }
 
         public static string OutputSpecialFolders()
@@ -919,8 +680,8 @@ namespace ShareX.HelpersLib
                 catch (Exception e)
                 {
                     DebugHelper.WriteException(e);
-                    MessageBox.Show(Resources.Helpers_CreateDirectoryIfNotExist_Create_failed_ + "\r\n\r\n" + e, "ShareX - " + Resources.Error,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //  MessageBox.Show(Resources.Helpers_CreateDirectoryIfNotExist_Create_failed_ + "\r\n\r\n" + e, "ShareX - " + Resources.Error,
+                    //      MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -997,7 +758,7 @@ namespace ShareX.HelpersLib
             }
             catch (Exception e)
             {
-                MessageBox.Show("Rename file error:\r\n" + e.ToString(), "ShareX - " + Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //  MessageBox.Show("Rename file error:\r\n" + e.ToString(), "ShareX - " + Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return filePath;
@@ -1046,53 +807,6 @@ namespace ShareX.HelpersLib
             return Guid.NewGuid().ToString("N");
         }
 
-        public static Point GetPosition(ContentAlignment placement, Point offset, Size backgroundSize, Size objectSize)
-        {
-            int midX = (backgroundSize.Width / 2) - (objectSize.Width / 2);
-            int midY = (backgroundSize.Height / 2) - (objectSize.Height / 2);
-            int right = backgroundSize.Width - objectSize.Width;
-            int bottom = backgroundSize.Height - objectSize.Height;
-
-            switch (placement)
-            {
-                default:
-                case ContentAlignment.TopLeft:
-                    return new Point(offset.X, offset.Y);
-                case ContentAlignment.TopCenter:
-                    return new Point(midX, offset.Y);
-                case ContentAlignment.TopRight:
-                    return new Point(right - offset.X, offset.Y);
-                case ContentAlignment.MiddleLeft:
-                    return new Point(offset.X, midY);
-                case ContentAlignment.MiddleCenter:
-                    return new Point(midX, midY);
-                case ContentAlignment.MiddleRight:
-                    return new Point(right - offset.X, midY);
-                case ContentAlignment.BottomLeft:
-                    return new Point(offset.X, bottom - offset.Y);
-                case ContentAlignment.BottomCenter:
-                    return new Point(midX, bottom - offset.Y);
-                case ContentAlignment.BottomRight:
-                    return new Point(right - offset.X, bottom - offset.Y);
-            }
-        }
-
-        public static Size MeasureText(string text, Font font)
-        {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                return g.MeasureString(text, font).ToSize();
-            }
-        }
-
-        public static Size MeasureText(string text, Font font, int width)
-        {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                return g.MeasureString(text, font, width).ToSize();
-            }
-        }
-
         public static string SendPing(string host)
         {
             return SendPing(host, 1);
@@ -1124,30 +838,6 @@ namespace ShareX.HelpersLib
             return string.Join(", ", status);
         }
 
-        public static string DownloadString(string url)
-        {
-            if (!string.IsNullOrEmpty(url))
-            {
-                try
-                {
-                    using (WebClient wc = new WebClient())
-                    {
-                        wc.Encoding = Encoding.UTF8;
-                        wc.Headers.Add(HttpRequestHeader.UserAgent, ShareXResources.UserAgent);
-                        wc.Proxy = HelpersOptions.CurrentProxy.GetWebProxy();
-                        return wc.DownloadString(url);
-                    }
-                }
-                catch (Exception e)
-                {
-                    DebugHelper.WriteException(e);
-                    MessageBox.Show(Resources.Helpers_DownloadString_Download_failed_ + "\r\n" + e, "ShareX - " + Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-            return null;
-        }
-
         public static void SetDefaultUICulture(CultureInfo culture)
         {
             Type type = typeof(CultureInfo);
@@ -1171,38 +861,10 @@ namespace ShareX.HelpersLib
             }
         }
 
-        public static string GetAbsolutePath(string path)
-        {
-            path = ExpandFolderVariables(path);
-
-            if (!Path.IsPathRooted(path)) // Is relative path?
-            {
-                path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path);
-            }
-
-            return Path.GetFullPath(path);
-        }
-
         public static string GetTempPath(string extension)
         {
             string path = Path.GetTempFileName();
             return Path.ChangeExtension(path, extension);
-        }
-
-        public static bool IsAdministrator()
-        {
-            try
-            {
-                using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
-                {
-                    WindowsPrincipal principal = new WindowsPrincipal(identity);
-                    return principal.IsInRole(WindowsBuiltInRole.Administrator);
-                }
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         public static string RepeatGenerator(int count, Func<string> generator)
@@ -1291,50 +953,6 @@ namespace ShareX.HelpersLib
                                        select Activator.CreateInstance(t) as T;
 
             return instances.ToArray();
-        }
-
-        public static string GetOperatingSystemProductName(bool includeBit = false)
-        {
-            string productName = null;
-
-            try
-            {
-                productName = RegistryHelpers.GetRegistryValue(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", "ProductName", RegistryHive.LocalMachine);
-            }
-            catch
-            {
-            }
-
-            if (string.IsNullOrEmpty(productName))
-            {
-                productName = Environment.OSVersion.VersionString;
-            }
-
-            if (includeBit)
-            {
-                string bit;
-
-                if (Environment.Is64BitOperatingSystem)
-                {
-                    bit = "64";
-                }
-                else
-                {
-                    bit = "32";
-                }
-
-                productName = $"{productName} ({bit}-bit)";
-            }
-
-            return productName;
-        }
-
-        public static Cursor CreateCursor(byte[] data)
-        {
-            using (MemoryStream ms = new MemoryStream(data))
-            {
-                return new Cursor(ms);
-            }
         }
 
         public static string EscapeCLIText(string text)
@@ -1436,41 +1054,6 @@ namespace ShareX.HelpersLib
                 num /= 26;
             }
             return result;
-        }
-
-        [ReflectionPermission(SecurityAction.Assert, MemberAccess = true)]
-        public static bool TryFixHandCursor()
-        {
-            try
-            {
-                // https://referencesource.microsoft.com/#System.Windows.Forms/winforms/Managed/System/WinForms/Cursors.cs,423
-                typeof(Cursors).GetField("hand", BindingFlags.NonPublic | BindingFlags.Static)
-                    .SetValue(null, new Cursor(NativeMethods.LoadCursor(IntPtr.Zero, NativeConstants.IDC_HAND)));
-
-                return true;
-            }
-            catch
-            {
-                // If it fails, we'll just have to live with the old hand.
-                return false;
-            }
-        }
-
-        public static bool IsTabletMode()
-        {
-            //int state = NativeMethods.GetSystemMetrics(SystemMetric.SM_CONVERTIBLESLATEMODE);
-            //return state == 0;
-
-            try
-            {
-                int result = (int)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ImmersiveShell", "TabletMode", 0);
-                return result > 0;
-            }
-            catch
-            {
-            }
-
-            return false;
         }
 
         public static string JSONFormat(string json, Newtonsoft.Json.Formatting formatting)
