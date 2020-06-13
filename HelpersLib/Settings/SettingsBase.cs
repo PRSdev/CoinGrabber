@@ -134,7 +134,7 @@ namespace ShareX.HelpersLib
 
                             if (SupportDPAPIEncryption)
                             {
-                                serializer.ContractResolver = new DPAPIEncryptedStringPropertyResolver();
+                                // serializer.ContractResolver = new DPAPIEncryptedStringPropertyResolver();
                             }
                             else
                             {
@@ -248,7 +248,6 @@ namespace ShareX.HelpersLib
                             using (JsonTextReader jsonReader = new JsonTextReader(streamReader))
                             {
                                 JsonSerializer serializer = new JsonSerializer();
-                                serializer.ContractResolver = new DPAPIEncryptedStringPropertyResolver();
                                 serializer.Converters.Add(new StringEnumConverter());
                                 serializer.DateTimeZoneHandling = DateTimeZoneHandling.Local;
                                 serializer.ObjectCreationHandling = ObjectCreationHandling.Replace;

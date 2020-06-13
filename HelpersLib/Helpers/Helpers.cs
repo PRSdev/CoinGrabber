@@ -744,26 +744,6 @@ namespace ShareX.HelpersLib
             return null;
         }
 
-        public static string RenameFile(string filePath, string newFileName)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
-                {
-                    string directory = Path.GetDirectoryName(filePath);
-                    string newFilePath = Path.Combine(directory, newFileName);
-                    File.Move(filePath, newFilePath);
-                    return newFilePath;
-                }
-            }
-            catch (Exception e)
-            {
-                //  MessageBox.Show("Rename file error:\r\n" + e.ToString(), "ShareX - " + Resources.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return filePath;
-        }
-
         public static string BackupFileWeekly(string filePath, string destinationFolder)
         {
             if (!string.IsNullOrEmpty(filePath) && File.Exists(filePath))
