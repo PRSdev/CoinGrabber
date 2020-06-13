@@ -122,7 +122,7 @@ namespace BinanceBotLib
 
         public void Start(Settings settings)
         {
-            _settings = settings; // Get the latest from UI or Console
+            _settings = settings; // Get the latest from UI (Start/Stop) or Console
             Init();
 
 #if DEBUG
