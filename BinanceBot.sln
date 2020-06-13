@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceBotLib", "BinanceBot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExchangeClientLib", "ExchangeClientLib\ExchangeClientLib.csproj", "{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpersLib", "HelpersLib\HelpersLib.csproj", "{31E096F9-7055-491C-A542-264EE78BA6FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,16 @@ Global
 		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
 		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.Steam|Any CPU.ActiveCfg = Debug|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.Steam|Any CPU.Build.0 = Debug|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.WindowsStore|Any CPU.ActiveCfg = Debug|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.WindowsStore|Any CPU.Build.0 = Debug|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31E096F9-7055-491C-A542-264EE78BA6FC}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
