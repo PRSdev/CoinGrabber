@@ -12,20 +12,12 @@ using Microsoft.Extensions.Logging;
 namespace BinanceBotSvc
 {
     // sc create BinanceBotSvc binPath="C:\Users\mike\source\repos\McoreD\BinanceBot\BinanceBotSvc\bin\Debug\netcoreapp3.1\BinanceBotSvc.exe" obj=".\mike" password="password" start=auto
-    // sc config BinanceBotSvc start=auto
     // sc start BinanceBotSvc
     // sc delete BinanceBotSvc
 
     public class Worker : BackgroundService
     {
         public static readonly string PersonalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BinanceBot");
-        public static string SettingsFilePath
-        {
-            get
-            {
-                return Path.Combine(PersonalFolder, "Settings.json");
-            }
-        }
 
         private readonly ILogger<Worker> _logger;
 
@@ -39,11 +31,9 @@ namespace BinanceBotSvc
             EventLog.WriteEntry("BinanceBotSvc", "Started", EventLogEntryType.Information);
             try
             {
-                Settings settings = Settings.Load(SettingsFilePath);
-                Bot bot = new Bot(settings);
-                _logger.LogInformation(settings.BotMode.ToString());
-                // bot.Start(settings);
-                EventLog.WriteEntry("BinanceBotSvc", SettingsFilePath);
+                Bot bot = new Bot();
+                _logger.LogInformation(bot.Settings.BotMode.ToString());
+                bot.Start();
             }
             catch (Exception ex)
             {

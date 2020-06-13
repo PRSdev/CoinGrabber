@@ -2,18 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>BinanceBotLib</AssemblyName>
-    <RootNamespace>BinanceBotLib</RootNamespace>
+    <AssemblyName>ExchangeClientLib</AssemblyName>
+    <RootNamespace>ExchangeClientLib</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Binance.Net" Version="5.1.6" />
     <PackageReference Include="CryptoExchange.Net" Version="3.0.9" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ExchangeClientLibStd\ExchangeClientLibStd.csproj" />
-    <ProjectReference Include="..\HelpersLib\HelpersLib.csproj" />
   </ItemGroup>
 
 </Project>
