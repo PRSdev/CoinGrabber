@@ -14,7 +14,6 @@ namespace BinanceBotWinSvc
 {
     public partial class BinanceBotWinSvc : ServiceBase
     {
-        private Settings _settings;
         private Bot _bot;
 
         public BinanceBotWinSvc()
@@ -26,9 +25,8 @@ namespace BinanceBotWinSvc
 
         protected override void OnStart(string[] args)
         {
-            _settings = Bot.LoadSettings();
-            _bot = new Bot(_settings);
-            _bot.Start(_settings);
+            _bot = new Bot();
+            _bot.Start();
 
             _bot.Strategy.TradeListItemHandled += Strategy_TradeListItemHandled;
         }
@@ -36,6 +34,8 @@ namespace BinanceBotWinSvc
         private void Strategy_TradeListItemHandled(TradingData data)
         {
             StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Market Price: {data.Price}");
             sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
             if (data.PriceLongBelow > 0)
             {

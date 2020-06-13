@@ -9,7 +9,7 @@ namespace BinanceBotUI
 {
     internal static class Program
     {
-        public static Settings Settings { get; set; }
+        public static Bot Bot = new Bot();
 
         /// <summary>
         /// The main entry point for the application.
@@ -17,8 +17,6 @@ namespace BinanceBotUI
         [STAThread]
         private static void Main()
         {
-            Program.Settings = Bot.LoadSettings();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());

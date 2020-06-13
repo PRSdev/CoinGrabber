@@ -7,20 +7,18 @@ namespace BinanceBotConsole
     internal class Program
 
     {
-        private static Settings Settings { get; set; }
+        private static Bot myBot = new Bot();
 
         private static void Main(string[] args)
         {
-            Settings = Bot.LoadSettings();
-
             // Error handling
-            if (string.IsNullOrEmpty(Settings.APIKey))
+            if (string.IsNullOrEmpty(myBot.Settings.APIKey))
             {
                 Console.Write("Enter Binance API Key: ");
-                Settings.APIKey = Console.ReadLine();
+                myBot.Settings.APIKey = Console.ReadLine();
 
                 Console.Write("Enter Binance Secret Key: ");
-                Settings.SecretKey = Console.ReadLine();
+                myBot.Settings.SecretKey = Console.ReadLine();
             }
 
             // Choose Bot mode
@@ -32,15 +30,15 @@ namespace BinanceBotConsole
 
             int intMode;
             int.TryParse(Console.ReadLine(), out intMode);
-            Settings.BotMode = (BotMode)intMode;
+            myBot.Settings.BotMode = (BotMode)intMode;
 
-            Bot.SaveSettings(Settings);
+            Bot.SaveSettings(myBot.Settings);
 
             // Error handling - Bot mode specific
-            switch (Settings.BotMode)
+            switch (myBot.Settings.BotMode)
             {
                 case BotMode.FixedProfit:
-                    if (Settings.DailyProfitTarget <= 0)
+                    if (myBot.Settings.DailyProfitTarget <= 0)
                     {
                         Console.WriteLine("Daily Profit Target must be greater than zero!");
                         Console.ReadLine();
@@ -49,9 +47,8 @@ namespace BinanceBotConsole
                     break;
             }
 
-            Bot myBot = new Bot(Program.Settings);
-            myBot.Start(Program.Settings);
-            Console.WriteLine($"{Settings.BotMode.GetDescription()} Bot started...");
+            myBot.Start();
+            Console.WriteLine($"{myBot.Settings.BotMode.GetDescription()} Bot started...");
 
             Console.ReadLine();
         }

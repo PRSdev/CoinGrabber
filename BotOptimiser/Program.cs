@@ -48,7 +48,7 @@ namespace BotOptimiser
                         };
 
                         Bot myBot = new Bot(settings);
-                        myBot.Start(settings);
+                        myBot.Start();
                     }
                 }
             }
