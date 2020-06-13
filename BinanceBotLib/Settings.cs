@@ -116,7 +116,7 @@ namespace BinanceBotLib
         [Category("5 Futures"), Description("Automatically determine target profit (Size / Levarage * Mark Price * 0.618)")]
         public bool IsAutoAdjustTargetProfit { get; set; }
 
-        [Category("5 Futures"), Description("Target profit to close position. Closing position based on target profit has precedence over closing position based on price ranges.")]
+        [Category("5 Futures"), Description("Target profit to close position. When above 0, closing position based on target profit has precedence over closing position based on price ranges.")]
         public decimal FuturesProfitTarget { get; set; }
     }
 }
