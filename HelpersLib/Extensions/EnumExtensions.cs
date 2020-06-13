@@ -23,7 +23,6 @@
 
 #endregion License Information (GPL v3)
 
-using ShareX.HelpersLib.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -52,11 +51,6 @@ namespace ShareX.HelpersLib
             return value.ToString();
         }
 
-        public static string GetLocalizedDescription(this Enum value)
-        {
-            return value.GetLocalizedDescription(Resources.ResourceManager);
-        }
-
         public static string GetLocalizedDescription(this Enum value, ResourceManager resourceManager)
         {
             string resourceName = value.GetType().Name + "_" + value;
@@ -68,11 +62,6 @@ namespace ShareX.HelpersLib
             }
 
             return description;
-        }
-
-        public static string GetLocalizedCategory(this Enum value)
-        {
-            return value.GetLocalizedCategory(Resources.ResourceManager);
         }
 
         public static string GetLocalizedCategory(this Enum value, ResourceManager resourceManager)
