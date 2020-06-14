@@ -147,7 +147,6 @@ namespace BinanceBotLib
 
             try
             {
-                NativeMethods.PreventSleep();
                 Strategy.Activate();
             }
             catch (ArgumentOutOfRangeException) // Mockup Exchange Client
