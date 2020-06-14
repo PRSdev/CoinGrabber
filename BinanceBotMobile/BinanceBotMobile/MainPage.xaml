@@ -7,10 +7,12 @@
              x:Class="BinanceBotMobile.MainPage">
 
     <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+        <Button Text="Settings" x:Name="btnSettings" Clicked="btnSettings_Clicked" />
+        <Button Text="Start" ></Button>
+        <Label x:Name="lblStatus"
+               Text="Status"
+               FontSize="Large"
+               VerticalOptions="CenterAndExpand"
+               HorizontalOptions="Center" />
     </StackLayout>
-
 </ContentPage>

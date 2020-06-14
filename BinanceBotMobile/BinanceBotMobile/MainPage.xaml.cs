@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BinanceBotLib;
+using ShareX.HelpersLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -16,6 +18,26 @@ namespace BinanceBotMobile
         public MainPage()
         {
             InitializeComponent();
+
+        }
+
+        public IList<string> BotModesList
+        {
+            get
+            {
+                List<string> modes = new List<string>();
+                foreach (BotMode botMode in Helpers.GetEnums<BotMode>())
+                {
+                    modes.Add(botMode.GetDescription());
+                }
+                Console.WriteLine(modes.Count);
+                return modes;
+            }
+        }
+
+        private void btnSettings_Clicked(object sender, EventArgs e)
+        {
+          
         }
     }
 }
