@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BinanceBotLib;
+using ExchangeClientLib;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -17,30 +19,43 @@ namespace BinanceBotSvc
 
     public class Worker : BackgroundService
     {
-        public static readonly string PersonalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BinanceBot");
-
-        private readonly ILogger<Worker> _logger;
+        private Bot _bot;
 
         public Worker(ILogger<Worker> logger)
         {
-            _logger = logger;
         }
 
         public override async Task StartAsync(CancellationToken cancellationToken)
         {
-            EventLog.WriteEntry("BinanceBotSvc", "Started", EventLogEntryType.Information);
             try
             {
-                Bot bot = new Bot();
-                _logger.LogInformation(bot.Settings.BotMode.ToString());
-                bot.Start();
+                _bot = new Bot();
+                _bot.Start();
+
+                _bot.Strategy.TradeListItemHandled += Strategy_TradeListItemHandled;
             }
             catch (Exception ex)
             {
-                EventLog.WriteEntry("BinanceBotSvc", ex.StackTrace, EventLogEntryType.Information);
+                EventLog.WriteEntry("BinanceBotSvc", ex.StackTrace, EventLogEntryType.Error);
             }
 
             await base.StartAsync(cancellationToken);
+        }
+
+        private void Strategy_TradeListItemHandled(TradingData data)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Market Price: {data.Price}");
+            sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
+            if (data.PriceLongBelow > 0)
+            {
+                sb.AppendLine($"Long Below: {data.PriceLongBelow}");
+                sb.AppendLine($"Short Above: {data.PriceShortAbove}");
+                sb.AppendLine($"Target Profit: {data.ProfitTarget}");
+            }
+
+            EventLog.WriteEntry("BinanceBotSvc", sb.ToString(), EventLogEntryType.Information);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

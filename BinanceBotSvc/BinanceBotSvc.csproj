@@ -12,5 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BinanceBotLibStd\BinanceBotLibStd.csproj" />
+    <ProjectReference Include="..\ExchangeClientLibStd\ExchangeClientLibStd.csproj" />
   </ItemGroup>
 </Project>
