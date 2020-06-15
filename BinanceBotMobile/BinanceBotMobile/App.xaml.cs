@@ -10,7 +10,7 @@ namespace BinanceBotMobile
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(new DashboardPage());
         }
 
         protected override void OnStart()

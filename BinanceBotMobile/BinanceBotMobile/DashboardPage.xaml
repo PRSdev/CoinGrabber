@@ -4,18 +4,11 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             x:Class="BinanceBotMobile.MainPage">
+             x:Class="BinanceBotMobile.DashboardPage">
 
     <StackLayout>
-        <Button Text="Settings" x:Name="btnSettings" Clicked="btnSettings_Clicked" />
-
-        <StackLayout Orientation="Horizontal" Margin="50,10">
-            <Label>Auto adjust ShortAbove and LongBelow:</Label>
-            <Switch IsToggled="{Binding IsAutoAdjustShortAboveAndLongBelow}" />
-        </StackLayout>
-
+        <Button Text="Settings" x:Name="btnSettings" Clicked="btnSettings_Clicked" ></Button>
         <Button Text="Start" x:Name="btnStartStop" Clicked="btnStartStop_Clicked" ></Button>
-
         <Label x:Name="lblStatus"
                Text="Status"
                FontSize="Large"

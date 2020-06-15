@@ -11,6 +11,11 @@
             <Entry x:Name="txtAPIKey"></Entry>
             <Label x:Name="lblSecretKey">Secret Key</Label>
             <Entry x:Name="txtSecretKey"></Entry>
+
+            <StackLayout Orientation="Horizontal">
+                <Label>Auto adjust ShortAbove and LongBelow:</Label>
+                <Switch IsToggled="{Binding IsAutoAdjustShortAboveAndLongBelow}" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

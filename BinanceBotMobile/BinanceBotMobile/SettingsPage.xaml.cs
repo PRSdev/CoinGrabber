@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BinanceBot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,9 +13,16 @@ namespace BinanceBotMobile
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SettingsPage : ContentPage
     {
+        public SettingsViewModel ViewModel
+        {
+            get => BindingContext as SettingsViewModel;
+            set => BindingContext = value;
+        }
+
         public SettingsPage()
         {
             InitializeComponent();
+            ViewModel = new SettingsViewModel();
         }
     }
 }
