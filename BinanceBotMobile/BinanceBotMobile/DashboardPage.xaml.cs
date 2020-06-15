@@ -30,6 +30,14 @@ namespace BinanceBotMobile
 
         private void btnStartStop_Clicked(object sender, EventArgs e)
         {
+            Settings botSettings = new Settings();
+            SettingsViewModel viewModel = new SettingsViewModel();
+
+            botSettings.APIKey = viewModel.APIKey;
+            botSettings.SecretKey = viewModel.SecretKey;
+
+            Bot bot = new Bot(botSettings);
+            lblStatus.Text = $"Price: ${bot.Test()}";
         }
     }
 }

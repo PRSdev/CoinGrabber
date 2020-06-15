@@ -8,11 +8,11 @@
     <ContentPage.Content>
         <StackLayout>
             <Label x:Name="lblAPIKey">API Key</Label>
-            <Entry x:Name="txtAPIKey"></Entry>
+            <Entry x:Name="txtAPIKey" Text="{Binding APIKey}"></Entry>
             <Label x:Name="lblSecretKey">Secret Key</Label>
-            <Entry x:Name="txtSecretKey"></Entry>
+            <Entry x:Name="txtSecretKey" Text="{Binding SecretKey}" ></Entry>
 
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
                 <Label>Auto adjust ShortAbove and LongBelow:</Label>
                 <Switch IsToggled="{Binding IsAutoAdjustShortAboveAndLongBelow}" />
             </StackLayout>

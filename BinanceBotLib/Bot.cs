@@ -2,6 +2,7 @@
 using Binance.Net.Objects;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
+using ExchangeClientLib;
 using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
@@ -122,6 +123,12 @@ namespace BinanceBotLib
                     Console.ReadLine();
                     return;
             }
+        }
+
+        public decimal Test()
+        {
+            var client = new BinanceFuturesExchangeClient(Settings.APIKey, Settings.SecretKey);
+            return client.GetPrice(new CoinPair("BTC", "USDT", 3));
         }
 
         public void Start()

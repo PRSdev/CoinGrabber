@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BinanceBotLib;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -9,7 +10,6 @@ namespace BinanceBotMobile
         public App()
         {
             InitializeComponent();
-
             MainPage = new NavigationPage(new DashboardPage());
         }
 
