@@ -6,6 +6,7 @@
     <RootNamespace>BinanceBot</RootNamespace>
     <AssemblyName>BinanceBot</AssemblyName>
     <Authors>McoreD</Authors>
+    <PackageIcon>Binance.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -27,5 +28,12 @@
     <EmbeddedResource Update="SettingsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\Binance.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 </Project>

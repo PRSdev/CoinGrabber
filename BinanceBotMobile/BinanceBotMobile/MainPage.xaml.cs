@@ -30,7 +30,7 @@ namespace BinanceBotMobile
         public MainPage()
         {
             InitializeComponent();
-            Title = $"{AppInfo.Name} {AppInfo.VersionString}";
+            Title = $"BinanceBot {AppInfo.VersionString}";
         }
 
         public IList<string> BotModesList

@@ -8,7 +8,14 @@
 
     <StackLayout>
         <Button Text="Settings" x:Name="btnSettings" Clicked="btnSettings_Clicked" />
-        <Button Text="Start" ></Button>
+
+        <StackLayout Orientation="Horizontal" Margin="50,10">
+            <Label>Auto adjust ShortAbove and LongBelow:</Label>
+            <Switch IsToggled="{Binding IsAutoAdjustShortAboveAndLongBelow}" />
+        </StackLayout>
+
+        <Button Text="Start" x:Name="btnStartStop" Clicked="btnStartStop_Clicked" ></Button>
+
         <Label x:Name="lblStatus"
                Text="Status"
                FontSize="Large"
