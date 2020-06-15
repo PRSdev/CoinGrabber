@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace BinanceBotMobile
@@ -15,10 +16,21 @@ namespace BinanceBotMobile
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
+        public bool IsAutoAdjustShortAboveAndLongBelow
+        {
+            get => Preferences.Get(nameof(IsAutoAdjustShortAboveAndLongBelow), false);
+
+            set
+            {
+                Preferences.Set(nameof(IsAutoAdjustShortAboveAndLongBelow), value);
+                OnPropertyChanged(nameof(IsAutoAdjustShortAboveAndLongBelow));
+            }
+        }
+
         public MainPage()
         {
             InitializeComponent();
-
+            Title = $"{AppInfo.Name} {AppInfo.VersionString}";
         }
 
         public IList<string> BotModesList
@@ -35,9 +47,15 @@ namespace BinanceBotMobile
             }
         }
 
-        private void btnSettings_Clicked(object sender, EventArgs e)
+        private async void btnSettings_Clicked(object sender, EventArgs e)
         {
-          
+            await Navigation.PushAsync(new SettingsPage());
+
+            // Application.Current.SavePropertiesAsync();
+        }
+
+        private void btnStartStop_Clicked(object sender, EventArgs e)
+        {
         }
     }
 }
