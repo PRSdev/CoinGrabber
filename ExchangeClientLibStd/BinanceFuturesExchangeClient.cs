@@ -1,6 +1,7 @@
 ﻿using Binance.Net;
 using Binance.Net.Enums;
 using Binance.Net.Objects.Futures;
+using Binance.Net.Objects.Spot.MarketData;
 using Binance.Net.Objects.Spot.SpotData;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ExchangeClientLib
 {
@@ -55,6 +57,17 @@ namespace ExchangeClientLib
                 {
                     return 0;
                 }
+            }
+        }
+
+        public async Task<WebCallResult<BinancePrice>> GetPriceAsync(CoinPair coinPair)
+        {
+            using (var client = new BinanceFuturesClient())
+            {
+                var task = await client.GetPriceAsync(coinPair.ToString());
+                decimal marketPrice = Math.Round(task.Data.Price, 2);
+                Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
+                return task;
             }
         }
 

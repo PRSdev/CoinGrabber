@@ -1,7 +1,9 @@
 ﻿using Binance.Net;
 using Binance.Net.Objects;
+using Binance.Net.Objects.Spot.MarketData;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
+using CryptoExchange.Net.Objects;
 using ExchangeClientLib;
 using ShareX.HelpersLib;
 using System;
@@ -10,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace BinanceBotLib
@@ -125,10 +128,11 @@ namespace BinanceBotLib
             }
         }
 
-        public decimal Test()
+        public async Task<decimal> TestAsync()
         {
             var client = new BinanceFuturesExchangeClient(Settings.APIKey, Settings.SecretKey);
-            return client.GetPrice(new CoinPair("BTC", "USDT", 3));
+            var task = await client.GetPriceAsync(new CoinPair("BTC", "USDT", 3));
+            return task.Data.Price;
         }
 
         public void Start()

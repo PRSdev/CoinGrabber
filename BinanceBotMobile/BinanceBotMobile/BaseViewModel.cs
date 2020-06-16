@@ -32,7 +32,7 @@ namespace BinanceBot
 
         protected void SetPreference(string prefName, double value)
         {
-            Preferences.Set(prefName, (double)value);
+            Preferences.Set(prefName, value);
             OnPropertyChanged(prefName);
         }
     }

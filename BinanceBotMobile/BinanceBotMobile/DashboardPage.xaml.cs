@@ -28,10 +28,11 @@ namespace BinanceBotMobile
             await Navigation.PushAsync(new SettingsPage());
         }
 
-        private void btnStartStop_Clicked(object sender, EventArgs e)
+        private async void btnStartStop_Clicked(object sender, EventArgs e)
         {
             Bot bot = new Bot(new SettingsViewModel());
-            lblStatus.Text = $"Price: ${bot.Test()}";
+            var price = await bot.TestAsync();
+            lblStatus.Text = $"Price: ${price}";
         }
     }
 }
