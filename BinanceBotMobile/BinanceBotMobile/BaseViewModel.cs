@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BinanceBotLib;
+using ShareX.HelpersLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -6,20 +8,13 @@ using System.Text;
 
 namespace BinanceBot
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public class BaseViewModel : Settings, INotifyPropertyChanged
     {
-        #region INotifyPropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        #endregion INotifyPropertyChanged
     }
 }

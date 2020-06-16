@@ -13,10 +13,10 @@ namespace BinanceBotLib
         public DateTime StartDate { get; set; } = DateTime.Now;
 
         [Category("1 General"), Description("Binance API Key.")]
-        public string APIKey { get; set; }
+        public virtual string APIKey { get; set; }
 
         [Category("1 General"), Description("Binance Secret Key.")]
-        public string SecretKey { get; set; }
+        public virtual string SecretKey { get; set; }
 
         [Category("1 General"), Description("Orders will be actually placed during the production mode.")]
         public bool ProductionMode { get; set; } = false;
@@ -105,7 +105,7 @@ namespace BinanceBotLib
         public decimal FuturesSafetyFactor { get; set; } = 15m;
 
         [Category("5 Futures"), Description("Automatically adjust Long Below and Short Above prices")]
-        public bool IsAutoAdjustShortAboveAndLongBelow { get; set; } = false;
+        public virtual bool IsAutoAdjustShortAboveAndLongBelow { get; set; } = false;
 
         [Category("5 Futures"), Description("Short/Sell above this price")]
         public decimal ShortAbove { get; set; } = 10000m;

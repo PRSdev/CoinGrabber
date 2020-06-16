@@ -7,7 +7,7 @@ namespace BinanceBot
 {
     public class SettingsViewModel : BaseViewModel
     {
-        public string APIKey
+        public override string APIKey
         {
             get => Preferences.Get(nameof(APIKey), "");
             set
@@ -17,7 +17,7 @@ namespace BinanceBot
             }
         }
 
-        public string SecretKey
+        public override string SecretKey
         {
             get => Preferences.Get(nameof(SecretKey), "");
             set
@@ -29,7 +29,7 @@ namespace BinanceBot
 
         // Futures
 
-        public bool IsAutoAdjustShortAboveAndLongBelow
+        public override bool IsAutoAdjustShortAboveAndLongBelow
         {
             get => Preferences.Get(nameof(IsAutoAdjustShortAboveAndLongBelow), false);
             set
