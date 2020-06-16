@@ -41,7 +41,7 @@ namespace BinanceBotLib
 
                 if (_settings.IsAutoAdjustTargetProfit)
                 {
-                    trade.ProfitTarget = Math.Round(Math.Abs(pos.Quantity) / pos.Leverage * pos.EntryPrice * 0.618m, 2);
+                    trade.ProfitTarget = (double)Math.Round(Math.Abs(pos.Quantity) / pos.Leverage * pos.EntryPrice * 0.618m, 2);
                 }
                 else
                 {
@@ -51,7 +51,7 @@ namespace BinanceBotLib
                 // If zero positions
                 if (pos.EntryPrice == 0 && openOrders.Count() == 0)
                 {
-                    decimal investment = _client.GetBalance(trade.CoinPair.Pair2) / _settings.FuturesSafetyFactor; // 11 is to have the liquidation very low or high
+                    decimal investment = _client.GetBalance(trade.CoinPair.Pair2) / (decimal)_settings.FuturesSafetyFactor; // 11 is to have the liquidation very low or high
                     trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
 
                     // Short above or Long below
@@ -82,7 +82,7 @@ namespace BinanceBotLib
                         trade.CoinQuantity = pos.Quantity;
 
                         bool success;
-                        bool targetProfitMet = trade.ProfitTarget > 0 && pos.UnrealizedPnL > trade.ProfitTarget;
+                        bool targetProfitMet = trade.ProfitTarget > 0 && pos.UnrealizedPnL > (decimal)trade.ProfitTarget;
 
                         if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && (targetProfitMet || pos.MarkPrice > trade.PriceShortAbove)) // i.e. Long position
                         {

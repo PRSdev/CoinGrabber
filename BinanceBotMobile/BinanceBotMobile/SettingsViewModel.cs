@@ -21,10 +21,22 @@ namespace BinanceBot
 
         // Futures
 
+        public override double FuturesSafetyFactor
+        {
+            get => Preferences.Get(nameof(FuturesSafetyFactor), 15.0);
+            set { SetPreference(nameof(FuturesSafetyFactor), value); }
+        }
+
         public override bool IsAutoAdjustShortAboveAndLongBelow
         {
             get => Preferences.Get(nameof(IsAutoAdjustShortAboveAndLongBelow), false);
             set { SetPreference(nameof(IsAutoAdjustShortAboveAndLongBelow), value); }
+        }
+
+        public override double FuturesProfitTarget
+        {
+            get => Preferences.Get(nameof(FuturesProfitTarget), 0.0);
+            set { SetPreference(nameof(FuturesProfitTarget), value); }
         }
     }
 }

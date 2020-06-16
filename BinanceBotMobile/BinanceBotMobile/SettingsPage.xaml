@@ -7,11 +7,12 @@
              x:Class="BinanceBotMobile.SettingsPage">
     <ContentPage.Content>
         <StackLayout>
-            <Label x:Name="lblAPIKey">API Key</Label>
+            <Label>API Key</Label>
             <Entry x:Name="txtAPIKey" Text="{Binding APIKey}"></Entry>
-            <Label x:Name="lblSecretKey">Secret Key</Label>
+            <Label>Secret Key</Label>
             <Entry x:Name="txtSecretKey" Text="{Binding SecretKey}" ></Entry>
-
+            <Label>Safety Factor</Label>
+            <Entry x:Name="txtFuturesSafetyFactor" Text="{Binding FuturesSafetyFactor}" ></Entry>
             <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
                 <Label>Auto adjust ShortAbove and LongBelow:</Label>
                 <Switch IsToggled="{Binding IsAutoAdjustShortAboveAndLongBelow}" />

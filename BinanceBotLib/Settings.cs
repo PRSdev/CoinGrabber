@@ -102,21 +102,21 @@ namespace BinanceBotLib
         public List<TradingData> TradingViewTradesList { get; set; } = new List<TradingData>();
 
         [Category("5 Futures"), Description("If FuturesSafetyFactor is 15 then balance divided by 11 will be used for investment")]
-        public decimal FuturesSafetyFactor { get; set; } = 15m;
+        public virtual double FuturesSafetyFactor { get; set; } = 15;
 
         [Category("5 Futures"), Description("Automatically adjust Long Below and Short Above prices")]
         public virtual bool IsAutoAdjustShortAboveAndLongBelow { get; set; } = false;
 
         [Category("5 Futures"), Description("Short/Sell above this price")]
-        public decimal ShortAbove { get; set; } = 10000m;
+        public virtual decimal ShortAbove { get; set; } = 10000m;
 
         [Category("5 Futures"), Description("Long/Buy below this price")]
-        public decimal LongBelow { get; set; } = 9500m;
+        public virtual decimal LongBelow { get; set; } = 9500m;
 
         [Category("5 Futures"), Description("Automatically determine target profit (Size / Levarage * Mark Price * 0.618)")]
-        public bool IsAutoAdjustTargetProfit { get; set; }
+        public virtual bool IsAutoAdjustTargetProfit { get; set; }
 
         [Category("5 Futures"), Description("Target profit to close position. When above 0, closing position based on target profit has precedence over closing position based on price ranges.")]
-        public decimal FuturesProfitTarget { get; set; }
+        public virtual double FuturesProfitTarget { get; set; }
     }
 }
