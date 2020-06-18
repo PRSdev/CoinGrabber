@@ -1,5 +1,6 @@
 ﻿using BinanceBot;
 using BinanceBotLib;
+using ExchangeClientLib;
 using ShareX.HelpersLib;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace BinanceBotMobile
     [DesignTimeVisible(false)]
     public partial class DashboardPage : ContentPage
     {
+        private int _count;
+
         public DashboardPage()
         {
             InitializeComponent();
@@ -30,9 +33,29 @@ namespace BinanceBotMobile
 
         private async void btnStartStop_Clicked(object sender, EventArgs e)
         {
-            Bot bot = new Bot(new SettingsViewModel());
-            var price = await bot.TestAsync();
-            lblStatus.Text = $"Price: ${price}";
+            Bot bot = new Bot(new SettingsViewModel() { BotMode = BotMode.Futures });
+            bot.Start();
+
+            bot.Strategy.TradeListItemHandled += Strategy_TradeListItemHandled;
+            // var price = await bot.TestAsync();
+            // lblStatus.Text = $"Price: ${price}";
+        }
+
+        private void Strategy_TradeListItemHandled(TradingData data)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Iteration: {_count++}");
+            sb.AppendLine($"Market Price: {data.Price}");
+            sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
+            if (data.PriceLongBelow > 0)
+            {
+                sb.AppendLine($"Long Below: {data.PriceLongBelow}");
+                sb.AppendLine($"Short Above: {data.PriceShortAbove}");
+                sb.AppendLine($"Target Profit: {data.ProfitTarget}");
+            }
+
+            lblStatus.Dispatcher.BeginInvokeOnMainThread(new Action(() => { lblStatus.Text = sb.ToString(); }));
         }
     }
 }
