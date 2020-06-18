@@ -12,7 +12,7 @@
             <Label>API Key</Label>
             <Entry x:Name="txtAPIKey" Text="{Binding APIKey}"></Entry>
             <Label>Secret Key</Label>
-            <Entry x:Name="txtSecretKey" Text="{Binding SecretKey}" ></Entry>
+            <Entry x:Name="txtSecretKey" Text="{Binding SecretKey}" IsPassword="True" ></Entry>
 
             <Label FontSize="Title">Futures</Label>
 
@@ -28,12 +28,12 @@
 
             <StackLayout Orientation="Horizontal">
                 <Label HorizontalOptions="Start">Short Above</Label>
-                <Entry Text="{Binding ShortAbove}" HorizontalOptions="FillAndExpand"></Entry>
+                <Entry Text="{Binding ShortAbove}" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"></Entry>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal">
                 <Label HorizontalOptions="Start">Long Below</Label>
-                <Entry HorizontalOptions="FillAndExpand" Text="{Binding LongBelow}" ></Entry>
+                <Entry HorizontalOptions="FillAndExpand" Text="{Binding LongBelow}" ClearButtonVisibility="WhileEditing" ></Entry>
             </StackLayout>
 
             <StackLayout Orientation="Horizontal">
