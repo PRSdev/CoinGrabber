@@ -29,9 +29,9 @@ namespace BinanceBotLib
 
                 if (_settings.IsAutoAdjustShortAboveAndLongBelow)
                 {
-                    trade.PriceLongBelow = Math.Round(dataLast24hr.WeightedAveragePrice - priceDiff * 0.618m, 2);
+                    trade.PriceLongBelow = (double)Math.Round(dataLast24hr.WeightedAveragePrice - priceDiff * 0.618m, 2);
                     decimal entryPrice = pos.EntryPrice == 0 ? dataLast24hr.WeightedAveragePrice : pos.EntryPrice;
-                    trade.PriceShortAbove = Math.Round(priceDiff * 0.618m + entryPrice, 2);
+                    trade.PriceShortAbove = (double)Math.Round(priceDiff * 0.618m + entryPrice, 2);
                 }
                 else
                 {
@@ -55,11 +55,11 @@ namespace BinanceBotLib
                     trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
 
                     // Short above or Long below
-                    if (trade.Price < trade.PriceLongBelow)
+                    if (trade.Price < (decimal)trade.PriceLongBelow)
                     {
                         _client.PlaceBuyOrder(trade);
                     }
-                    else if (trade.Price > trade.PriceShortAbove)
+                    else if (trade.Price > (decimal)trade.PriceShortAbove)
                     {
                         _client.PlaceSellOrder(trade);
                     }
@@ -84,11 +84,11 @@ namespace BinanceBotLib
                         bool success;
                         bool targetProfitMet = trade.ProfitTarget > 0 && pos.UnrealizedPnL > (decimal)trade.ProfitTarget;
 
-                        if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && (targetProfitMet || pos.MarkPrice > trade.PriceShortAbove)) // i.e. Long position
+                        if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && (targetProfitMet || pos.MarkPrice > (decimal)trade.PriceShortAbove)) // i.e. Long position
                         {
                             success = _client.PlaceSellOrder(trade, closePosition: true);
                         }
-                        else if (trade.LastAction == Binance.Net.Enums.OrderSide.Sell && (targetProfitMet || pos.MarkPrice < trade.PriceLongBelow))
+                        else if (trade.LastAction == Binance.Net.Enums.OrderSide.Sell && (targetProfitMet || pos.MarkPrice < (decimal)trade.PriceLongBelow))
                         {
                             success = _client.PlaceBuyOrder(trade, closePosition: true);
                         }

@@ -121,10 +121,10 @@ namespace ExchangeClientLib
         }
 
         [JsonIgnore]
-        public decimal PriceLongBelow { get; set; }
+        public double PriceLongBelow { get; set; }
 
         [JsonIgnore]
-        public decimal PriceShortAbove { get; set; }
+        public double PriceShortAbove { get; set; }
 
         [JsonIgnore]
         public double ProfitTarget { get; set; }

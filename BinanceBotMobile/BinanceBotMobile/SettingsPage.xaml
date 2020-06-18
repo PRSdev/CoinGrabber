@@ -7,15 +7,43 @@
              x:Class="BinanceBotMobile.SettingsPage">
     <ContentPage.Content>
         <StackLayout>
+            <Label FontSize="Title">General</Label>
+
             <Label>API Key</Label>
             <Entry x:Name="txtAPIKey" Text="{Binding APIKey}"></Entry>
             <Label>Secret Key</Label>
             <Entry x:Name="txtSecretKey" Text="{Binding SecretKey}" ></Entry>
-            <Label>Safety Factor</Label>
-            <Entry x:Name="txtFuturesSafetyFactor" Text="{Binding FuturesSafetyFactor}" ></Entry>
-            <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
-                <Label>Auto adjust ShortAbove and LongBelow:</Label>
+
+            <Label FontSize="Title">Futures</Label>
+
+            <StackLayout Orientation="Horizontal">
+                <Label HorizontalOptions="Start">Safety Factor</Label>
+                <Entry Text="{Binding FuturesSafetyFactor}" HorizontalOptions="FillAndExpand" ></Entry>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Label HorizontalOptions="Start">Auto adjust ShortAbove and LongBelow:</Label>
                 <Switch IsToggled="{Binding IsAutoAdjustShortAboveAndLongBelow}" />
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Label HorizontalOptions="Start">Short Above</Label>
+                <Entry Text="{Binding ShortAbove}" HorizontalOptions="FillAndExpand"></Entry>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Label HorizontalOptions="Start">Long Below</Label>
+                <Entry HorizontalOptions="FillAndExpand" Text="{Binding LongBelow}" ></Entry>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Label >Auto adjust Profit Target:</Label>
+                <Switch IsToggled="{Binding IsAutoAdjustTargetProfit}" />
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <Label HorizontalOptions="Start">Future Profit Target</Label>
+                <Entry HorizontalOptions="FillAndExpand" Text="{Binding FuturesProfitTarget}" ></Entry>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

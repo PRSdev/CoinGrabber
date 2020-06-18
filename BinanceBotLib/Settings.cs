@@ -108,10 +108,10 @@ namespace BinanceBotLib
         public virtual bool IsAutoAdjustShortAboveAndLongBelow { get; set; } = false;
 
         [Category("5 Futures"), Description("Short/Sell above this price")]
-        public virtual decimal ShortAbove { get; set; } = 10000m;
+        public virtual double ShortAbove { get; set; } = 10000.0;
 
         [Category("5 Futures"), Description("Long/Buy below this price")]
-        public virtual decimal LongBelow { get; set; } = 9500m;
+        public virtual double LongBelow { get; set; } = 9500.0;
 
         [Category("5 Futures"), Description("Automatically determine target profit (Size / Levarage * Mark Price * 0.618)")]
         public virtual bool IsAutoAdjustTargetProfit { get; set; }

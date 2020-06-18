@@ -33,6 +33,24 @@ namespace BinanceBot
             set { SetPreference(nameof(IsAutoAdjustShortAboveAndLongBelow), value); }
         }
 
+        public override double ShortAbove
+        {
+            get => Preferences.Get(nameof(ShortAbove), 9990.0);
+            set { SetPreference(nameof(ShortAbove), value); }
+        }
+
+        public override double LongBelow
+        {
+            get => Preferences.Get(nameof(LongBelow), 9490.0);
+            set { SetPreference(nameof(LongBelow), value); }
+        }
+
+        public override bool IsAutoAdjustTargetProfit
+        {
+            get => Preferences.Get(nameof(IsAutoAdjustTargetProfit), false);
+            set { SetPreference(nameof(IsAutoAdjustTargetProfit), value); }
+        }
+
         public override double FuturesProfitTarget
         {
             get => Preferences.Get(nameof(FuturesProfitTarget), 0.0);
