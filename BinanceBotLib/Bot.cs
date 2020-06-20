@@ -151,6 +151,23 @@ namespace BinanceBotLib
             _marketTimer.Stop();
         }
 
+        public string ToStatusString(TradingData data)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"Market Price: {data.Price}");
+            sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
+            if (data.PriceLongBelow > 0)
+            {
+                string orders = data.ProfitTarget > 0 ? " for new orders" : "";
+                sb.AppendLine($"Long Below: {data.PriceLongBelow}{orders}");
+                sb.AppendLine($"Short Above: {data.PriceShortAbove}{orders}");
+                sb.AppendLine($"Target Profit: {data.ProfitTarget}");
+            }
+
+            return sb.ToString();
+        }
+
         private void MarketTimer_Tick(object sender, ElapsedEventArgs e)
         {
             if (_exchangeType != ExchangeType.MockupExchange && string.IsNullOrEmpty(Settings.APIKey))

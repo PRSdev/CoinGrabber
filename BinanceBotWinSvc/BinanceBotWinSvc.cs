@@ -43,7 +43,7 @@ namespace BinanceBotWinSvc
                 sb.AppendLine($"Short Above: {data.PriceShortAbove}");
                 sb.AppendLine($"Target Profit: {data.ProfitTarget}");
             }
-            EventLog.WriteEntry("BinanceBotWinSvc", sb.ToString());
+            EventLog.WriteEntry("BinanceBotWinSvc", _bot.ToStatusString(data));
         }
 
         protected override void OnContinue()

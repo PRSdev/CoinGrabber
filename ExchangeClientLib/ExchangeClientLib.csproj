@@ -129,8 +129,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ExchangeClientLibStd\BinanceFuturesExchangeClient.cs">
+      <Link>BinanceFuturesExchangeClient.cs</Link>
+    </Compile>
+    <Compile Include="..\ExchangeClientLibStd\TradingData.cs">
+      <Link>TradingData.cs</Link>
+    </Compile>
     <Compile Include="BinanceExchangeClient.cs" />
-    <Compile Include="BinanceFuturesExchangeClient.cs" />
     <Compile Include="CoinData.cs" />
     <Compile Include="CoinPair.cs" />
     <Compile Include="ExchangeClient.cs" />
@@ -138,7 +143,7 @@
     <Compile Include="MockupExchangeClient.cs" />
     <Compile Include="PortfolioHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TradingData.cs" />
+    <Compile Include="TradingDataBridge.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

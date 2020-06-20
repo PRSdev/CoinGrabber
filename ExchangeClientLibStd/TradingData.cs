@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ExchangeClientLib
 {
-    public class TradingData
+    public partial class TradingData
     {
         public int ID { get; set; }
 

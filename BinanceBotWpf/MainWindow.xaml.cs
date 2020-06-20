@@ -52,18 +52,7 @@ namespace BinanceBotWpf
 
         private void Strategy_TradeListItemHandled(TradingData data)
         {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine($"Market Price: {data.Price}");
-            sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
-            if (data.PriceLongBelow > 0)
-            {
-                sb.AppendLine($"Long Below: {data.PriceLongBelow}");
-                sb.AppendLine($"Short Above: {data.PriceShortAbove}");
-                sb.AppendLine($"Target Profit: {data.ProfitTarget}");
-            }
-
-            txtStatus.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => { txtStatus.Text = sb.ToString(); }));
+            txtStatus.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => { txtStatus.Text = App.Bot.ToStatusString(data); }));
         }
 
         private void Strategy_Started()

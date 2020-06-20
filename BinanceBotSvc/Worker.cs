@@ -44,18 +44,7 @@ namespace BinanceBotSvc
 
         private void Strategy_TradeListItemHandled(TradingData data)
         {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendLine($"Market Price: {data.Price}");
-            sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
-            if (data.PriceLongBelow > 0)
-            {
-                sb.AppendLine($"Long Below: {data.PriceLongBelow}");
-                sb.AppendLine($"Short Above: {data.PriceShortAbove}");
-                sb.AppendLine($"Target Profit: {data.ProfitTarget}");
-            }
-
-            EventLog.WriteEntry("BinanceBotSvc", sb.ToString(), EventLogEntryType.Information);
+            EventLog.WriteEntry("BinanceBotSvc", _bot.ToStatusString(data), EventLogEntryType.Information);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
