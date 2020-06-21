@@ -98,5 +98,11 @@ namespace BinanceBotWpf
         {
             App.Bot.Settings.IsAutoAdjustShortAboveAndLongBelow = IsAutoAdjustShortAboveAndLongBelow.IsChecked.Value;
         }
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            SettingsWindow settingsWindow = new SettingsWindow();
+            settingsWindow.ShowDialog();
+        }
     }
 }

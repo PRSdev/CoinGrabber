@@ -15,10 +15,10 @@ namespace BinanceBotLib
         [Category("1 General"), Description("Binance API Key.")]
         public virtual string APIKey { get; set; }
 
-        [Category("1 General"), Description("Binance Secret Key.")]
+        [Category("1 General"), Description("Binance Secret Key."), PasswordPropertyText(true)]
         public virtual string SecretKey { get; set; }
 
-        [Category("1 General"), Description("Orders will be actually placed during the production mode.")]
+        [Category("0 General"), Description("Orders will be actually placed during the production mode.")]
         public bool ProductionMode { get; set; } = false;
 
         [Category("1 General"), Browsable(false), Description("Total Profit.")]
