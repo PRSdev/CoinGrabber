@@ -16,5 +16,10 @@ namespace BinanceBotWpf
     public partial class App : Application
     {
         public static Bot Bot = new Bot();
+
+        public App()
+        {
+            SettingsManager.LoadUserProfiles();
+        }
     }
 }

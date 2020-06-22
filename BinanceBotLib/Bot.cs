@@ -25,40 +25,9 @@ namespace BinanceBotLib
 
         #region IO
 
-        public static readonly string PersonalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BinanceBot");
         public Settings Settings { get; set; }
 
-        public static string SettingsFilePath
-        {
-            get
-            {
-                return Path.Combine(PersonalFolder, "Settings.json");
-            }
-        }
-
-        public static string LogFilePath
-        {
-            get
-            {
-                string logsFolder = Path.Combine(PersonalFolder, "Logs");
-                string filename = string.Format("BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
-                return Path.Combine(logsFolder, filename);
-            }
-        }
-        private static Logger logger = new Logger(Bot.LogFilePath);
-
-        public static Settings LoadSettings()
-        {
-            return Settings.Load(SettingsFilePath);
-        }
-
-        public static void SaveSettings(Settings settings)
-        {
-            if (settings != null)
-            {
-                settings.Save(SettingsFilePath);
-            }
-        }
+        private static Logger logger = new Logger(SettingsManager.LogFilePath);
 
         public static void WriteConsole(string message = "")
         {
@@ -82,7 +51,7 @@ namespace BinanceBotLib
         public Bot(Settings settings = null)
         {
             if (settings == null)
-                Settings = LoadSettings();
+                Settings = SettingsManager.LoadSettings();
             else
                 Settings = settings;
 

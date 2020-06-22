@@ -25,6 +25,6 @@
             </StackPanel>
         </materialDesign:Card>
         <Button Name="btnStartStop" Margin="10" Click="btnStartStop_Click">Start</Button>
-        <Button x:Name="btnSettings" Click="btnSettings_Click">Settings</Button>
+        <Button x:Name="btnSettings" Margin="10" Click="btnSettings_Click">Settings</Button>
     </StackPanel>
 </Window>

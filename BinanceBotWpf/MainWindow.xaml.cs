@@ -82,11 +82,7 @@ namespace BinanceBotWpf
 
         private void Main_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Bot.SaveSettings(App.Bot.Settings);
-        }
-
-        private void Main_ContentRendered(object sender, EventArgs e)
-        {
+            SettingsManager.SaveSettings(App.Bot.Settings);
         }
 
         private void Main_Loaded(object sender, RoutedEventArgs e)

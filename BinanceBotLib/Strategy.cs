@@ -80,7 +80,7 @@ namespace BinanceBotLib
             OrderSucceeded?.Invoke(data);
 #if DEBUG
             if (_settings.ProductionMode)
-                Bot.SaveSettings(_settings);
+                SettingsManager.SaveSettings(_settings);
 #endif
 
 #if RELEASE
