@@ -21,13 +21,16 @@ namespace BinanceBotWpf
         public SettingsWindow()
         {
             InitializeComponent();
-            foreach (UserData user in SettingsManager.UserProfiles.Users)
-            {
-                lbUsers.Items.Add(user);
-            }
+            ViewModel = SettingsManager.UserProfiles;
 
             lbUsers.SelectionChanged += LbUsers_SelectionChanged;
             lbUsers.SelectedIndex = 0;
+        }
+
+        public UserProfiles ViewModel
+        {
+            get => DataContext as UserProfiles;
+            set => DataContext = value;
         }
 
         private void LbUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)

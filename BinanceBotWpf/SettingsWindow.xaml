@@ -23,7 +23,8 @@
 
         <ListBox
             x:Name="lbUsers"
-            Grid.Column="0">
+            Grid.Column="0"
+            ItemsSource="{Binding Users}">
         </ListBox>
         <xctk:PropertyGrid
                                Grid.Column="1"
