@@ -32,7 +32,7 @@ namespace BinanceBotConsole
             int.TryParse(Console.ReadLine(), out intMode);
             myBot.Settings.BotMode = (BotMode)intMode;
 
-            Bot.SaveSettings(myBot.Settings);
+            SettingsManager.SaveSettings(myBot.Settings);
 
             // Error handling - Bot mode specific
             switch (myBot.Settings.BotMode)
