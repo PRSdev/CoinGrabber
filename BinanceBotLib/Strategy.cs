@@ -84,7 +84,7 @@ namespace BinanceBotLib
 #endif
 
 #if RELEASE
-            Bot.SaveSettings(_settings);
+            SettingsManager.SaveSettings(_settings);
 #endif
         }
 
