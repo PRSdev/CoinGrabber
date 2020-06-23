@@ -127,6 +127,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\BinanceBotLibStd\SettingsManager.cs">
+      <Link>SettingsManager.cs</Link>
+    </Compile>
+    <Compile Include="..\BinanceBotLibStd\UserData.cs">
+      <Link>UserData.cs</Link>
+    </Compile>
+    <Compile Include="..\BinanceBotLibStd\UserProfiles.cs">
+      <Link>UserProfiles.cs</Link>
+    </Compile>
     <Compile Include="Bot.cs" />
     <Compile Include="CoinPairHelper.cs" />
     <Compile Include="EmailHelper.cs" />

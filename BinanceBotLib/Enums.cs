@@ -20,6 +20,13 @@ namespace BinanceBotLib
         Futures
     }
 
+    public enum FuturesTakeProfitMode
+    {
+        ProfitByTarget,
+        ProfitByPriceRange,
+        ProfitByAny
+    }
+
     public enum ExchangeType
     {
         [Description("Binance")]

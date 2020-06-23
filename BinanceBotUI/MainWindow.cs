@@ -51,9 +51,8 @@ namespace BinanceBotUI
                 // Futures
                 if (trade.PriceLongBelow > 0) // this does not update UI
                 {
-                    string orders = Program.Bot.Settings.IsAutoAdjustTargetProfit ? " for new orders" : "";
-                    AddStatistic($"Long Below{orders}", trade.PriceLongBelow.ToString());
-                    AddStatistic($"Short Above{orders}", trade.PriceShortAbove.ToString());
+                    AddStatistic($"Long Below", trade.PriceLongBelow.ToString());
+                    AddStatistic($"Short Above", trade.PriceShortAbove.ToString());
                 }
 
                 if (trade.ProfitTarget > 0)
@@ -174,7 +173,7 @@ namespace BinanceBotUI
         private void MainWindow_FormClosed(object sender, FormClosedEventArgs e)
         {
             BinanceBotLib.NativeMethods.AllowSleep();
-            Bot.SaveSettings(Program.Bot.Settings);
+            SettingsManager.SaveSettings(Program.Bot.Settings);
         }
 
         private void chkStartWithWindows_CheckedChanged(object sender, EventArgs e)
@@ -206,7 +205,7 @@ namespace BinanceBotUI
 
         private void btnLog_Click(object sender, EventArgs e)
         {
-            Helpers.OpenFile(Bot.LogFilePath);
+            Helpers.OpenFile(SettingsManager.LogFilePath);
         }
     }
 }

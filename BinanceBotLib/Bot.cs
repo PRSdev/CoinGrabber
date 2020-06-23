@@ -128,9 +128,8 @@ namespace BinanceBotLib
             sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
             if (data.PriceLongBelow > 0)
             {
-                string orders = data.ProfitTarget > 0 ? " for new orders" : "";
-                sb.AppendLine($"Long Below: {data.PriceLongBelow}{orders}");
-                sb.AppendLine($"Short Above: {data.PriceShortAbove}{orders}");
+                sb.AppendLine($"Long Below: {data.PriceLongBelow}");
+                sb.AppendLine($"Short Above: {data.PriceShortAbove}");
                 sb.AppendLine($"Target Profit: {data.ProfitTarget}");
             }
 

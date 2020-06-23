@@ -1,6 +1,7 @@
 ﻿using Binance.Net;
 using ExchangeClientLib;
 using System;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace BinanceBotLib
@@ -81,20 +82,41 @@ namespace BinanceBotLib
                     {
                         trade.CoinQuantity = pos.Quantity;
 
-                        bool success;
+                        bool success = false;
                         bool targetProfitMet = trade.ProfitTarget > 0 && pos.UnrealizedPnL > (decimal)trade.ProfitTarget;
 
-                        if (trade.LastAction == Binance.Net.Enums.OrderSide.Buy && (targetProfitMet || pos.MarkPrice > (decimal)trade.PriceShortAbove)) // i.e. Long position
+                        bool posIsLong = trade.LastAction == Binance.Net.Enums.OrderSide.Buy;
+                        bool posIsShort = trade.LastAction == Binance.Net.Enums.OrderSide.Sell;
+
+                        bool closeLongPosByProfitTarget = _settings.TakeProfitMode == FuturesTakeProfitMode.ProfitByTarget && posIsLong && targetProfitMet;
+                        bool closeShortPosByProfitTarget = _settings.TakeProfitMode == FuturesTakeProfitMode.ProfitByTarget && posIsShort && targetProfitMet;
+                        bool closeLongPosByPrice = _settings.TakeProfitMode == FuturesTakeProfitMode.ProfitByPriceRange &&
+                            posIsLong && pos.MarkPrice > (decimal)trade.PriceShortAbove;
+                        bool closeShortPosByPrice = _settings.TakeProfitMode == FuturesTakeProfitMode.ProfitByPriceRange &&
+                            posIsShort && pos.MarkPrice < (decimal)trade.PriceLongBelow;
+
+                        switch (_settings.TakeProfitMode)
                         {
-                            success = _client.PlaceSellOrder(trade, closePosition: true);
-                        }
-                        else if (trade.LastAction == Binance.Net.Enums.OrderSide.Sell && (targetProfitMet || pos.MarkPrice < (decimal)trade.PriceLongBelow))
-                        {
-                            success = _client.PlaceBuyOrder(trade, closePosition: true);
-                        }
-                        else
-                        {
-                            success = false;
+                            case FuturesTakeProfitMode.ProfitByPriceRange:
+                                if (closeLongPosByPrice)
+                                    success = _client.PlaceSellOrder(trade, closePosition: true);
+                                else if (closeShortPosByPrice)
+                                    success = _client.PlaceBuyOrder(trade, closePosition: true);
+                                break;
+
+                            case FuturesTakeProfitMode.ProfitByTarget:
+                                if (closeLongPosByProfitTarget)
+                                    success = _client.PlaceSellOrder(trade, closePosition: true);
+                                else if (closeShortPosByProfitTarget)
+                                    success = _client.PlaceBuyOrder(trade, closePosition: true);
+                                break;
+
+                            case FuturesTakeProfitMode.ProfitByAny:
+                                if (closeLongPosByPrice || closeLongPosByProfitTarget)
+                                    success = _client.PlaceSellOrder(trade, closePosition: true);
+                                else if (closeShortPosByPrice || closeShortPosByProfitTarget)
+                                    success = _client.PlaceBuyOrder(trade, closePosition: true);
+                                break;
                         }
 
                         if (success)

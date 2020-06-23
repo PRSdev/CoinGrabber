@@ -104,6 +104,9 @@ namespace BinanceBotLib
         [Category("5 Futures"), Description("If FuturesSafetyFactor is 15 then balance divided by 11 will be used for investment")]
         public virtual double FuturesSafetyFactor { get; set; } = 15;
 
+        [Category("5 Futures"), Description("Take profit by a fixed profit target or by short/long price range")]
+        public virtual FuturesTakeProfitMode TakeProfitMode { get; set; } = FuturesTakeProfitMode.ProfitByTarget;
+
         [Category("5 Futures"), Description("Automatically adjust Long Below and Short Above prices")]
         public virtual bool IsAutoAdjustShortAboveAndLongBelow { get; set; } = false;
 
