@@ -81,11 +81,15 @@ namespace BinanceBotUI
             cboCoinPairDefaultNew.SelectedIndex = new CoinPairHelper(Program.Bot.Settings).GetCoinPairIndex();
             cboCoinPairDefaultNew.Enabled = !Program.Bot.Settings.RandomNewCoinPair && Program.Bot.Settings.BotMode != BotMode.TradingViewSignal;
 
+            if (Program.Bot.Strategy != null)
+            {
             NameValueCollection nvc = Program.Bot.Strategy.Statistics.GetReport();
             for (int i = 0; i < nvc.Count; i++)
             {
                 AddStatistic(nvc.GetKey(i), nvc.Get(i));
             }
+            }
+
         }
 
         private void AddStatistic(string name, string value)

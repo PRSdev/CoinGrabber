@@ -22,7 +22,7 @@ namespace ExchangeClientLib
         {
             if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(secretKey))
             {
-                throw new Exception("API Key or Secret Key is empty!");
+              //  throw new Exception("API Key or Secret Key is empty!");
             }
         }
 

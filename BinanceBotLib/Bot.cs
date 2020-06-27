@@ -55,6 +55,7 @@ namespace BinanceBotLib
             else
                 Settings = settings;
 
+            if(!string.IsNullOrEmpty(Settings.APIKey))
             Init();
         }
 

@@ -117,7 +117,7 @@ namespace BinanceBotLib
         public virtual double LongBelow { get; set; } = 9500.0;
 
         [Category("5 Futures"), Description("Automatically determine target profit (Size / Levarage * Mark Price * 0.618)")]
-        public virtual bool IsAutoAdjustTargetProfit { get; set; }
+        public virtual bool IsAutoAdjustTargetProfit { get; set; } = true;
 
         [Category("5 Futures"), Description("Target profit to close position. When above 0, closing position based on target profit has precedence over closing position based on price ranges.")]
         public virtual double FuturesProfitTarget { get; set; }

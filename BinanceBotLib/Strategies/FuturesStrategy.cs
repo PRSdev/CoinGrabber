@@ -53,16 +53,19 @@ namespace BinanceBotLib
                 if (pos.EntryPrice == 0 && openOrders.Count() == 0)
                 {
                     decimal investment = _client.GetBalance(trade.CoinPair.Pair2) / (decimal)_settings.FuturesSafetyFactor; // 11 is to have the liquidation very low or high
-                    trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
+                    if ((int)investment > 0)
+                    {
+                        trade.CoinQuantity = investment / trade.Price * pos.Leverage; // 20x leverage
 
-                    // Short above or Long below
-                    if (trade.Price < (decimal)trade.PriceLongBelow)
-                    {
-                        _client.PlaceBuyOrder(trade);
-                    }
-                    else if (trade.Price > (decimal)trade.PriceShortAbove)
-                    {
-                        _client.PlaceSellOrder(trade);
+                        // Short above or Long below
+                        if (trade.Price < (decimal)trade.PriceLongBelow)
+                        {
+                            _client.PlaceBuyOrder(trade);
+                        }
+                        else if (trade.Price > (decimal)trade.PriceShortAbove)
+                        {
+                            _client.PlaceSellOrder(trade);
+                        }
                     }
                 }
 
