@@ -125,6 +125,7 @@ namespace BinanceBotLib
         {
             StringBuilder sb = new StringBuilder();
 
+            sb.AppendLine($"Profit mode: {Settings.TakeProfitMode.ToString()}");
             sb.AppendLine($"Market Price: {data.Price}");
             sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
             if (data.PriceLongBelow > 0)
