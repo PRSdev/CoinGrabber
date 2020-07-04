@@ -29,7 +29,7 @@ namespace BinanceBot
             set { SetPreference(nameof(FuturesSafetyFactor), value); }
         }
 
-        public List<string> ProftTakeModes
+        public List<string> TakeProfitModes
         {
             get
             {

@@ -1,13 +1,9 @@
 ﻿using BinanceBot;
 using BinanceBotLib;
 using ExchangeClientLib;
-using ShareX.HelpersLib;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -31,7 +27,7 @@ namespace BinanceBotMobile
             await Navigation.PushAsync(new SettingsPage());
         }
 
-        private async void btnStartStop_Clicked(object sender, EventArgs e)
+        private void btnStartStop_Clicked(object sender, EventArgs e)
         {
             Bot bot = new Bot(new SettingsViewModel() { BotMode = BotMode.Futures });
             bot.Start();
