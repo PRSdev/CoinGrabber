@@ -1,6 +1,8 @@
-﻿using System;
+﻿using BinanceBotLib;
+using ShareX.HelpersLib;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using Xamarin.Essentials;
 
 namespace BinanceBot
@@ -25,6 +27,20 @@ namespace BinanceBot
         {
             get => Preferences.Get(nameof(FuturesSafetyFactor), 15.0);
             set { SetPreference(nameof(FuturesSafetyFactor), value); }
+        }
+
+        public List<string> ProftTakeModes
+        {
+            get
+            {
+                return Enum.GetNames(typeof(FuturesTakeProfitMode)).Select(x => x.SplitCamelCase()).ToList();
+            }
+        }
+
+        public override FuturesTakeProfitMode TakeProfitMode
+        {
+            get => (FuturesTakeProfitMode)Preferences.Get(nameof(TakeProfitMode), (int)FuturesTakeProfitMode.ProfitByAny);
+            set => SetPreference(nameof(TakeProfitMode), (int)value);
         }
 
         public override bool IsAutoAdjustShortAboveAndLongBelow
