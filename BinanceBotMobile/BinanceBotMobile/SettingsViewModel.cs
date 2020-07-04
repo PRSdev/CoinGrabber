@@ -39,7 +39,7 @@ namespace BinanceBot
 
         public override FuturesTakeProfitMode TakeProfitMode
         {
-            get => (FuturesTakeProfitMode)Preferences.Get(nameof(TakeProfitMode), (int)FuturesTakeProfitMode.ProfitByAny);
+            get => (FuturesTakeProfitMode)Preferences.Get(nameof(TakeProfitMode), (int)FuturesTakeProfitMode.ProfitByPriceRange);
             set => SetPreference(nameof(TakeProfitMode), (int)value);
         }
 

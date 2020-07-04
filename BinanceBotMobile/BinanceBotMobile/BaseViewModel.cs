@@ -1,10 +1,6 @@
 ﻿using BinanceBotLib;
-using ShareX.HelpersLib;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
 using Xamarin.Essentials;
 
 namespace BinanceBot
@@ -31,6 +27,12 @@ namespace BinanceBot
         }
 
         protected void SetPreference(string prefName, double value)
+        {
+            Preferences.Set(prefName, value);
+            OnPropertyChanged(prefName);
+        }
+
+        protected void SetPreference(string prefName, int value)
         {
             Preferences.Set(prefName, value);
             OnPropertyChanged(prefName);
