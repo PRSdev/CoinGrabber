@@ -7,50 +7,30 @@
              x:Class="BinanceBotMobile.SettingsPage">
 
     <ContentPage.Content>
-        <StackLayout>
-            <Label FontSize="Title">General</Label>
+        <TableView Intent="Settings">
+            <TableRoot>
+                <TableSection Title="General">
+                    <EntryCell Label="API Key" Text="{Binding APIKey}"/>
+                    <EntryCell Label="Secret Key" Text="{Binding SecretKey}"/>
+                </TableSection>
 
-            <Label>API Key</Label>
-            <Entry x:Name="txtAPIKey" Text="{Binding APIKey}"></Entry>
-            <Label>Secret Key</Label>
-            <Entry x:Name="txtSecretKey" Text="{Binding SecretKey}" IsPassword="True" ></Entry>
-
-            <Label FontSize="Title">Futures</Label>
-
-            <StackLayout Orientation="Horizontal">
-                <Label HorizontalOptions="Start">Safety Factor</Label>
-                <Entry Text="{Binding FuturesSafetyFactor}" HorizontalOptions="FillAndExpand" ></Entry>
-            </StackLayout>
-       
-            <StackLayout>
-                <Label HorizontalOptions="Start">Profit take mode</Label>
-                <Picker ItemsSource="{Binding TakeProfitModes}" SelectedIndex="{Binding TakeProfitMode, Converter={StaticResource IntEnum}}"></Picker> 
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal">
-                <Label HorizontalOptions="Start">Auto adjust ShortAbove and LongBelow:</Label>
-                <Switch IsToggled="{Binding IsAutoAdjustShortAboveAndLongBelow}" />
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal">
-                <Label HorizontalOptions="Start">Short Above</Label>
-                <Entry Text="{Binding ShortAbove}" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"></Entry>
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal">
-                <Label HorizontalOptions="Start">Long Below</Label>
-                <Entry HorizontalOptions="FillAndExpand" Text="{Binding LongBelow}" ClearButtonVisibility="WhileEditing" ></Entry>
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal">
-                <Label >Auto adjust Profit Target:</Label>
-                <Switch IsToggled="{Binding IsAutoAdjustTargetProfit}" />
-            </StackLayout>
-
-            <StackLayout Orientation="Horizontal">
-                <Label HorizontalOptions="Start">Future Profit Target</Label>
-                <Entry HorizontalOptions="FillAndExpand" Text="{Binding FuturesProfitTarget}" ></Entry>
-            </StackLayout>
-        </StackLayout>
+                <TableSection Title="Futures">
+                    <EntryCell Label="Safety Factor" Text="{Binding FuturesSafetyFactor}"/>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="16,0">
+                            <Label HorizontalOptions="Start" >Profit take mode</Label>
+                            <Picker HorizontalOptions="FillAndExpand" ItemsSource="{Binding TakeProfitModes}" 
+                                    SelectedIndex="{Binding TakeProfitMode, Converter={StaticResource IntEnum}}">
+                            </Picker>
+                        </StackLayout>
+                    </ViewCell>
+                    <SwitchCell Text="Auto adjust ShortAbove and LongBelow" On="{Binding IsAutoAdjustShortAboveAndLongBelow}"/>
+                    <EntryCell Label="Short Above" Text="{Binding ShortAbove}"/>
+                    <EntryCell Label="Long Below" Text="{Binding LongBelow}"/>
+                    <SwitchCell Text="Auto adjust Profit Target" On="{Binding IsAutoAdjustTargetProfit}"/>
+                    <EntryCell Label="Future Profit Target" Text="{Binding FuturesProfitTarget}"/>
+                </TableSection>
+            </TableRoot>
+        </TableView>
     </ContentPage.Content>
 </ContentPage>
