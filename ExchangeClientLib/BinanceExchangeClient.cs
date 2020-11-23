@@ -1,15 +1,12 @@
 ﻿using Binance.Net;
 using Binance.Net.Enums;
-using Binance.Net.Objects;
 using Binance.Net.Objects.Spot;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
-using CryptoExchange.Net.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace ExchangeClientLib
 {
@@ -31,7 +28,7 @@ namespace ExchangeClientLib
             {
                 try
                 {
-                    decimal balance = client.GetAccountInfo().Data.Balances.Single(s => s.Asset == coinName).Free;
+                    decimal balance = client.General.GetAccountInfo().Data.Balances.Single(s => s.Asset == coinName).Free;
                     Portfolio.UpdateCoinBalance(coinName, balance);
                     return balance;
                 }
@@ -48,7 +45,7 @@ namespace ExchangeClientLib
             {
                 try
                 {
-                    decimal marketPrice = Math.Round(client.GetPrice(coinPair.ToString()).Data.Price, 2);
+                    decimal marketPrice = Math.Round(client.Spot.Market.GetPrice(coinPair.ToString()).Data.Price, 2);
                     Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
                     return marketPrice;
                 }
@@ -63,7 +60,7 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                return client.GetTradeFee().Data.Single(s => s.Symbol == coinPair.ToString()).MakerFee;
+                return client.Spot.Market.GetTradeFee().Data.Single(s => s.Symbol == coinPair.ToString()).MakerFee;
             }
         }
 
@@ -71,7 +68,7 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var buyOrder = client.PlaceOrder(
+                var buyOrder = client.Spot.Order.PlaceOrder(
                 trade.CoinPair.ToString(),
                 OrderSide.Buy,
                 OrderType.Limit,
@@ -92,7 +89,7 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var sellOrder = client.PlaceOrder(
+                var sellOrder = client.Spot.Order.PlaceOrder(
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
                 OrderType.Limit,
@@ -113,7 +110,7 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var buyOrder = client.PlaceTestOrder(
+                var buyOrder = client.Spot.Order.PlaceTestOrder(
                 trade.CoinPair.ToString(),
                 OrderSide.Buy,
                 OrderType.Limit,
@@ -134,7 +131,7 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var sellOrder = client.PlaceTestOrder(
+                var sellOrder = client.Spot.Order.PlaceTestOrder(
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
                 OrderType.Limit,
@@ -155,7 +152,7 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var sellOrder = client.PlaceTestOrder(
+                var sellOrder = client.Spot.Order.PlaceTestOrder(
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
                 OrderType.StopLoss,

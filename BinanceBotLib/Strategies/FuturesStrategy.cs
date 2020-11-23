@@ -1,7 +1,6 @@
 ﻿using Binance.Net;
 using ExchangeClientLib;
 using System;
-using System.ComponentModel.Design;
 using System.Linq;
 
 namespace BinanceBotLib
@@ -14,24 +13,24 @@ namespace BinanceBotLib
 
         public override void Trade()
         {
-            using (var tempClient = new BinanceFuturesClient())
+            using (var tempClient = new BinanceClient())
             {
-                var openOrders = tempClient.GetOpenOrders().Data;
+                var openOrders = tempClient.FuturesUsdt.Order.GetOpenOrders().Data;
 
                 TradingData trade = new TradingData(new CoinPair("BTC", "USDT", 3));
-                var pos = tempClient.GetOpenPositions().Data.Single(s => s.Symbol == trade.CoinPair.ToString());
+                var pos = tempClient.FuturesUsdt.GetPositionInformation().Data.Single(s => s.Symbol == trade.CoinPair.ToString());
                 trade.UpdateMarketPrice(pos.MarkPrice);
 
                 Console.WriteLine($"{DateTime.Now} Entry Price: {pos.EntryPrice} Unrealised PnL: {pos.UnrealizedPnL}");
 
-                var dataLast24hr = tempClient.Get24HPrice(trade.CoinPair.ToString()).Data;
+                var dataLast24hr = tempClient.FuturesUsdt.Market.Get24HPrices(trade.CoinPair.ToString()).Data;
 
-                decimal priceDiff = dataLast24hr.WeightedAveragePrice - dataLast24hr.LowPrice;
+                decimal priceDiff = dataLast24hr.First().WeightedAveragePrice - dataLast24hr.First().LowPrice;
 
                 if (_settings.IsAutoAdjustShortAboveAndLongBelow)
                 {
-                    trade.PriceLongBelow = (double)Math.Round(dataLast24hr.WeightedAveragePrice - priceDiff * 0.618m, 2);
-                    decimal entryPrice = pos.EntryPrice == 0 ? dataLast24hr.WeightedAveragePrice : pos.EntryPrice;
+                    trade.PriceLongBelow = (double)Math.Round(dataLast24hr.First().WeightedAveragePrice - priceDiff * 0.618m, 2);
+                    decimal entryPrice = pos.EntryPrice == 0 ? dataLast24hr.First().WeightedAveragePrice : pos.EntryPrice;
                     trade.PriceShortAbove = (double)Math.Round(priceDiff * 0.618m + entryPrice, 2);
                 }
                 else

@@ -1,15 +1,13 @@
 ﻿using Binance.Net;
 using Binance.Net.Enums;
-using Binance.Net.Objects.Futures;
+using Binance.Net.Objects.Spot;
 using Binance.Net.Objects.Spot.MarketData;
-using Binance.Net.Objects.Spot.SpotData;
 using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
 using CryptoExchange.Net.Objects;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ExchangeClientLib
@@ -18,7 +16,7 @@ namespace ExchangeClientLib
     {
         public BinanceFuturesExchangeClient(string apiKey, string secretKey) : base(apiKey, secretKey)
         {
-            BinanceFuturesClient.SetDefaultOptions(new BinanceFuturesClientOptions()
+            BinanceClient.SetDefaultOptions(new BinanceClientOptions()
             {
                 ApiCredentials = new ApiCredentials(apiKey, secretKey),
                 LogVerbosity = LogVerbosity.Error,
@@ -28,11 +26,11 @@ namespace ExchangeClientLib
 
         public override decimal GetBalance(string coinName)
         {
-            using (var client = new BinanceFuturesClient())
+            using (var client = new BinanceClient())
             {
                 try
                 {
-                    decimal balance = client.GetAccountInfo().Data.TotalWalletBalance;
+                    decimal balance = client.FuturesUsdt.Account.GetAccountInfo().Data.TotalWalletBalance;
                     Portfolio.UpdateCoinBalance(coinName, balance);
                     return balance;
                 }
@@ -45,11 +43,11 @@ namespace ExchangeClientLib
 
         public override decimal GetPrice(CoinPair coinPair)
         {
-            using (var client = new BinanceFuturesClient())
+            using (var client = new BinanceClient())
             {
                 try
                 {
-                    decimal marketPrice = Math.Round(client.GetPrice(coinPair.ToString()).Data.Price, 2);
+                    decimal marketPrice = Math.Round(client.FuturesUsdt.Market.GetPrice(coinPair.ToString()).Data.Price, 2);
                     Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
                     return marketPrice;
                 }
@@ -62,9 +60,9 @@ namespace ExchangeClientLib
 
         public async Task<WebCallResult<BinancePrice>> GetPriceAsync(CoinPair coinPair)
         {
-            using (var client = new BinanceFuturesClient())
+            using (var client = new BinanceClient())
             {
-                var task = await client.GetPriceAsync(coinPair.ToString());
+                var task = await client.FuturesUsdt.Market.GetPriceAsync(coinPair.ToString());
                 decimal marketPrice = Math.Round(task.Data.Price, 2);
                 Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
                 return task;
@@ -73,9 +71,9 @@ namespace ExchangeClientLib
 
         public override bool PlaceBuyOrder(TradingData trade, bool closePosition)
         {
-            using (var client = new BinanceFuturesClient())
+            using (var client = new BinanceClient())
             {
-                var buyOrder = client.PlaceOrder(
+                var buyOrder = client.FuturesUsdt.Order.PlaceOrder(
                    trade.CoinPair.ToString(),
                    OrderSide.Buy,
                    OrderType.Limit,
@@ -95,9 +93,9 @@ namespace ExchangeClientLib
 
         public override bool PlaceSellOrder(TradingData trade, bool closePosition = false)
         {
-            using (var client = new BinanceFuturesClient())
+            using (var client = new BinanceClient())
             {
-                var sellOrder = client.PlaceOrder(
+                var sellOrder = client.FuturesUsdt.Order.PlaceOrder(
                    trade.CoinPair.ToString(),
                    OrderSide.Sell,
                    OrderType.Limit,
