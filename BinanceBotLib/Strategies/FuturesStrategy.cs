@@ -23,14 +23,14 @@ namespace BinanceBotLib
 
                 Console.WriteLine($"{DateTime.Now} Entry Price: {pos.EntryPrice} Unrealised PnL: {pos.UnrealizedPnL}");
 
-                var dataLast24hr = tempClient.FuturesUsdt.Market.Get24HPrices(trade.CoinPair.ToString()).Data;
+                var dataLast24hr = tempClient.FuturesUsdt.Market.Get24HPrices(trade.CoinPair.ToString()).Data.First();
 
-                decimal priceDiff = dataLast24hr.First().WeightedAveragePrice - dataLast24hr.First().LowPrice;
+                decimal priceDiff = dataLast24hr.WeightedAveragePrice - dataLast24hr.LowPrice;
 
                 if (_settings.IsAutoAdjustShortAboveAndLongBelow)
                 {
-                    trade.PriceLongBelow = (double)Math.Round(dataLast24hr.First().WeightedAveragePrice - priceDiff * 0.618m, 2);
-                    decimal entryPrice = pos.EntryPrice == 0 ? dataLast24hr.First().WeightedAveragePrice : pos.EntryPrice;
+                    trade.PriceLongBelow = (double)Math.Round(dataLast24hr.WeightedAveragePrice - priceDiff * 0.618m, 2);
+                    decimal entryPrice = pos.EntryPrice == 0 ? dataLast24hr.WeightedAveragePrice : pos.EntryPrice;
                     trade.PriceShortAbove = (double)Math.Round(priceDiff * 0.618m + entryPrice, 2);
                 }
                 else
