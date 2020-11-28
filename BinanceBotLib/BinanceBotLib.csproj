@@ -143,6 +143,7 @@
     <Compile Include="CoinPairHelper.cs" />
     <Compile Include="EmailHelper.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Strategies\FuturesRandomStrategy.cs" />
     <Compile Include="Strategies\FuturesStrategy.cs" />
     <Compile Include="IStrategy.cs" />
     <Compile Include="NativeMethods.cs" />

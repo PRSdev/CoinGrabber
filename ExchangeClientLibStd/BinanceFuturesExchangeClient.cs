@@ -112,5 +112,49 @@ namespace ExchangeClientLib
                 return sellOrder.Success;
             }
         }
+
+        public override bool PlaceBuyOrder(TradingData trade, decimal priceTakeProfit)
+        {
+            using (var client = new BinanceClient())
+            {
+                var buyOrder = client.FuturesUsdt.Order.PlaceOrder(
+                   trade.CoinPair.ToString(),
+                   OrderSide.Buy,
+                   OrderType.TakeProfitLimit,
+                   quantity: Math.Round(trade.CoinQuantityToTrade, 3),
+                   stopPrice: priceTakeProfit,
+                   price: Math.Round(trade.Price, 2),
+                   timeInForce: TimeInForce.GoodTillCancel);
+
+                if (buyOrder.Success)
+                    trade.BuyOrderID = buyOrder.Data.OrderId;
+                else
+                    Console.WriteLine(buyOrder.Error.Message.ToString());
+
+                return buyOrder.Success;
+            }
+        }
+
+        public override bool PlaceSellOrder(TradingData trade, decimal priceTakeProfit)
+        {
+            using (var client = new BinanceClient())
+            {
+                var sellOrder = client.FuturesUsdt.Order.PlaceOrder(
+                   trade.CoinPair.ToString(),
+                   OrderSide.Sell,
+                   OrderType.TakeProfitLimit,
+                   quantity: Math.Round(trade.CoinQuantityToTrade, 3),
+                   stopPrice: priceTakeProfit,
+                   price: Math.Round(trade.Price, 2),
+                   timeInForce: TimeInForce.GoodTillCancel);
+
+                if (sellOrder.Success)
+                    trade.SellOrderID = sellOrder.Data.OrderId;
+                else
+                    Console.WriteLine(sellOrder.Error.Message.ToString());
+
+                return sellOrder.Success;
+            }
+        }
     }
 }

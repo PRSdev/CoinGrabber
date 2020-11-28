@@ -1,17 +1,7 @@
-﻿using Binance.Net;
-using Binance.Net.Objects;
-using Binance.Net.Objects.Spot.MarketData;
-using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Logging;
-using CryptoExchange.Net.Objects;
-using ExchangeClientLib;
+﻿using ExchangeClientLib;
 using ShareX.HelpersLib;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -55,8 +45,8 @@ namespace BinanceBotLib
             else
                 Settings = settings;
 
-            if(!string.IsNullOrEmpty(Settings.APIKey))
-            Init();
+            if (!string.IsNullOrEmpty(Settings.APIKey))
+                Init();
         }
 
         public static ExchangeType GetExchangeType()
@@ -89,6 +79,12 @@ namespace BinanceBotLib
                     _marketTimer.Interval = 10000;
                     _exchangeType = ExchangeType.BinanceFuturesExchange;
                     Strategy = new FuturesStrategy(_exchangeType, Settings);
+                    break;
+
+                case BotMode.FuturesRandom:
+                    _marketTimer.Interval = 10000;
+                    _exchangeType = ExchangeType.BinanceFuturesExchange;
+                    Strategy = new FuturesRandomStrategy(_exchangeType, Settings);
                     break;
 
                 default:

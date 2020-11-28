@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace BinanceBotLib
 {
@@ -17,7 +14,10 @@ namespace BinanceBotLib
         TradingViewSignal,
 
         [Description("Futures")]
-        Futures
+        Futures,
+
+        [Description("Futures Random")]
+        FuturesRandom
     }
 
     public enum FuturesTakeProfitMode

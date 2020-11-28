@@ -1,9 +1,5 @@
-﻿using Binance.Net.Objects;
-using Binance.Net.Objects.Spot.SpotData;
-using CryptoExchange.Net.Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ExchangeClientLib
 {
@@ -22,7 +18,7 @@ namespace ExchangeClientLib
         {
             if (string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(secretKey))
             {
-              //  throw new Exception("API Key or Secret Key is empty!");
+                //  throw new Exception("API Key or Secret Key is empty!");
             }
         }
 
@@ -46,7 +42,17 @@ namespace ExchangeClientLib
             throw new NotImplementedException();
         }
 
+        public virtual bool PlaceBuyOrder(TradingData trade, decimal priceTakeProfit)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual bool PlaceSellOrder(TradingData trade, bool closePosition = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool PlaceSellOrder(TradingData trade, decimal priceTakeProfit)
         {
             throw new NotImplementedException();
         }
