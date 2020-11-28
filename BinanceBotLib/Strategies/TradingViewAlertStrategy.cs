@@ -29,7 +29,7 @@ namespace BinanceBotLib
                 foreach (TradingData trade in tradesList)
                 {
                     OnTradeListItemHandled(trade);
-                    if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair)))
+                    if (trade.UpdatePrice(_client.GetPrice(trade.CoinPair)))
                     {
                         // Update PriceChangePercentage
                         trade.SetPriceChangePercentage(trade.Price);
@@ -112,7 +112,7 @@ namespace BinanceBotLib
 
         protected void PlaceCompleteSellOrder(TradingData trade, bool forReal)
         {
-            if (trade.UpdateMarketPrice(Math.Round(_client.GetPrice(trade.CoinPair), 2)))
+            if (trade.UpdatePrice(Math.Round(_client.GetPrice(trade.CoinPair), 2)))
             {
                 trade.CoinQuantityToTrade = trade.CoinQuantity;
                 base.PlaceSellOrder(trade, forReal);
@@ -134,7 +134,7 @@ namespace BinanceBotLib
 
             decimal capitalCost = fiatValue / _settings.HydraFactor;
 
-            if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair)))
+            if (trade.UpdatePrice(_client.GetPrice(trade.CoinPair)))
             {
                 Bot.WriteConsole();
 

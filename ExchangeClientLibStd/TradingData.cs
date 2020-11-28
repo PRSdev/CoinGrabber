@@ -138,7 +138,7 @@ namespace ExchangeClientLib
             CoinPair = coinPair;
         }
 
-        public bool UpdateMarketPrice(decimal marketPrice)
+        public bool UpdatePrice(decimal marketPrice)
         {
             if (marketPrice > 0)
             {

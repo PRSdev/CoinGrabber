@@ -19,7 +19,7 @@ namespace BinanceBotLib
 
                 TradingData trade = new TradingData(new CoinPair("BTC", "USDT", 3));
                 var pos = tempClient.FuturesUsdt.GetPositionInformation().Data.Single(s => s.Symbol == trade.CoinPair.ToString());
-                trade.UpdateMarketPrice(pos.MarkPrice);
+                trade.UpdatePrice(pos.MarkPrice);
 
                 Console.WriteLine($"{DateTime.Now} Entry Price: {pos.EntryPrice} Unrealised PnL: {pos.UnrealizedPnL}");
 

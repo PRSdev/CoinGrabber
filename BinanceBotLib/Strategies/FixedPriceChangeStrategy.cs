@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace BinanceBotLib
 {
@@ -55,7 +53,7 @@ namespace BinanceBotLib
 
             foreach (TradingData trade in tradesList)
             {
-                if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair)))
+                if (trade.UpdatePrice(_client.GetPrice(trade.CoinPair)))
                 {
                     trade.SetPriceChangePercentage(trade.Price);
                     Bot.WriteConsole(trade.ToStringPriceCheck());
@@ -80,7 +78,7 @@ namespace BinanceBotLib
 
         protected override void PlaceSellOrder(TradingData trade, bool forReal)
         {
-            if (trade.UpdateMarketPrice(Math.Round(_client.GetPrice(trade.CoinPair), 2)))
+            if (trade.UpdatePrice(Math.Round(_client.GetPrice(trade.CoinPair), 2)))
             {
                 if (trade.Price > trade.BuyPriceAfterFees)
                 {

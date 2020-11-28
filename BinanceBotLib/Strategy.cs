@@ -108,7 +108,7 @@ namespace BinanceBotLib
 
             if (capitalCost > _settings.InvestmentMin)
             {
-                if (trade.UpdateMarketPrice(_client.GetPrice(trade.CoinPair)))
+                if (trade.UpdatePrice(_client.GetPrice(trade.CoinPair)))
                 {
                     Bot.WriteConsole();
 
