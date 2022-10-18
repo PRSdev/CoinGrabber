@@ -2,7 +2,6 @@
 using ShareX.HelpersLib;
 using System;
 using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace BinanceBotLib
@@ -75,17 +74,6 @@ namespace BinanceBotLib
                     Strategy = new TradingViewAlertStrategy(_exchangeType, Settings);
                     break;
 
-                case BotMode.Futures:
-                    _marketTimer.Interval = 10000;
-                    _exchangeType = ExchangeType.BinanceFuturesExchange;
-                    Strategy = new FuturesStrategy(_exchangeType, Settings);
-                    break;
-
-                case BotMode.FuturesRandom:
-                    _marketTimer.Interval = 10000;
-                    _exchangeType = ExchangeType.BinanceFuturesExchange;
-                    Strategy = new FuturesRandomStrategy(_exchangeType, Settings);
-                    break;
 
                 default:
                     Console.WriteLine("Unhandled Bot Mode.");
@@ -94,12 +82,6 @@ namespace BinanceBotLib
             }
         }
 
-        public async Task<decimal> TestAsync()
-        {
-            var client = new BinanceFuturesExchangeClient(Settings.APIKey, Settings.SecretKey);
-            var task = await client.GetPriceAsync(new CoinPair("BTC", "USDT", 3));
-            return task.Data.Price;
-        }
 
         public void Start()
         {
