@@ -6,9 +6,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{72940829-7A00-479B-B2D5-3113A2DF1531}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>BinanceBotConsole</RootNamespace>
-    <AssemblyName>BinanceBotConsole</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <RootNamespace>CoinGrabberConsole</RootNamespace>
+    <AssemblyName>CoinGrabberConsole</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -132,7 +132,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj">
+    <ProjectReference Include="..\..\..\ShareX Team\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj">
       <Project>{327750e1-9fb7-4cc3-8aea-9bc42180cad3}</Project>
       <Name>ShareX.HelpersLib</Name>
     </ProjectReference>

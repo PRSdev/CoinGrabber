@@ -51,10 +51,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj">
-      <Project>{327750e1-9fb7-4cc3-8aea-9bc42180cad3}</Project>
-      <Name>ShareX.HelpersLib</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BinanceBotLib\BinanceBotLib.csproj">
       <Project>{2291f1c1-deb0-43b8-b52e-f16784a4f6d6}</Project>
       <Name>BinanceBotLib</Name>

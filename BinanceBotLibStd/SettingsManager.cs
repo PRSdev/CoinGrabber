@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace BinanceBotLib
 {
     public static class SettingsManager
     {
-        public static readonly string PersonalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "BinanceBot");
+        public static readonly string PersonalFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CoinGrabber");
         public static UserProfiles UserProfiles { get; set; }
 
         public static string LogFilePath
@@ -15,7 +13,7 @@ namespace BinanceBotLib
             get
             {
                 string logsFolder = Path.Combine(PersonalFolder, "Logs");
-                string filename = string.Format("BinanceBot-Log-{0:yyyy-MM}.log", DateTime.Now);
+                string filename = string.Format("CoinGrabber-Log-{0:yyyy-MM}.log", DateTime.Now);
                 return Path.Combine(logsFolder, filename);
             }
         }
