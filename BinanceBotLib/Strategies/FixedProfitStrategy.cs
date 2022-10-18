@@ -1,4 +1,4 @@
-﻿using Binance.Net;
+﻿using Binance.Net.Clients;
 using Binance.Net.Enums;
 using System;
 using System.Linq;
@@ -15,12 +15,12 @@ namespace BinanceBotLib
         {
             using (var client = new BinanceClient())
             {
-                var queryBuyOrder = client.Spot.Order.GetOrder(_settings.CoinPair.ToString(), orderId: _settings.LastBuyOrderID); ;
-                var querySellOrder = client.Spot.Order.GetOrder(_settings.CoinPair.ToString(), orderId: _settings.LastSellOrderID);
+                var queryBuyOrder = client.SpotApi.Trading.GetOrderAsync(_settings.CoinPair.ToString(), orderId: _settings.LastBuyOrderID); ;
+                var querySellOrder = client.SpotApi.Trading.GetOrderAsync(_settings.CoinPair.ToString(), orderId: _settings.LastSellOrderID);
 
-                if (queryBuyOrder.Data != null)
+                if (queryBuyOrder.Result.Data != null)
                 {
-                    switch (queryBuyOrder.Data.Status)
+                    switch (queryBuyOrder.Result.Data.Status)
                     {
                         case OrderStatus.Filled:
                             PlaceSellOrder();
@@ -30,16 +30,16 @@ namespace BinanceBotLib
                             PlaceBuyOrder();
                             break;
                         case OrderStatus.New:
-                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - queryBuyOrder.Data.CreateTime} for the {_settings.BuyPrice} buy order to fill...");
+                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - queryBuyOrder.Result.Data.CreateTime} for the {_settings.BuyPrice} buy order to fill...");
                             break;
                         default:
                             Bot.WriteConsole("Unhandled buy order outcome. Reload application...");
                             break;
                     }
                 }
-                else if (querySellOrder.Data != null)
+                else if (querySellOrder.Result.Data != null)
                 {
-                    switch (querySellOrder.Data.Status)
+                    switch (querySellOrder.Result.Data.Status)
                     {
                         case OrderStatus.Filled:
                             PlaceBuyOrder();
@@ -49,19 +49,19 @@ namespace BinanceBotLib
                             PlaceSellOrder();
                             break;
                         case OrderStatus.New:
-                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - querySellOrder.Data.CreateTime} for the {_settings.SellPrice} sell order to fill...");
+                            Bot.WriteConsole($"Waiting {DateTime.UtcNow - querySellOrder.Result.Data.CreateTime} for the {_settings.SellPrice} sell order to fill...");
                             break;
                         default:
                             Bot.WriteConsole("Unhandled sell order outcome. Reload application...");
                             break;
                     }
                 }
-                else if (queryBuyOrder.Data == null)
+                else if (queryBuyOrder.Result.Data == null)
                 {
                     Bot.WriteConsole("Could not find any previous buy orders.");
                     PlaceBuyOrder();
                 }
-                else if (querySellOrder.Data == null)
+                else if (querySellOrder.Result.Data == null)
                 {
                     Bot.WriteConsole("Could not find any previous sell orders.");
                     PlaceSellOrder();
@@ -73,20 +73,20 @@ namespace BinanceBotLib
         {
             using (var client = new BinanceClient())
             {
-                var accountInfo = client.General.GetAccountInfo();
-                decimal coinsUSDT = accountInfo.Data.Balances.Single(s => s.Asset == _settings.CoinPair.Pair2).Free;
+                var accountInfo = client.SpotApi.Account.GetAccountInfoAsync();
+                decimal coinsUSDT = accountInfo.Result.Data.Balances.Single(s => s.Asset == _settings.CoinPair.Pair2).Available;
 
                 decimal myCapitalCost = _settings.InvestmentMax == 0 ? coinsUSDT : Math.Min(_settings.InvestmentMax, coinsUSDT);
                 Bot.WriteLog("USDT balance to trade = " + myCapitalCost.ToString());
 
-                decimal fees = client.Spot.Market.GetTradeFee().Data.Single(s => s.Symbol == _settings.CoinPair.ToString()).MakerFee;
+                decimal fees = client.SpotApi.ExchangeData.GetTradeFeeAsync().Result.Data.Single(s => s.Symbol == _settings.CoinPair.ToString()).MakerFee;
                 decimal myInvestment = myCapitalCost / (1 + fees);
 
                 decimal myRevenue = myCapitalCost + _settings.DailyProfitTarget;
                 Bot.WriteLog($"Receive target = {myRevenue}");
 
                 // New method from: https://docs.google.com/spreadsheets/d/1be6zYuzKyJMZ4Yn_pUmIt-YRTON3YJKbq_lenL2Kldc/edit?usp=sharing
-                decimal marketBuyPrice = client.Spot.Market.GetPrice(_settings.CoinPair.ToString()).Data.Price;
+                decimal marketBuyPrice = client.SpotApi.ExchangeData.GetPriceAsync(_settings.CoinPair.ToString()).Result.Data.Price;
                 Bot.WriteLog($"Market price = {marketBuyPrice}");
 
                 decimal marketSellPrice = myRevenue * (1 + fees) / (myInvestment / marketBuyPrice);
@@ -96,9 +96,9 @@ namespace BinanceBotLib
                 _settings.CoinQuantity = Math.Round(myInvestment / _settings.BuyPrice, 6);
 
                 Bot.WriteLog($"Buying {_settings.CoinQuantity} {_settings.CoinPair.Pair1} for {_settings.BuyPrice}");
-                var buyOrder = client.Spot.Order.PlaceOrder(_settings.CoinPair.ToString(), OrderSide.Buy, OrderType.Limit, quantity: _settings.CoinQuantity, price: _settings.BuyPrice, timeInForce: TimeInForce.GoodTillCancel);
+                var buyOrder = client.SpotApi.Trading.PlaceOrderAsync(_settings.CoinPair.ToString(), OrderSide.Buy, SpotOrderType.Limit, quantity: _settings.CoinQuantity, price: _settings.BuyPrice, timeInForce: TimeInForce.GoodTillCanceled);
 
-                if (buyOrder.Success)
+                if (buyOrder.Result.Success)
                 {
                     // Save Sell Price
                     _settings.SellPrice = Math.Round(myRevenue * (1 + fees) / _settings.CoinQuantity, 2);
@@ -106,8 +106,8 @@ namespace BinanceBotLib
 
                     decimal priceChange = Math.Round(priceDiff / _settings.BuyPrice * 100, 2);
                     Bot.WriteConsole($"Price change = {priceChange}%");
-                    _settings.LastBuyOrderID = buyOrder.Data.OrderId;
-                    Bot.WriteLog("Order ID: " + buyOrder.Data.OrderId);
+                    _settings.LastBuyOrderID = buyOrder.Result.Data.Id;
+                    Bot.WriteLog("Order ID: " + buyOrder.Result.Data.Id);
                     Bot.WriteConsole();
                 }
             }
@@ -117,16 +117,16 @@ namespace BinanceBotLib
         {
             using (var client = new BinanceClient())
             {
-                var accountInfo = client.General.GetAccountInfo();
-                decimal coinsQuantity = accountInfo.Data.Balances.Single(s => s.Asset == _settings.CoinPair.Pair1).Free;
+                var accountInfo = client.SpotApi.Account.GetAccountInfoAsync();
+                decimal coinsQuantity = accountInfo.Result.Data.Balances.Single(s => s.Asset == _settings.CoinPair.Pair1).Available;
 
                 // if user has crypto rather than USDT for capital, then calculate SellPrice and CoinQuanitity
                 if (_settings.SellPrice == 0 || _settings.CoinQuantity == 0)
                 {
-                    decimal marketBuyPrice = client.Spot.Market.GetPrice(_settings.CoinPair.ToString()).Data.Price;
+                    decimal marketBuyPrice = client.SpotApi.ExchangeData.GetPriceAsync(_settings.CoinPair.ToString()).Result.Data.Price;
                     decimal myCapitalCost = _settings.InvestmentMax == 0 ? marketBuyPrice * coinsQuantity : Math.Min(_settings.InvestmentMax, marketBuyPrice * coinsQuantity);
 
-                    decimal fees = client.Spot.Market.GetTradeFee().Data.Single(s => s.Symbol == _settings.CoinPair.ToString()).MakerFee;
+                    decimal fees = client.SpotApi.ExchangeData.GetTradeFeeAsync().Result.Data.Single(s => s.Symbol == _settings.CoinPair.ToString()).MakerFee;
                     decimal myInvestment = myCapitalCost / (1 + fees);
 
                     decimal myRevenue = myCapitalCost + _settings.DailyProfitTarget;
@@ -141,13 +141,13 @@ namespace BinanceBotLib
 
                 if (_settings.SellPrice > 0 && _settings.CoinQuantity > 0 && coinsQuantity > _settings.CoinQuantity)
                 {
-                    var sellOrder = client.Spot.Order.PlaceOrder(_settings.CoinPair.ToString(), OrderSide.Sell, OrderType.Limit, quantity: _settings.CoinQuantity, price: _settings.SellPrice, timeInForce: TimeInForce.GoodTillCancel);
+                    var sellOrder = client.SpotApi.Trading.PlaceOrderAsync(_settings.CoinPair.ToString(), OrderSide.Sell, SpotOrderType.Limit, quantity: _settings.CoinQuantity, price: _settings.SellPrice, timeInForce: TimeInForce.GoodTillCanceled);
 
-                    if (sellOrder.Success)
+                    if (sellOrder.Result.Success)
                     {
                         Bot.WriteLog($"Sold {_settings.CoinQuantity} {_settings.CoinPair.Pair1} for {_settings.SellPrice}");
-                        _settings.LastSellOrderID = sellOrder.Data.OrderId;
-                        Bot.WriteLog("Order ID: " + sellOrder.Data.OrderId);
+                        _settings.LastSellOrderID = sellOrder.Result.Data.Id;
+                        Bot.WriteLog("Order ID: " + sellOrder.Result.Data.Id);
                         _settings.TotalProfit += _settings.DailyProfitTarget;
                         Bot.WriteConsole();
                     }
