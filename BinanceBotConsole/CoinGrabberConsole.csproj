@@ -140,6 +140,10 @@
       <Project>{2291f1c1-deb0-43b8-b52e-f16784a4f6d6}</Project>
       <Name>BinanceBotLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExchangeClientLib\ExchangeClientLib.csproj">
+      <Project>{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}</Project>
+      <Name>ExchangeClientLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

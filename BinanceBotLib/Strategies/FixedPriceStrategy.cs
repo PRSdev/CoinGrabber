@@ -1,5 +1,7 @@
 ﻿using Binance.Net.Clients;
 using Binance.Net.Enums;
+using Binance.Net.Objects;
+using CryptoExchange.Net.Authentication;
 using System;
 using System.Linq;
 
@@ -71,12 +73,21 @@ namespace BinanceBotLib
 
         public override void PlaceBuyOrder()
         {
-            using (var client = new BinanceClient())
-            {
-                var accountInfo = client.SpotApi.Account.GetAccountInfoAsync();
-                decimal coinsUSDT = accountInfo.Result.Data.Balances.Single(s => s.Asset == _settings.CoinPair.Pair2).Available;
+            decimal coin = _client.GetBalance(_settings.CoinPair.Pair1);
+            Bot.WriteConsole($"{_settings.CoinPair.Pair1} balance: {coin}");
 
-                decimal myCapitalCost = _settings.InvestmentMax == 0 ? coinsUSDT : Math.Min(_settings.InvestmentMax, coinsUSDT);
+            using (var client = new BinanceClient(new BinanceClientOptions
+            {
+                ApiCredentials = new ApiCredentials(_settings.APIKey, _settings.SecretKey),
+                SpotApiOptions = new BinanceApiClientOptions
+                {
+                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
+                    AutoTimestamp = false
+                },
+            }))
+            {
+
+                decimal myCapitalCost = _settings.InvestmentMax == 0 ? coin : Math.Min(_settings.InvestmentMax, coin);
                 Bot.WriteLog("USDT balance to trade = " + myCapitalCost.ToString());
 
                 decimal fees = client.SpotApi.ExchangeData.GetTradeFeeAsync().Result.Data.Single(s => s.Symbol == _settings.CoinPair.ToString()).MakerFee;

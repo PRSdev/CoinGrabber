@@ -136,9 +136,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ExchangeClientLibStd\BinanceFuturesExchangeClient.cs">
-      <Link>BinanceFuturesExchangeClient.cs</Link>
-    </Compile>
     <Compile Include="..\ExchangeClientLibStd\TradingData.cs">
       <Link>TradingData.cs</Link>
     </Compile>

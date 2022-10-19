@@ -1,4 +1,5 @@
 ﻿using BinanceBotLib;
+using ExchangeClientLib;
 using ShareX.HelpersLib;
 using System;
 
@@ -15,28 +16,21 @@ namespace BinanceBotConsole
             if (string.IsNullOrEmpty(myBot.Settings.APIKey))
             {
                 Console.Write("Enter Binance API Key: ");
-                myBot.Settings.APIKey = Console.ReadLine();
+                myBot.Settings.APIKey = Console.ReadLine().Trim();
 
                 Console.Write("Enter Binance Secret Key: ");
-                myBot.Settings.SecretKey = Console.ReadLine();
+                myBot.Settings.SecretKey = Console.ReadLine().Trim();
+
+                SettingsManager.SaveSettings(myBot.Settings);
             }
 
             myBot.Settings.BotMode = BotMode.FixedPrice;
 
-            SettingsManager.SaveSettings(myBot.Settings);
+            Console.Write("Enter coin to grab: ");
+            string coin = Console.ReadLine().Trim();
+            myBot.Settings.CoinPair = new CoinPair(coin, "BUSD", 2);
 
-            // Error handling - Bot mode specific
-            switch (myBot.Settings.BotMode)
-            {
-                case BotMode.FixedPrice:
-                    if (myBot.Settings.DailyProfitTarget <= 0)
-                    {
-                        Console.WriteLine("Daily Profit Target must be greater than zero!");
-                        Console.ReadLine();
-                        return;
-                    }
-                    break;
-            }
+            SettingsManager.SaveSettings(myBot.Settings);
 
             myBot.Start();
             Console.WriteLine($"{myBot.Settings.BotMode.GetDescription()} Bot started...");

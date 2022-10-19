@@ -1,94 +1,80 @@
-﻿using CryptoExchange.Net.Authentication;
-using CryptoExchange.Net.Logging;
+﻿using Binance.Net.Clients;
+using Binance.Net.Enums;
+using Binance.Net.Objects;
+using CryptoExchange.Net.Authentication;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace ExchangeClientLib
 {
     public class BinanceExchangeClient : ExchangeClient
     {
+        BinanceClient _client;
+
         public BinanceExchangeClient(string apiKey, string secretKey) : base(apiKey, secretKey)
         {
-            var binanceClient = new BinanceClient(new BinanceClientOptions
+            _client = new BinanceClient(new BinanceClientOptions
             {
-                ApiCredentials = new ApiCredentials("API-KEY", "API-SECRET"),
+                ApiCredentials = new ApiCredentials(apiKey, secretKey),
                 SpotApiOptions = new BinanceApiClientOptions
                 {
                     BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
                     AutoTimestamp = false
                 },
             });
-
-            BinanceClient.SetDefaultOptions(new BinanceClientOptions()
-            {
-                ApiCredentials = new ApiCredentials(apiKey, secretKey),
-                LogVerbosity = LogVerbosity.Error,
-                LogWriters = new List<TextWriter> { Console.Out }
-            });
         }
 
         public override decimal GetBalance(string coinName)
         {
-            using (var client = new BinanceClient())
+            try
             {
-                try
-                {
-                    decimal balance = client.General.GetAccountInfo().Data.Balances.Single(s => s.Asset == coinName).Free;
-                    Portfolio.UpdateCoinBalance(coinName, balance);
-                    return balance;
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
+                decimal balance = _client.SpotApi.Account.GetAccountInfoAsync().Result.Data.Balances.Single(s => s.Asset == coinName).Available;
+                Portfolio.UpdateCoinBalance(coinName, balance);
+                return balance;
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
 
         public override decimal GetPrice(CoinPair coinPair)
         {
-            using (var client = new BinanceClient())
+            try
             {
-                try
-                {
-                    decimal marketPrice = Math.Round(client.Spot.Market.GetPrice(coinPair.ToString()).Data.Price, 2);
-                    Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
-                    return marketPrice;
-                }
-                catch (Exception)
-                {
-                    return 0;
-                }
+                decimal marketPrice = Math.Round(_client.SpotApi.ExchangeData.GetPriceAsync(coinPair.ToString()).Result.Data.Price, 2);
+                Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
+                return marketPrice;
+            }
+            catch (Exception)
+            {
+                return 0;
             }
         }
 
         public override decimal GetTradeFee(CoinPair coinPair)
         {
-            using (var client = new BinanceClient())
-            {
-                return client.Spot.Market.GetTradeFee().Data.Single(s => s.Symbol == coinPair.ToString()).MakerFee;
-            }
+            return _client.SpotApi.ExchangeData.GetTradeFeeAsync().Result.Data.Single(s => s.Symbol == coinPair.ToString()).MakerFee;
         }
 
         public override bool PlaceBuyOrder(TradingData trade, bool closePosition = false)
         {
             using (var client = new BinanceClient())
             {
-                var buyOrder = client.Spot.Order.PlaceOrder(
+                var buyOrder = client.SpotApi.Trading.PlaceOrderAsync(
                 trade.CoinPair.ToString(),
                 OrderSide.Buy,
-                OrderType.Limit,
+                SpotOrderType.Limit,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.Price, 2),
-                timeInForce: TimeInForce.GoodTillCancel);
+                timeInForce: TimeInForce.GoodTillCanceled);
 
-                if (buyOrder.Success)
-                    trade.BuyOrderID = buyOrder.Data.OrderId;
+                if (buyOrder.Result.Success)
+                    trade.BuyOrderID = buyOrder.Result.Data.Id;
                 else
-                    Console.WriteLine(buyOrder.Error.Message.ToString());
+                    Console.WriteLine(buyOrder.Result.Error.Message.ToString());
 
-                return buyOrder.Success;
+                return buyOrder.Result.Success;
             }
         }
 
@@ -96,20 +82,20 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var sellOrder = client.Spot.Order.PlaceOrder(
+                var sellOrder = client.SpotApi.Trading.PlaceOrderAsync(
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
-                OrderType.Limit,
+                SpotOrderType.Limit,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.Price, 2),
-                timeInForce: TimeInForce.GoodTillCancel);
+                timeInForce: TimeInForce.GoodTillCanceled);
 
-                if (sellOrder.Success)
-                    trade.SellOrderID = sellOrder.Data.OrderId;
+                if (sellOrder.Result.Success)
+                    trade.SellOrderID = sellOrder.Result.Data.Id;
                 else
-                    Console.WriteLine(sellOrder.Error.Message.ToString());
+                    Console.WriteLine(sellOrder.Result.Error.Message.ToString());
 
-                return sellOrder.Success;
+                return sellOrder.Result.Success;
             }
         }
 
@@ -117,20 +103,20 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var buyOrder = client.Spot.Order.PlaceTestOrder(
+                var buyOrder = client.SpotApi.Trading.PlaceTestOrderAsync(
                 trade.CoinPair.ToString(),
                 OrderSide.Buy,
-                OrderType.Limit,
+                SpotOrderType.Limit,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.Price, 2),
-                timeInForce: TimeInForce.GoodTillCancel);
+                timeInForce: TimeInForce.GoodTillCanceled);
 
-                if (buyOrder.Success)
-                    trade.BuyOrderID = buyOrder.Data.OrderId;
+                if (buyOrder.Result.Success)
+                    trade.BuyOrderID = buyOrder.Result.Data.Id;
                 else
-                    Console.WriteLine(buyOrder.Error.Message.ToString());
+                    Console.WriteLine(buyOrder.Result.Error.Message.ToString());
 
-                return buyOrder.Success;
+                return buyOrder.Result.Success;
             }
         }
 
@@ -138,20 +124,20 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var sellOrder = client.Spot.Order.PlaceTestOrder(
+                var sellOrder = client.SpotApi.Trading.PlaceTestOrderAsync(
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
-                OrderType.Limit,
+                SpotOrderType.Limit,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.Price, 2),
-                timeInForce: TimeInForce.GoodTillCancel);
+                timeInForce: TimeInForce.GoodTillCanceled);
 
-                if (sellOrder.Success)
-                    trade.SellOrderID = sellOrder.Data.OrderId;
+                if (sellOrder.Result.Success)
+                    trade.SellOrderID = sellOrder.Result.Data.Id;
                 else
-                    Console.WriteLine(sellOrder.Error.Message.ToString());
+                    Console.WriteLine(sellOrder.Result.Error.Message.ToString());
 
-                return sellOrder.Success;
+                return sellOrder.Result.Success;
             }
         }
 
@@ -159,21 +145,21 @@ namespace ExchangeClientLib
         {
             using (var client = new BinanceClient())
             {
-                var sellOrder = client.Spot.Order.PlaceTestOrder(
+                var sellOrder = client.SpotApi.Trading.PlaceTestOrderAsync(
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
-                OrderType.StopLoss,
+                SpotOrderType.StopLoss,
                 quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
                 price: Math.Round(trade.Price, 2),
-                timeInForce: TimeInForce.GoodTillCancel,
+                timeInForce: TimeInForce.GoodTillCanceled,
                 stopPrice: Math.Round(trade.BuyPriceAfterFees * (1 - percStopLoss / 100), 2));
 
-                if (sellOrder.Success)
-                    trade.SellOrderID = sellOrder.Data.OrderId;
+                if (sellOrder.Result.Success)
+                    trade.SellOrderID = sellOrder.Result.Data.Id;
                 else
-                    Console.WriteLine(sellOrder.Error.Message.ToString());
+                    Console.WriteLine(sellOrder.Result.Error.Message.ToString());
 
-                return sellOrder.Success;
+                return sellOrder.Result.Success;
             }
         }
     }

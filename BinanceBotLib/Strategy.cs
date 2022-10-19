@@ -2,7 +2,6 @@
 using ExchangeClientLib;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BinanceBotLib
 {
@@ -26,10 +25,6 @@ namespace BinanceBotLib
             {
                 case ExchangeType.BinanceExchange:
                     _client = new BinanceExchangeClient(_settings.APIKey, _settings.SecretKey);
-                    break;
-
-                case ExchangeType.BinanceFuturesExchange:
-                    _client = new BinanceFuturesExchangeClient(_settings.APIKey, _settings.SecretKey);
                     break;
 
                 case ExchangeType.MockupExchange:
