@@ -96,7 +96,7 @@ namespace BinanceBotLib
                 _settings.CoinQuantity = Math.Round(myInvestment / _settings.BuyPrice, 6);
 
                 Bot.WriteLog($"Buying {_settings.CoinQuantity} {_settings.CoinPair.Pair1} for {_settings.BuyPrice}");
-                var buyOrder = client.SpotApi.Trading.PlaceOrderAsync(_settings.CoinPair.ToString(), OrderSide.Buy, SpotOrderType.Limit, quantity: _settings.CoinQuantity, price: _settings.BuyPrice, timeInForce: TimeInForce.GoodTillCanceled);
+                var buyOrder = client.SpotApi.Trading.PlaceTestOrderAsync(_settings.CoinPair.ToString(), OrderSide.Buy, SpotOrderType.Limit, quantity: _settings.CoinQuantity, price: _settings.BuyPrice, timeInForce: TimeInForce.GoodTillCanceled);
 
                 if (buyOrder.Result.Success)
                 {
@@ -141,7 +141,7 @@ namespace BinanceBotLib
 
                 if (_settings.SellPrice > 0 && _settings.CoinQuantity > 0 && coinsQuantity > _settings.CoinQuantity)
                 {
-                    var sellOrder = client.SpotApi.Trading.PlaceOrderAsync(_settings.CoinPair.ToString(), OrderSide.Sell, SpotOrderType.Limit, quantity: _settings.CoinQuantity, price: _settings.SellPrice, timeInForce: TimeInForce.GoodTillCanceled);
+                    var sellOrder = client.SpotApi.Trading.PlaceTestOrderAsync(_settings.CoinPair.ToString(), OrderSide.Sell, SpotOrderType.Limit, quantity: _settings.CoinQuantity, price: _settings.SellPrice, timeInForce: TimeInForce.GoodTillCanceled);
 
                     if (sellOrder.Result.Success)
                     {
