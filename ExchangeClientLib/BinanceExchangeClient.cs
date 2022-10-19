@@ -1,7 +1,4 @@
-﻿using Binance.Net;
-using Binance.Net.Enums;
-using Binance.Net.Objects.Spot;
-using CryptoExchange.Net.Authentication;
+﻿using CryptoExchange.Net.Authentication;
 using CryptoExchange.Net.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,6 +11,16 @@ namespace ExchangeClientLib
     {
         public BinanceExchangeClient(string apiKey, string secretKey) : base(apiKey, secretKey)
         {
+            var binanceClient = new BinanceClient(new BinanceClientOptions
+            {
+                ApiCredentials = new ApiCredentials("API-KEY", "API-SECRET"),
+                SpotApiOptions = new BinanceApiClientOptions
+                {
+                    BaseAddress = BinanceApiAddresses.Default.RestClientAddress,
+                    AutoTimestamp = false
+                },
+            });
+
             BinanceClient.SetDefaultOptions(new BinanceClientOptions()
             {
                 ApiCredentials = new ApiCredentials(apiKey, secretKey),
