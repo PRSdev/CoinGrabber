@@ -1,8 +1,4 @@
 ﻿using ExchangeClientLib;
-using ShareX.HelpersLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BinanceBotLib
 {
@@ -22,14 +18,7 @@ namespace BinanceBotLib
 
         public int GetCoinPairIndex()
         {
-            if (_settings.RandomNewCoinPair)
-            {
-                return RandomFast.Next(0, ExchangeClient.CoinPairsList.Count - 1);
-            }
-            else
-            {
-                return ExchangeClient.CoinPairsList.FindIndex(x => x.ToString() == _settings.CoinPair.ToString());
-            }
+            return ExchangeClient.CoinPairsList.FindIndex(x => x.ToString() == _settings.CoinPair.ToString());
         }
 
         public CoinPair GetCoinPair(string signal)

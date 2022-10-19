@@ -147,7 +147,6 @@
     </Compile>
     <Compile Include="Bot.cs" />
     <Compile Include="CoinPairHelper.cs" />
-    <Compile Include="EmailHelper.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="IStrategy.cs" />
     <Compile Include="NativeMethods.cs" />

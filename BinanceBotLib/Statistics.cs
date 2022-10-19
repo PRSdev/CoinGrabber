@@ -1,8 +1,6 @@
 ﻿using ExchangeClientLib;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Text;
 
 namespace BinanceBotLib
@@ -30,18 +28,6 @@ namespace BinanceBotLib
             return Math.Round(_settings.TotalProfit / (decimal)totalDays, 2).ToString();
         }
 
-        public string GetTotalInvestment()
-        {
-            decimal cost = 0m;
-
-            foreach (TradingData trade in _settings.TradingDataList)
-            {
-                cost += trade.CoinOriginalQuantity * trade.BuyPriceAfterFees;
-            }
-
-            return Math.Round(cost, 2).ToString();
-        }
-
         public string GetPortfolioValue()
         {
             decimal fiatValue = 0;
@@ -63,7 +49,6 @@ namespace BinanceBotLib
             NameValueCollection nvc = new NameValueCollection();
             nvc.Add("Total profit made to-date ($)", GetTotalProfit());
             nvc.Add("Profit per day ($/day)", GetProfitPerDay());
-            nvc.Add("Total current investment ($)", GetTotalInvestment());
             nvc.Add("Portfolio value ($)", GetPortfolioValue());
             foreach (CoinData coin in _portfolio.Coins)
             {

@@ -97,36 +97,7 @@ namespace BinanceBotLib
 
         protected virtual void PlaceBuyOrder(TradingData trade, List<TradingData> tradesList, bool forReal)
         {
-            decimal fiatValue = _client.GetBalance(trade.CoinPair.Pair2);
-
-            decimal capitalCost = fiatValue / _settings.HydraFactor;
-
-            if (capitalCost > _settings.InvestmentMin)
-            {
-                if (trade.UpdatePrice(_client.GetPrice(trade.CoinPair)))
-                {
-                    Bot.WriteConsole();
-
-                    decimal fees = _client.GetTradeFee(trade.CoinPair);
-                    decimal myInvestment = capitalCost / (1 + fees);
-                    trade.CoinQuantity = myInvestment / trade.Price;
-
-                    var buyOrder = forReal ? _client.PlaceBuyOrder(trade) : _client.PlaceTestBuyOrder(trade);
-                    if (buyOrder)
-                    {
-                        trade.BuyPriceAfterFees = capitalCost / trade.CoinQuantity;
-                        trade.ID = tradesList.Count;
-                        trade.LastAction = OrderSide.Buy;
-                        tradesList.Add(trade);
-                        Bot.WriteLog(trade.ToStringBought());
-                        OnOrderSucceeded(trade);
-                    }
-                }
-            }
-            else
-            {
-                Bot.WriteConsole($"Capital cost is too low to buy more.");
-            }
+            throw new NotImplementedException();
         }
 
         protected virtual void PlaceSellOrder(TradingData trade, bool forReal)

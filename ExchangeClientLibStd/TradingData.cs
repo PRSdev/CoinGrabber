@@ -1,8 +1,6 @@
 ﻿using Binance.Net.Enums;
-using Binance.Net.Objects;
 using Newtonsoft.Json;
 using System;
-using System.Drawing;
 using System.Text;
 
 namespace ExchangeClientLib
@@ -50,7 +48,7 @@ namespace ExchangeClientLib
         {
             get
             {
-                return Math.Round(_quantityToTrade, CoinPair.Precision);
+                return Math.Round(_quantityToTrade, 2);
             }
             set
             {
@@ -192,32 +190,5 @@ namespace ExchangeClientLib
         {
             return LastAction == OrderSide.Sell ? ToStringSold() : ToStringBought();
         }
-
-        /*
-        public ListViewItem ToListViewItem()
-        {
-            ListViewItem lvi = new ListViewItem();
-            lvi.Text = ID.ToString();
-
-            if (CoinQuantity == 0)
-                lvi.SubItems.Add(CoinOriginalQuantity.ToString());
-            else
-                lvi.SubItems.Add(CoinQuantity.ToString());
-
-            lvi.SubItems.Add(CoinPair.ToString());
-            lvi.SubItems.Add(LastAction.ToString());
-
-            if (LastAction == OrderSide.Buy)
-                lvi.SubItems.Add(BuyPriceAfterFees.ToString());
-            else
-                lvi.SubItems.Add(SellPriceAfterFees.ToString());
-
-            lvi.SubItems.Add(Cost.ToString());
-            lvi.SubItems.Add(Price.ToString());
-            lvi.SubItems.Add(PriceChangePercentage.ToString());
-            lvi.ForeColor = PriceChangePercentage > 0m ? Color.Green : Color.Red;
-            return lvi;
-        }
-        */
     }
 }

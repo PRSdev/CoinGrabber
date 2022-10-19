@@ -59,23 +59,20 @@ namespace ExchangeClientLib
 
         public override bool PlaceBuyOrder(TradingData trade, bool closePosition = false)
         {
-            using (var client = new BinanceClient())
-            {
-                var buyOrder = client.SpotApi.Trading.PlaceOrderAsync(
-                trade.CoinPair.ToString(),
-                OrderSide.Buy,
-                SpotOrderType.Limit,
-                quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
-                price: Math.Round(trade.Price, 2),
-                timeInForce: TimeInForce.GoodTillCanceled);
+            var buyOrder = _client.SpotApi.Trading.PlaceOrderAsync(
+            trade.CoinPair.ToString(),
+            OrderSide.Buy,
+            SpotOrderType.Limit,
+            quantity: Math.Round(trade.CoinQuantityToTrade, 2),
+            price: Math.Round(trade.Price, 2),
+            timeInForce: TimeInForce.GoodTillCanceled);
 
-                if (buyOrder.Result.Success)
-                    trade.BuyOrderID = buyOrder.Result.Data.Id;
-                else
-                    Console.WriteLine(buyOrder.Result.Error.Message.ToString());
+            if (buyOrder.Result.Success)
+                trade.BuyOrderID = buyOrder.Result.Data.Id;
+            else
+                Console.WriteLine(buyOrder.Result.Error.Message.ToString());
 
-                return buyOrder.Result.Success;
-            }
+            return buyOrder.Result.Success;
         }
 
         public override bool PlaceSellOrder(TradingData trade, bool closePosition = false)
@@ -86,7 +83,7 @@ namespace ExchangeClientLib
                 trade.CoinPair.ToString(),
                 OrderSide.Sell,
                 SpotOrderType.Limit,
-                quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
+                quantity: Math.Round(trade.CoinQuantityToTrade, 2),
                 price: Math.Round(trade.Price, 2),
                 timeInForce: TimeInForce.GoodTillCanceled);
 
@@ -101,23 +98,18 @@ namespace ExchangeClientLib
 
         public override bool PlaceTestBuyOrder(TradingData trade)
         {
-            using (var client = new BinanceClient())
-            {
-                var buyOrder = client.SpotApi.Trading.PlaceTestOrderAsync(
-                trade.CoinPair.ToString(),
-                OrderSide.Buy,
-                SpotOrderType.Limit,
-                quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision),
-                price: Math.Round(trade.Price, 2),
-                timeInForce: TimeInForce.GoodTillCanceled);
+            var buyOrder = _client.SpotApi.Trading.PlaceTestOrderAsync(
+            trade.CoinPair.ToString(),
+            OrderSide.Buy,
+            SpotOrderType.Market,
+            quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision));
 
-                if (buyOrder.Result.Success)
-                    trade.BuyOrderID = buyOrder.Result.Data.Id;
-                else
-                    Console.WriteLine(buyOrder.Result.Error.Message.ToString());
+            if (buyOrder.Result.Success)
+                trade.BuyOrderID = buyOrder.Result.Data.Id;
+            else
+                Console.WriteLine(buyOrder.Result.Error.Message.ToString());
 
-                return buyOrder.Result.Success;
-            }
+            return buyOrder.Result.Success;
         }
 
         public override bool PlaceTestSellOrder(TradingData trade)

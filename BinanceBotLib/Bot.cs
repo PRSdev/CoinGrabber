@@ -55,7 +55,7 @@ namespace BinanceBotLib
 
         private void Init()
         {
-            double timerInterval = 100; // milliseconds
+            double timerInterval = 500; // milliseconds
 
             switch (Settings.BotMode)
             {
@@ -92,7 +92,6 @@ namespace BinanceBotLib
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendLine($"Profit mode: {Settings.TakeProfitMode.ToString()}");
             sb.AppendLine($"Market Price: {data.Price}");
             sb.AppendLine($"Entry Price: {data.BuyPriceAfterFees}");
             if (data.PriceLongBelow > 0)
@@ -118,8 +117,6 @@ namespace BinanceBotLib
             {
                 if (_exchangeType == ExchangeType.MockupExchange)
                 {
-                    string result = $"{Settings.HydraFactor},{Settings.PriceChangePercentageDown},{Settings.PriceChangePercentageUp},{Strategy.Statistics.GetPortfolioValue()}{Strategy.Statistics.GetCoinsBalanceCsv()}";
-                    Console.WriteLine(result);
                     Stop();
                 }
             }
