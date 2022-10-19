@@ -21,23 +21,14 @@ namespace BinanceBotConsole
                 myBot.Settings.SecretKey = Console.ReadLine();
             }
 
-            // Choose Bot mode
-            foreach (BotMode bm in Enum.GetValues(typeof(BotMode)))
-            {
-                Console.WriteLine($"{bm.GetIndex()} for {bm.GetDescription()}");
-            }
-            Console.Write("Choose Bot mode: ");
-
-            int intMode;
-            int.TryParse(Console.ReadLine(), out intMode);
-            myBot.Settings.BotMode = (BotMode)intMode;
+            myBot.Settings.BotMode = BotMode.FixedPrice;
 
             SettingsManager.SaveSettings(myBot.Settings);
 
             // Error handling - Bot mode specific
             switch (myBot.Settings.BotMode)
             {
-                case BotMode.FixedProfit:
+                case BotMode.FixedPrice:
                     if (myBot.Settings.DailyProfitTarget <= 0)
                     {
                         Console.WriteLine("Daily Profit Target must be greater than zero!");

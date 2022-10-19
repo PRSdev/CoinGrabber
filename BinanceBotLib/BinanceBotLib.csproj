@@ -154,9 +154,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Statistics.cs" />
-    <Compile Include="Strategies\FixedPriceChangeStrategy.cs" />
-    <Compile Include="Strategies\FixedProfitStrategy.cs" />
-    <Compile Include="Strategies\TradingViewAlertStrategy.cs" />
+    <Compile Include="Strategies\FixedPriceStrategy.cs" />
     <Compile Include="Strategy.cs" />
   </ItemGroup>
   <ItemGroup>

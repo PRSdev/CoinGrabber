@@ -4,20 +4,8 @@ namespace BinanceBotLib
 {
     public enum BotMode
     {
-        [Description("Fixed Profit")]
-        FixedProfit,
-
-        [Description("Fixed Price Change")]
-        FixedPriceChange,
-
-        [Description("TradingView Signal")]
-        TradingViewSignal,
-
-        [Description("Futures")]
-        Futures,
-
-        [Description("Futures Random")]
-        FuturesRandom
+        [Description("Fixed Price")]
+        FixedPrice
     }
 
     public enum FuturesTakeProfitMode

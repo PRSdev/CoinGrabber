@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace BinanceBotLib
 {
-    public class FixedProfitStrategy : Strategy
+    public class FixedPriceStrategy : Strategy
     {
-        public FixedProfitStrategy(ExchangeType exchange, Settings settings) : base(exchange, settings)
+        public FixedPriceStrategy(ExchangeType exchange, Settings settings) : base(exchange, settings)
         {
         }
 

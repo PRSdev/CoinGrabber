@@ -27,7 +27,7 @@ namespace BinanceBotLib
         public decimal TotalProfitSimulation { get; set; }
 
         [Category("1 General"), Browsable(false)]
-        public BotMode BotMode { get; set; } = BotMode.FixedPriceChange;
+        public BotMode BotMode { get; set; } = BotMode.FixedPrice;
 
         [Category("2 Fixed Profit"), Description("Maximum investment.")]
         public decimal InvestmentMax { get; set; } = 500m;
@@ -68,7 +68,7 @@ namespace BinanceBotLib
         [Category("3 Fixed Price Change"), Description("When current price is above this percentage, new sell orders trigger.")]
         public decimal PriceChangePercentageUp { get; set; } = 2m;
 
-        [Category("3 Fixed Price Change"), Description("Interval in minutes.")]
+        [Category("3 Fixed Price Change"), Description("Interval in seconds.")]
         public int TimerInterval { get; set; } = 180;
 
         [Category("3 Fixed Price Change"), Browsable(false)]
