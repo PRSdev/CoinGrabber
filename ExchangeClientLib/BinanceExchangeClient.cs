@@ -68,7 +68,7 @@ namespace ExchangeClientLib
             try
             {
                 decimal price = GetPrice(coinPair);
-                return Math.Floor(balance / price * 10) / 10;
+                return Math.Floor(balance / price * 10) / 10; // Binance deducts the fees in coin quantity after buying
             }
             catch (Exception)
             {
