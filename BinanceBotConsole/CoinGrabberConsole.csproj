@@ -136,8 +136,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoinPair.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -147,14 +150,6 @@
     <ProjectReference Include="..\..\..\ShareX Team\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj">
       <Project>{327750e1-9fb7-4cc3-8aea-9bc42180cad3}</Project>
       <Name>ShareX.HelpersLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BinanceBotLib\BinanceBotLib.csproj">
-      <Project>{2291f1c1-deb0-43b8-b52e-f16784a4f6d6}</Project>
-      <Name>BinanceBotLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExchangeClientLib\ExchangeClientLib.csproj">
-      <Project>{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}</Project>
-      <Name>ExchangeClientLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

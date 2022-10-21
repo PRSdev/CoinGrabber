@@ -5,10 +5,6 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinGrabberConsole", "BinanceBotConsole\CoinGrabberConsole.csproj", "{72940829-7A00-479B-B2D5-3113A2DF1531}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinanceBotLib", "BinanceBotLib\BinanceBotLib.csproj", "{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExchangeClientLib", "ExchangeClientLib\ExchangeClientLib.csproj", "{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareX.HelpersLib", "..\..\ShareX Team\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj", "{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}"
 EndProject
 Global
@@ -36,34 +32,6 @@ Global
 		{72940829-7A00-479B-B2D5-3113A2DF1531}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
 		{72940829-7A00-479B-B2D5-3113A2DF1531}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72940829-7A00-479B-B2D5-3113A2DF1531}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.MicrosoftStore|Any CPU.ActiveCfg = Release|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.MicrosoftStore|Any CPU.Build.0 = Release|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.MicrosoftStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.MicrosoftStoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Steam|Any CPU.ActiveCfg = Release|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.Steam|Any CPU.Build.0 = Release|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.WindowsStore|Any CPU.ActiveCfg = Release|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2291F1C1-DEB0-43B8-B52E-F16784A4F6D6}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.MicrosoftStore|Any CPU.ActiveCfg = Release|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.MicrosoftStore|Any CPU.Build.0 = Release|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.MicrosoftStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.MicrosoftStoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Steam|Any CPU.ActiveCfg = Release|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.Steam|Any CPU.Build.0 = Release|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStore|Any CPU.ActiveCfg = Release|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1745386A-69A5-40B0-81C6-8F7BB1EDFA87}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.MicrosoftStore|Any CPU.ActiveCfg = MicrosoftStore|Any CPU
