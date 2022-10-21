@@ -1,8 +1,8 @@
 #define MyAppName "BinanceBot"
-#define MyExeNameUI "BinanceBotUI"
-#define MyExeNameCLI "BinanceBotConsole"
-#define MyAppParentDir "BinanceBotUI\bin\Release\"
-#define MyAppPath MyAppParentDir + MyExeNameUI + ".exe"
+;#define MyExeNameUI "BinanceBotUI"
+#define MyExeNameCLI "CoinGrabberConsole"
+#define MyAppParentDir "BinanceBotConsole\bin\Release\"
+#define MyAppPath MyAppParentDir + MyExeNameCLI + ".exe"
 #dim Version[4]
 #expr ParseVersion(MyAppPath, Version[0], Version[1], Version[2], Version[3])
 #define MyAppVersion Str(Version[0]) + "." + Str(Version[1]) + "." + Str(Version[2])
@@ -12,12 +12,12 @@
 [Setup]
 AllowNoIcons=true
 AppId={#MyAppName}
-AppMutex={{825ED423-32F0-4CC3-A2C5-0E07ADD27C93}
+AppMutex={{046A83C1-364A-4134-8583-19D2A52DD708}
 AppName={#MyAppName}
 AppPublisher={#MyAppPublisher}
-AppPublisherURL=https://github.com/McoreD/BinanceBot
-AppSupportURL=https://github.com/McoreD/BinanceBot/issues
-AppUpdatesURL=https://github.com/McoreD/BinanceBot/releases
+AppPublisherURL=https://github.com/PRSdev/CoinGrabber
+AppSupportURL=https://github.com/PRSdev/CoinGrabber/issues
+AppUpdatesURL=https://github.com/PRSdev/CoinGrabber/releases
 AppVerName={#MyAppName} {#MyAppVersion}
 AppVersion={#MyAppVersion}
 ArchitecturesAllowed=x86 x64 ia64
@@ -39,7 +39,7 @@ ShowUndisplayableLanguages=false
 SignedUninstaller=false
 SolidCompression=true
 Uninstallable=true
-UninstallDisplayIcon={app}\{#MyExeNameUI}
+UninstallDisplayIcon={app}\{#MyExeNameCLI}
 UsePreviousAppDir=yes
 UsePreviousGroup=yes
 VersionInfoCompany={#MyAppName}
@@ -54,15 +54,15 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: BinanceBotUI\bin\Release\*.exe; Excludes: *.vshost.exe; DestDir: {app}; Flags: ignoreversion
-Source: BinanceBotUI\bin\Release\*.dll; DestDir: {app}; Flags: ignoreversion
-Source: BinanceBotUI\bin\Release\*.pdb; DestDir: {app}; Flags: ignoreversion
+Source: BinanceBotConsole\bin\Release\*.exe; Excludes: *.vshost.exe; DestDir: {app}; Flags: ignoreversion
+Source: BinanceBotConsole\bin\Release\*.dll; DestDir: {app}; Flags: ignoreversion
+Source: BinanceBotConsole\bin\Release\*.pdb; DestDir: {app}; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\{#MyExeNameUI}"; Filename: "{app}\{#MyExeNameUI}.exe"
+;Name: "{group}\{#MyExeNameUI}"; Filename: "{app}\{#MyExeNameUI}.exe"
 Name: "{group}\{#MyExeNameCLI}"; Filename: "{app}\{#MyExeNameCLI}.exe"
-Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyExeNameUI}.exe"; Tasks: desktopicon
+;Name: "{userdesktop}\{#MyAppName}"; Filename: "{app}\{#MyExeNameUI}.exe"; Tasks: desktopicon
 
 [Run]
-Filename: {app}\{#MyExeNameUI}.exe; Description: {cm:LaunchProgram,{#MyAppName} UI}; Flags: nowait postinstall skipifsilent
+;Filename: {app}\{#MyExeNameUI}.exe; Description: {cm:LaunchProgram,{#MyAppName} UI}; Flags: nowait postinstall skipifsilent
 Filename: {app}\{#MyExeNameCLI}.exe; Description: {cm:LaunchProgram,{#MyAppName} Console}; Flags: nowait postinstall skipifsilent unchecked
