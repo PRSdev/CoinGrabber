@@ -42,8 +42,9 @@ namespace ExchangeClientLib
         {
             try
             {
-                decimal marketPrice = Math.Round(_client.SpotApi.ExchangeData.GetPriceAsync(coinPair.ToString()).Result.Data.Price, 2);
+                decimal marketPrice = _client.SpotApi.ExchangeData.GetPriceAsync(coinPair.ToString()).Result.Data.Price;
                 Portfolio.UpdateCoinMarketPrice(coinPair.Pair1, marketPrice);
+                Console.WriteLine($"{coinPair.ToString()} price: {marketPrice}");
                 return marketPrice;
             }
             catch (Exception)
@@ -52,9 +53,27 @@ namespace ExchangeClientLib
             }
         }
 
+        /// <summary>
+        /// Returns Trade fee in a percentage e.g. 0.1 for 0.1% fee
+        /// </summary>
+        /// <param name="coinPair"></param>
+        /// <returns>Returns Trade fee in a percentage e.g. 0.1 for 0.1% fee</returns>
         public override decimal GetTradeFee(CoinPair coinPair)
         {
-            return _client.SpotApi.ExchangeData.GetTradeFeeAsync().Result.Data.Single(s => s.Symbol == coinPair.ToString()).MakerFee;
+            return _client.SpotApi.ExchangeData.GetTradeFeeAsync().Result.Data.Single(s => s.Symbol == coinPair.ToString()).TakerFee * 100;
+        }
+
+        public override decimal GetMaxQuantityAfterFees(decimal balance, CoinPair coinPair)
+        {
+            try
+            {
+                decimal price = GetPrice(coinPair);
+                return Math.Floor(balance / price * 10) / 10;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
         }
 
         public override bool PlaceBuyOrder(TradingData trade, bool closePosition = false)
@@ -62,13 +81,15 @@ namespace ExchangeClientLib
             var buyOrder = _client.SpotApi.Trading.PlaceOrderAsync(
             trade.CoinPair.ToString(),
             OrderSide.Buy,
-            SpotOrderType.Limit,
-            quantity: Math.Round(trade.CoinQuantityToTrade, 2),
-            price: Math.Round(trade.Price, 2),
-            timeInForce: TimeInForce.GoodTillCanceled);
+            SpotOrderType.Market,
+            quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision));
 
             if (buyOrder.Result.Success)
+            {
                 trade.BuyOrderID = buyOrder.Result.Data.Id;
+                Console.WriteLine($"Success: {trade.BuyOrderID}");
+                Console.WriteLine();
+            }
             else
                 Console.WriteLine(buyOrder.Result.Error.Message.ToString());
 
@@ -105,7 +126,12 @@ namespace ExchangeClientLib
             quantity: Math.Round(trade.CoinQuantityToTrade, trade.CoinPair.Precision));
 
             if (buyOrder.Result.Success)
+            {
                 trade.BuyOrderID = buyOrder.Result.Data.Id;
+                Console.WriteLine($"Success: {trade.BuyOrderID}");
+                Console.WriteLine();
+            }
+
             else
                 Console.WriteLine(buyOrder.Result.Error.Message.ToString());
 

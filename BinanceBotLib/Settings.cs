@@ -31,6 +31,8 @@ namespace BinanceBotLib
         [Category("2 Fixed Price"), Description("Buy upto price.")]
         public decimal BuyUptoPrice { get; set; } = 1;
 
+        public DateTime CoinListingTime { get; set; } = DateTime.Now;
+
         [Category("2 Fixed Profit"), Description("Daily profit target.")]
         public decimal DailyProfitTarget { get; set; } = 10m;
 

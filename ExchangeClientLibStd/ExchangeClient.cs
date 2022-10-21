@@ -36,6 +36,12 @@ namespace ExchangeClientLib
         {
             throw new NotImplementedException();
         }
+
+        public virtual decimal GetMaxQuantityAfterFees(decimal balance, CoinPair coinPair)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual bool PlaceBuyOrder(TradingData trade, decimal priceTakeProfit)
         {
             throw new NotImplementedException();

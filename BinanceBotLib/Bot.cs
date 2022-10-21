@@ -55,7 +55,7 @@ namespace BinanceBotLib
 
         private void Init()
         {
-            double timerInterval = 500; // milliseconds
+            double timerInterval = 5000; // milliseconds
 
             switch (Settings.BotMode)
             {
