@@ -19,7 +19,6 @@ namespace BinanceBotConsole
 
         private static CoinPair _coinPair;
         private static decimal _bidPrice;
-        private static DateTime _coinListingUtcTime;
 
         private static void Main(string[] args)
         {
@@ -44,7 +43,13 @@ namespace BinanceBotConsole
             decimal.TryParse(Console.ReadLine().Trim(), out _bidPrice);
 
             Console.Write("Listing date and time in UTC (2022-12-25 01:00): ");
-            DateTime.TryParse(Console.ReadLine().Trim(), out _coinListingUtcTime);
+            DateTime coinListingUtcTime;
+            string strTime = Console.ReadLine().Trim();
+            if (!string.IsNullOrEmpty(strTime))
+            {
+                DateTime.TryParse(strTime, out coinListingUtcTime);
+                _settings.CoinListingUtcTime = coinListingUtcTime;
+            }
 
             SettingsManager.SaveSettings(_settings);
 
@@ -67,7 +72,7 @@ namespace BinanceBotConsole
 
         private static void MarketTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (_coinListingUtcTime - DateTime.UtcNow < new TimeSpan(0, 2, 0))
+            if (_settings.CoinListingUtcTime - DateTime.UtcNow < new TimeSpan(0, 2, 0))
             {
                 try
                 {
@@ -80,7 +85,7 @@ namespace BinanceBotConsole
             }
             else
             {
-                Console.WriteLine($"Duration until listing: {_coinListingUtcTime - DateTime.UtcNow}");
+                Console.WriteLine($"Duration until listing: {_settings.CoinListingUtcTime - DateTime.UtcNow}");
             }
         }
 
