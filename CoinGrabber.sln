@@ -1,56 +1,36 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.3.32825.248
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinGrabberConsole", "BinanceBotConsole\CoinGrabberConsole.csproj", "{72940829-7A00-479B-B2D5-3113A2DF1531}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinGrabber", "CoinGrabber\CoinGrabber.csproj", "{D9CE36FF-A159-4F4D-9FC7-66BB0B5BD69F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareX.HelpersLib", "..\..\ShareX Team\ShareX\ShareX.HelpersLib\ShareX.HelpersLib.csproj", "{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C04B31A6-5E6D-49B4-AA1E-FC2C0B75DB71}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelpersLibStd", "..\..\McoreD\HelpersLib\HelpersLib\HelpersLibStd.csproj", "{2CA7DEC1-585D-4D4F-A503-2700EB096219}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		MicrosoftStore|Any CPU = MicrosoftStore|Any CPU
-		MicrosoftStoreDebug|Any CPU = MicrosoftStoreDebug|Any CPU
 		Release|Any CPU = Release|Any CPU
-		Steam|Any CPU = Steam|Any CPU
-		WindowsStore|Any CPU = WindowsStore|Any CPU
-		WindowsStoreDebug|Any CPU = WindowsStoreDebug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.MicrosoftStore|Any CPU.ActiveCfg = Release|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.MicrosoftStore|Any CPU.Build.0 = Release|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.MicrosoftStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.MicrosoftStoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.Steam|Any CPU.ActiveCfg = Release|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.Steam|Any CPU.Build.0 = Release|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.WindowsStore|Any CPU.ActiveCfg = Release|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.WindowsStore|Any CPU.Build.0 = Release|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72940829-7A00-479B-B2D5-3113A2DF1531}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.MicrosoftStore|Any CPU.ActiveCfg = MicrosoftStore|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.MicrosoftStore|Any CPU.Build.0 = MicrosoftStore|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.MicrosoftStoreDebug|Any CPU.ActiveCfg = MicrosoftStoreDebug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.MicrosoftStoreDebug|Any CPU.Build.0 = MicrosoftStoreDebug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Steam|Any CPU.ActiveCfg = Steam|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.Steam|Any CPU.Build.0 = Steam|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStore|Any CPU.ActiveCfg = Debug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStore|Any CPU.Build.0 = Debug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStoreDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{327750E1-9FB7-4CC3-8AEA-9BC42180CAD3}.WindowsStoreDebug|Any CPU.Build.0 = Debug|Any CPU
+		{D9CE36FF-A159-4F4D-9FC7-66BB0B5BD69F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9CE36FF-A159-4F4D-9FC7-66BB0B5BD69F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9CE36FF-A159-4F4D-9FC7-66BB0B5BD69F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9CE36FF-A159-4F4D-9FC7-66BB0B5BD69F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CA7DEC1-585D-4D4F-A503-2700EB096219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CA7DEC1-585D-4D4F-A503-2700EB096219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CA7DEC1-585D-4D4F-A503-2700EB096219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CA7DEC1-585D-4D4F-A503-2700EB096219}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {BD0B3DF3-409B-48A4-8FF9-E9B72C17E526}
+		SolutionGuid = {7EC4A7FD-FB3A-40AB-AE5D-EA39599CF856}
 	EndGlobalSection
 EndGlobal
