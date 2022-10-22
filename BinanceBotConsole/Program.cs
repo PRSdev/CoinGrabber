@@ -19,7 +19,7 @@ namespace BinanceBotConsole
 
         private static CoinPair _coinPair;
         private static decimal _bidPrice;
-        private static DateTime coinListingUtcTime;
+        private static DateTime _coinListingUtcTime;
 
         private static void Main(string[] args)
         {
@@ -38,14 +38,13 @@ namespace BinanceBotConsole
             }
 
             Console.Write("Enter coin to grab (SUI): ");
-            string coin = Console.ReadLine().Trim();
-            _coinPair = new CoinPair(coin, "BUSD", 1); // Some coins only support one decimal
+            _coinPair = new CoinPair(Console.ReadLine().Trim(), "BUSD", 1); // Some coins only support one decimal
 
             Console.Write("Enter your maximum price (1.00): ");
             decimal.TryParse(Console.ReadLine().Trim(), out _bidPrice);
 
             Console.Write("Listing date and time in UTC (2022-12-25 01:00): ");
-            DateTime.TryParse(Console.ReadLine().Trim(), out coinListingUtcTime);
+            DateTime.TryParse(Console.ReadLine().Trim(), out _coinListingUtcTime);
 
             SettingsManager.SaveSettings(_settings);
 
@@ -68,7 +67,7 @@ namespace BinanceBotConsole
 
         private static void MarketTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (coinListingUtcTime - DateTime.UtcNow < new TimeSpan(0, 2, 0))
+            if (_coinListingUtcTime - DateTime.UtcNow < new TimeSpan(0, 2, 0))
             {
                 try
                 {
@@ -81,18 +80,20 @@ namespace BinanceBotConsole
             }
             else
             {
-                Console.WriteLine($"Duration until listing: {coinListingUtcTime - DateTime.UtcNow}");
+                Console.WriteLine($"Duration until listing: {_coinListingUtcTime - DateTime.UtcNow}");
             }
         }
 
         public static void PlaceBuyOrder()
         {
-            decimal balance = GetBalance(_coinPair.Pair2);
+            decimal balance = _client.SpotApi.Account.GetAccountInfoAsync().Result.Data.Balances.Single(s => s.Asset == _coinPair.Pair2).Available;
             Console.WriteLine($"{_coinPair.Pair2} balance: {balance}");
 
             if (balance > 10)
             {
-                decimal price = GetPrice(_coinPair);
+                decimal price = _client.SpotApi.ExchangeData.GetPriceAsync(_coinPair.ToString()).Result.Data.Price;
+                Console.WriteLine($"{_coinPair} price: {price}");
+
                 if (price > 0 && price <= _bidPrice)
                 {
                     decimal quantity = Math.Floor(balance / price * 10) / 10; // Binance deducts the fees in coin quantity after buying
@@ -112,33 +113,6 @@ namespace BinanceBotConsole
                         }
                     }
                 }
-            }
-        }
-
-        private static decimal GetBalance(string coinName)
-        {
-            try
-            {
-                decimal balance = _client.SpotApi.Account.GetAccountInfoAsync().Result.Data.Balances.Single(s => s.Asset == coinName).Available;
-                return balance;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-        }
-
-        private static decimal GetPrice(CoinPair coinPair)
-        {
-            try
-            {
-                decimal marketPrice = _client.SpotApi.ExchangeData.GetPriceAsync(coinPair.ToString()).Result.Data.Price;
-                Console.WriteLine($"{coinPair.ToString()} price: {marketPrice}");
-                return marketPrice;
-            }
-            catch (Exception)
-            {
-                return 0;
             }
         }
     }
