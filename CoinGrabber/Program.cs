@@ -11,6 +11,7 @@ CoinPair _coinPair;
 decimal _bidPrice;
 
 _settings = SettingsManager.LoadSettings();
+Console.WriteLine($"Settings filepath: {_settings.FilePath}");
 
 // Error handling
 if (string.IsNullOrEmpty(_settings.APIKey))
@@ -37,8 +38,8 @@ if (!string.IsNullOrEmpty(strTime))
 {
     DateTime.TryParse(strTime, out coinListingUtcTime);
     _settings.CoinListingUtcTime = coinListingUtcTime;
+    SettingsManager.SaveSettings(_settings);
 }
-SettingsManager.SaveSettings(_settings);
 
 _client = new BinanceClient(new BinanceClientOptions
 {
