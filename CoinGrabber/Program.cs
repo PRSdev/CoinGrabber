@@ -26,7 +26,7 @@ if (string.IsNullOrEmpty(_settings.APIKey))
 }
 
 Console.Write("Enter coin to grab (SUI): ");
-_coinPair = new CoinPair(Console.ReadLine().Trim(), "BUSD", 1); // Some coins only support one decimal
+_coinPair = new CoinPair(Console.ReadLine().Trim(), "USDT", 1); // Some coins only support one decimal
 
 Console.Write("Enter your maximum price (1.00): ");
 decimal.TryParse(Console.ReadLine().Trim(), out _bidPrice);
@@ -43,7 +43,7 @@ if (!string.IsNullOrEmpty(strTime))
 
 _client = new BinanceClient(new BinanceClientOptions
 {
-    ApiCredentials = new ApiCredentials(_settings.APIKey, _settings.SecretKey),
+    ApiCredentials = new BinanceApiCredentials(_settings.APIKey, _settings.SecretKey),
     SpotApiOptions = new BinanceApiClientOptions
     {
         BaseAddress = BinanceApiAddresses.Default.RestClientAddress,

@@ -12,11 +12,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Binance.Net" Version="8.2.0" />
+    <PackageReference Include="Binance.Net" Version="8.5.1" />
+    <PackageReference Include="CryptoExchange.Net" Version="5.4.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\McoreD\HelpersLib\HelpersLib\HelpersLibStd.csproj" />
+    <ProjectReference Include="..\..\..\McoreD\HelpersLib\HelpersLib\HelpersLib.csproj" />
   </ItemGroup>
 
 </Project>
