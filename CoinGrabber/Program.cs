@@ -4,7 +4,7 @@ using Binance.Net.Objects;
 using CryptoExchange.Net.Authentication;
 
 Settings _settings;
-PeriodicTimer _marketTimer = new PeriodicTimer(new TimeSpan(0, 0, 5));
+PeriodicTimer _waitTimer = new PeriodicTimer(new TimeSpan(0, 0, 5));
 BinanceClient _client;
 
 CoinPair _coinPair;
@@ -52,13 +52,28 @@ _client = new BinanceClient(new BinanceClientOptions
 });
 
 
-while (await _marketTimer.WaitForNextTickAsync())
+while (await _waitTimer.WaitForNextTickAsync())
 {
     if (_settings.CoinListingUtcTime - DateTime.UtcNow < new TimeSpan(0, 2, 0))
     {
         try
         {
-            PlaceBuyOrder();
+            PeriodicTimer marketTimer = new PeriodicTimer(new TimeSpan(0, 0, 1));
+            while (await marketTimer.WaitForNextTickAsync())
+            {
+                try
+                {
+                    if (PlaceBuyOrder())
+                    {
+                        marketTimer.Dispose();
+                        _waitTimer.Dispose();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -71,7 +86,7 @@ while (await _marketTimer.WaitForNextTickAsync())
     }
 }
 
-void PlaceBuyOrder()
+bool PlaceBuyOrder()
 {
     decimal balance = _client.SpotApi.Account.GetAccountInfoAsync().Result.Data.Balances.Single(s => s.Asset == _coinPair.Pair2).Available;
     Console.WriteLine($"{_coinPair.Pair2} balance: {balance}");
@@ -97,8 +112,10 @@ void PlaceBuyOrder()
                 {
                     Console.WriteLine($"Success: {buyOrder.Result.Data.Id}");
                     Console.WriteLine();
+                    return true;
                 }
             }
         }
     }
+    return false;
 }
